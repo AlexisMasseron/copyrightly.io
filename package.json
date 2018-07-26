@@ -1,0 +1,27 @@
+{
+  "name": "copyrightly.eth",
+  "version": "0.0.1",
+  "description": "ÐApp for Copyright Management",
+  "scripts": {
+    "lint": "solhint ./contracts/*.sol",
+    "network": "ganache-cli",
+    "migrate": "truffle migrate --reset",
+    "test": "node $NODE_DEBUG_OPTION ./node_modules/.bin/truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogargon/copyrightly.eth.git"
+  },
+  "author": "http://rhizomik.net/~roberto/",
+  "license": "SEE LICENSE IN LICENSE",
+  "bugs": {
+    "url": "https://github.com/rogargon/copyrightly.eth/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "ganache-cli": "^6.1.6",
+    "solhint": "^1.2.1",
+    "solidity-cli": "^1.0.1",
+    "truffle": "^4.1.13"
+  }
+}
