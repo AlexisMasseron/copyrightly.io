@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MatIconRegistry } from "@angular/material";
+import { MatIconRegistry } from '@angular/material';
 
 @Component({
   selector: 'app-root',

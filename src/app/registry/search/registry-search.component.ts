@@ -38,8 +38,9 @@ export class RegistrySearchComponent implements OnInit {
       this.retrieved.title = result[0];
       this.retrieved.hash = hash;
       this.retrieved.authors = result[1];
-      if (!this.retrieved.title)
-        this.setStatus('Work not found, unregistered')
+      if (!this.retrieved.title) {
+        this.setStatus('Work not found, unregistered');
+      }
     } catch (e) {
       console.log(e);
       this.setStatus('Error getting manifestation for hash, see log for details');

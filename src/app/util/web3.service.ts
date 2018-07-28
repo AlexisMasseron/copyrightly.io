@@ -34,7 +34,7 @@ export class Web3Service {
   }
 
   public async artifactsToContract(artifacts) {
-    if (!this.web3) this.bootstrapWeb3();
+    if (!this.web3) { this.bootstrapWeb3(); }
     const contractAbstraction = contract(artifacts);
     contractAbstraction.setProvider(this.web3.currentProvider);
     return contractAbstraction;
@@ -52,6 +52,6 @@ export class Web3Service {
           observer.error(new Error('Error retrieving accounts, see logs for details'));
         });
       return { unsubscribe() {} };
-    })
+    });
   }
 }

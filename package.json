@@ -11,7 +11,7 @@
     "migrate": "truffle migrate --reset",
     "test": "npm-run-all -p -c soltest ngtest",
     "soltest": "node $NODE_DEBUG_OPTION ./node_modules/.bin/truffle test",
-    "ngtest": "ng test",
+    "ngtest": "ng test --watch=false",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",

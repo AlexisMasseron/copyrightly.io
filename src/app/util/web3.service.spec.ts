@@ -3,7 +3,7 @@ import Web3 from 'web3';
 
 import {Web3Service} from './web3.service';
 
-import metacoin_artifacts from '../../../build/contracts/MetaCoin.json';
+import registry_artifacts from '../../../build/contracts/Registry.json';
 const TRUFFLE_CONFIG = require('../../../truffle');
 
 declare let window: any;
@@ -26,7 +26,7 @@ describe('Web3Service', () => {
 
       service.bootstrapWeb3();
 
-      return service.artifactsToContract(metacoin_artifacts).then((abstraction) => {
+      return service.artifactsToContract(registry_artifacts).then((abstraction) => {
         expect(abstraction.currentProvider.host).toBe(localNode);
       });
     })
@@ -40,7 +40,7 @@ describe('Web3Service', () => {
 
       service.bootstrapWeb3();
 
-      return service.artifactsToContract(metacoin_artifacts).then((abstraction) => {
+      return service.artifactsToContract(registry_artifacts).then((abstraction) => {
         expect(abstraction.currentProvider.host).toBe('http://localhost:1337');
       });
     })
