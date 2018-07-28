@@ -19,11 +19,6 @@ export class ManifestSingleComponent implements OnInit {
     title: '',
     hash: ''
   };
-  retrieved = {
-    title: '',
-    authors: [],
-    hash: '',
-  };
 
   constructor(private web3Service: Web3Service, private matSnackBar: MatSnackBar) {}
 
@@ -67,21 +62,6 @@ export class ManifestSingleComponent implements OnInit {
     } catch (e) {
       console.log(e);
       this.setStatus('Error registering creation, see log for details');
-    }
-  }
-
-  async getManifestation(hash: string) {
-    try {
-      const deployedRegistry = await this.Registry.deployed();
-      const result = await deployedRegistry.getManifestation(hash);
-      this.retrieved.title = result[0];
-      this.retrieved.hash = hash;
-      this.retrieved.authors = result[1];
-      if (!this.retrieved.title)
-        this.setStatus('Work not found, unregistered')
-    } catch (e) {
-      console.log(e);
-      this.setStatus('Error getting manifestation for hash, see log for details');
     }
   }
 }

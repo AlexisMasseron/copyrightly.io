@@ -6,10 +6,12 @@ import { MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatI
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule } from '@angular/forms';
 import { ManifestSingleComponent } from './manifest/manifest-single.component';
+import { RegistrySearchComponent } from './search/registry-search.component';
 
 @NgModule({
   declarations: [
-    ManifestSingleComponent
+    ManifestSingleComponent,
+    RegistrySearchComponent
   ],
   imports: [
     BrowserAnimationsModule,
@@ -26,7 +28,8 @@ import { ManifestSingleComponent } from './manifest/manifest-single.component';
     UtilModule
   ],
   exports: [
-    ManifestSingleComponent
+    ManifestSingleComponent,
+    RegistrySearchComponent
   ]
 })
 export class RegistryModule { }

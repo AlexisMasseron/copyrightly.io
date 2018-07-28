@@ -6,7 +6,8 @@ import { HttpClientModule } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { RegistryModule } from './registry/registry.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatToolbarModule, MatIconModule, MatIconRegistry } from '@angular/material';
+import { MatToolbarModule, MatIconModule, MatIconRegistry, MatButtonModule } from '@angular/material';
+import { AppRoutingModule } from './app-routing.module';
 
 @NgModule({
   declarations: [
@@ -16,10 +17,12 @@ import { MatToolbarModule, MatIconModule, MatIconRegistry } from '@angular/mater
     BrowserAnimationsModule,
     MatToolbarModule,
     MatIconModule,
+    MatButtonModule,
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    RegistryModule
+    RegistryModule,
+    AppRoutingModule
   ],
   providers: [ MatIconRegistry ],
   bootstrap: [ AppComponent ]

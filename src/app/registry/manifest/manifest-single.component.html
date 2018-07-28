@@ -30,26 +30,3 @@
     </mat-card-actions>
   </form>
 </mat-card>
-
-<mat-card>
-  <mat-card-header>
-    <div mat-card-avatar><mat-icon fontSet="fa" fontIcon="fa-search"></mat-icon></div>
-    <mat-card-title>Retrieve Registered Work</mat-card-title>
-    <mat-card-subtitle>Search for previously registered creations by content hash</mat-card-subtitle>
-  </mat-card-header>
-  <mat-card-content>
-    <form (ngSubmit)="getManifestation(inputHash.value)" #getManifestationForm="ngForm">
-      <mat-form-field>
-        <input type="text" matInput id="inputHash" name="inputHash" (ngModel)="retrieved.hash"
-               #inputHash="ngModel" placeholder="Manifestation Content Hash">
-      </mat-form-field>
-      <button mat-button type="submit" id="search">Search</button>
-    </form>
-    <br>
-    <span *ngIf="retrieved.title">
-      <mat-label>Title:</mat-label><p>{{retrieved.title}}</p>
-      <mat-label>Hash:</mat-label><p>{{retrieved.hash}}</p>
-      <mat-label>Authors:</mat-label><p>{{retrieved.authors}}</p>
-    </span>
-  </mat-card-content>
-</mat-card>

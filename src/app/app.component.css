@@ -1,3 +1,7 @@
-mat-icon {
-  font-size: larger;
+.logo mat-icon {
+  font-size: x-large;
+}
+
+.logo .logo-text {
+  vertical-align: text-bottom;
 }
