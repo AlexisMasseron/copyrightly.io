@@ -1,0 +1,10 @@
+mat-form-field {
+  width: 400px;
+}
+mat-card-header mat-icon {
+  font-size: xx-large;
+}
+button mat-icon {
+  font-size: large;
+  vertical-align: text-top;
+}
