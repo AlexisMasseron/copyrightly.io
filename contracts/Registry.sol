@@ -1,21 +1,20 @@
 pragma solidity ^0.4.24;
 
 /// @title Copyrightly Registry contract for copyright registration and authorship evidence storage
-/// @author Roberto García (roberto@rhizomik.net)
-contract CopyrightlyRegistry {
+/// @author Roberto García (http://rhizomik.net/~roberto/)
+contract Registry {
 
     struct Manifestation {
         string title;
         address[] authors;
     }
 
-    event ManifestEvent(string hash, string title, address[] authors,
-        address indexed manifester);
+    event ManifestEvent(string hash, string title, address[] authors, address indexed manifester);
 
-    mapping (string => Manifestation) private manifestations;
+    mapping(string => Manifestation) private manifestations;
 
     /// @notice Register single authorship for `msg.sender` of the manifestation with title `title`
-    /// and hash `hash`.
+    /// and hash `hash`. Requires hash not previously registered.
     /// @dev To be used when their is just one author, which is considered to be the message sender
     /// @param hash Hash of the manifestation content, for instance IPFS Base58 Hash
     /// @param title The title of the manifestation

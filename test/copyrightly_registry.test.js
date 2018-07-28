@@ -1,6 +1,6 @@
-var CopyrightlyRegistry = artifacts.require('CopyrightlyRegistry');
+var Registry = artifacts.require('Registry');
 
-contract('CopyrightlyRegistry', function (accounts) {
+contract('Registry', function (accounts) {
 
   const manifester = accounts[0];
   const HASH = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
@@ -9,7 +9,7 @@ contract('CopyrightlyRegistry', function (accounts) {
   let manifestHash, manifestTitle, manifestAuthors, manifestManifester;
 
   it("should manifest a previously unregistered piece of content", async () => {
-    const registry = await CopyrightlyRegistry.deployed();
+    const registry = await Registry.deployed();
     let eventEmitted = false;
     const event = registry.ManifestEvent();
     await event.watch((error, result) => {
@@ -37,7 +37,7 @@ contract('CopyrightlyRegistry', function (accounts) {
   });
 
   it("should allow retrieving an previously registered manifestation", async () => {
-    const registry = await CopyrightlyRegistry.deployed();
+    const registry = await Registry.deployed();
 
     const result = await registry.getManifestation(HASH);
 
@@ -50,7 +50,7 @@ contract('CopyrightlyRegistry', function (accounts) {
   });
 
   it("shouldn't manifest a previously registered piece of content", async () => {
-    const registry = await CopyrightlyRegistry.deployed();
+    const registry = await Registry.deployed();
     let eventEmitted = false;
     const event = registry.ManifestEvent();
     await event.watch(() => {

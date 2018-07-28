@@ -2,11 +2,11 @@ pragma solidity ^0.4.24;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
-import "../contracts/CopyrightlyRegistry.sol";
+import "../contracts/Registry.sol";
 
-contract TestCopyrightlyRegistry {
-    CopyrightlyRegistry private registry =
-        CopyrightlyRegistry(DeployedAddresses.CopyrightlyRegistry());
+contract TestRegistry {
+    Registry private registry =
+        Registry(DeployedAddresses.Registry());
 
     string constant HASH = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
     string constant TITLE = "A nice picture";
@@ -29,7 +29,7 @@ contract TestCopyrightlyRegistry {
     function testAlreadyRegistered() public {
         ThrowProxy throwProxy = new ThrowProxy(address(registry));
 
-        CopyrightlyRegistry(address(throwProxy)).manifestAuthorship(HASH, TITLE);
+        Registry(address(throwProxy)).manifestAuthorship(HASH, TITLE);
         bool r = throwProxy.execute.gas(200000)();
 
         Assert.isFalse(r, "Should be false, as it should be reverted");
