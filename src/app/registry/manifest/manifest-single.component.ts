@@ -23,11 +23,8 @@ export class ManifestSingleComponent implements OnInit {
   constructor(private web3Service: Web3Service, private matSnackBar: MatSnackBar) {}
 
   ngOnInit(): void {
-    this.web3Service.artifactsToContract(registry_artifacts)
-    .then((RegistryAbstraction) => {
-      this.Registry = RegistryAbstraction;
-      this.getAccounts();
-    });
+    this.Registry = this.web3Service.artifactsToContract(registry_artifacts);
+    this.getAccounts();
   }
 
   setStatus(status) {

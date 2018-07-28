@@ -21,10 +21,7 @@ export class RegistrySearchComponent implements OnInit {
   constructor(private web3Service: Web3Service, private matSnackBar: MatSnackBar) {}
 
   ngOnInit(): void {
-    this.web3Service.artifactsToContract(registry_artifacts)
-    .then((RegistryAbstraction) => {
-      this.Registry = RegistryAbstraction;
-    });
+    this.Registry = this.web3Service.artifactsToContract(registry_artifacts);
   }
 
   setStatus(status) {

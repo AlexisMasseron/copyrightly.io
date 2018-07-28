@@ -13,12 +13,6 @@ export class Web3Service {
   private web3: any;
 
   constructor() {
-    window.addEventListener('load', (event) => {
-      this.bootstrapWeb3();
-    });
-  }
-
-  public bootstrapWeb3() {
     if (typeof window.web3 !== 'undefined') {
       console.log('Using Web3 provided by the browser');
       this.web3 = new Web3(window.web3.currentProvider);
@@ -33,8 +27,7 @@ export class Web3Service {
     }
   }
 
-  public async artifactsToContract(artifacts) {
-    if (!this.web3) { this.bootstrapWeb3(); }
+  public artifactsToContract(artifacts) {
     const contractAbstraction = contract(artifacts);
     contractAbstraction.setProvider(this.web3.currentProvider);
     return contractAbstraction;
