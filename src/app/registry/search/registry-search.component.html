@@ -7,16 +7,16 @@
   <mat-card-content>
     <form (ngSubmit)="getManifestation(inputHash.value)" #getManifestationForm="ngForm">
       <mat-form-field>
-        <input type="text" matInput id="inputHash" name="inputHash" (ngModel)="retrieved.hash"
+        <input type="text" matInput id="inputHash" name="inputHash" (ngModel)="manifestation.hash"
                #inputHash="ngModel" placeholder="Manifestation Content Hash">
       </mat-form-field>
       <button mat-button type="submit" id="search">Search</button>
     </form>
     <br>
-    <span *ngIf="retrieved.title">
-      <mat-label>Title:</mat-label><p>{{retrieved.title}}</p>
-      <mat-label>Hash:</mat-label><p>{{retrieved.hash}}</p>
-      <mat-label>Authors:</mat-label><p>{{retrieved.authors}}</p>
+    <span *ngIf="manifestation.title">
+      <mat-label>Title:</mat-label><p>{{manifestation.title}}</p>
+      <mat-label>Hash:</mat-label><p>{{manifestation.hash}}</p>
+      <mat-label>Authors:</mat-label><p>{{manifestation.authors}}</p>
     </span>
   </mat-card-content>
 </mat-card>

@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material';
 
 import { Web3Service } from '../../util/web3.service';
-
-declare let require: any;
-const registry_artifacts = require('../../../../build/contracts/Registry.json');
+import { RegistryContractService } from '../registry-contract.service';
+import { Manifestation } from '../manifestation';
 
 @Component({
   selector: 'app-manifest-single',
@@ -12,18 +11,15 @@ const registry_artifacts = require('../../../../build/contracts/Registry.json');
   styleUrls: ['./manifest-single.component.css']
 })
 export class ManifestSingleComponent implements OnInit {
-  Registry: any;
   accounts: string[];
   account: string;
-  manifestation = {
-    title: '',
-    hash: ''
-  };
+  manifestation = new Manifestation();
 
-  constructor(private web3Service: Web3Service, private matSnackBar: MatSnackBar) {}
+  constructor(private web3Service: Web3Service,
+              private registryContractService: RegistryContractService,
+              private matSnackBar: MatSnackBar) {}
 
   ngOnInit(): void {
-    this.Registry = this.web3Service.artifactsToContract(registry_artifacts);
     this.getAccounts();
   }
 
@@ -40,25 +36,14 @@ export class ManifestSingleComponent implements OnInit {
       error => this.setStatus(<any>error.message));
   }
 
-  async manifest() {
-    if (!this.Registry) {
-      this.setStatus('Registry is not loaded, unable to send transaction to contract');
-      return;
-    }
+  manifest() {
     this.setStatus('Initiating registration... (please wait)');
-    try {
-      const deployedRegistry = await this.Registry.deployed();
-      const transaction = await deployedRegistry.manifestAuthorship.sendTransaction(
-        this.manifestation.hash, this.manifestation.title, {from: this.account});
-
-      if (!transaction) {
-        this.setStatus('Transaction failed!');
-      } else {
-        this.setStatus('Transaction submitted!');
-      }
-    } catch (e) {
-      console.log(e);
-      this.setStatus('Error registering creation, see log for details');
-    }
+    this.registryContractService.manifest(this.manifestation, this.account)
+      .subscribe((receipt) => {
+        console.log('Transaction receipt:' + receipt);
+        this.setStatus('Registration submitted!');
+      }, error => {
+        this.setStatus(error);
+      });
   }
 }

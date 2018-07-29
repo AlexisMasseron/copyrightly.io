@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Web3Service } from '../../util/web3.service';
 import { MatSnackBar } from '@angular/material';
-
-declare let require: any;
-const registry_artifacts = require('../../../../build/contracts/Registry.json');
+import { RegistryContractService } from '../registry-contract.service';
+import { Manifestation } from '../manifestation';
 
 @Component({
   selector: 'app-registry-search',
@@ -11,36 +10,27 @@ const registry_artifacts = require('../../../../build/contracts/Registry.json');
   styleUrls: ['./registry-search.component.css']
 })
 export class RegistrySearchComponent implements OnInit {
-  Registry: any;
-  retrieved = {
-    title: '',
-    authors: [],
-    hash: '',
-  };
+  manifestation = new Manifestation();
 
-  constructor(private web3Service: Web3Service, private matSnackBar: MatSnackBar) {}
+  constructor(private web3Service: Web3Service,
+              private registryContractService: RegistryContractService,
+              private matSnackBar: MatSnackBar) {}
 
-  ngOnInit(): void {
-    this.Registry = this.web3Service.artifactsToContract(registry_artifacts);
-  }
+  ngOnInit(): void { }
 
   setStatus(status) {
     this.matSnackBar.open(status, null, {duration: 5000});
   }
 
-  async getManifestation(hash: string) {
-    try {
-      const deployedRegistry = await this.Registry.deployed();
-      const result = await deployedRegistry.getManifestation(hash);
-      this.retrieved.title = result[0];
-      this.retrieved.hash = hash;
-      this.retrieved.authors = result[1];
-      if (!this.retrieved.title) {
-        this.setStatus('Work not found, unregistered');
-      }
-    } catch (e) {
-      console.log(e);
-      this.setStatus('Error getting manifestation for hash, see log for details');
-    }
+  getManifestation(hash: string) {
+    this.registryContractService.getManifestation(hash)
+      .subscribe((manifestation: Manifestation) => {
+        this.manifestation = manifestation;
+        if (!this.manifestation.title) {
+          this.setStatus('Work not found, unregistered');
+        }
+      }, error => {
+        this.setStatus(error);
+      });
   }
 }
