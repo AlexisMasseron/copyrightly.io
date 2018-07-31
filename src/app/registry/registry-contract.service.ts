@@ -3,24 +3,28 @@ import { Web3Service } from '../util/web3.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { Manifestation } from './manifestation';
 
+import * as contract from 'truffle-contract';
+
 declare const require: any;
-const registry_artifacts = require('../../assets/Registry.json');
+const artifacts = require('../../assets/Registry.json');
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegistryContractService {
 
-  private registryContract: any;
+  private deployedContract: any;
 
   constructor(private web3Service: Web3Service) {
-    const contract = this.web3Service.artifactsToContract(registry_artifacts);
-    contract.deployed().then((deployedContract) => this.registryContract = deployedContract);
+    const contractAbstraction = contract(artifacts);
+    contractAbstraction.setProvider(web3Service.web3.currentProvider);
+    contractAbstraction.deployed()
+      .then((deployedContract) => this.deployedContract = deployedContract);
   }
 
   public getManifestation(hash: string): Observable<Manifestation> {
     return new Observable((observer) => {
-      this.registryContract.getManifestation(hash)
+      this.deployedContract.getManifestation(hash)
         .then(function(result) {
           observer.next(new Manifestation(
             { hash: hash, title: result[0], authors: result[1]}));
@@ -36,7 +40,7 @@ export class RegistryContractService {
 
   public manifest(manifestation: Manifestation, account: string): Observable<any> {
     return new Observable((observer) => {
-      this.registryContract.manifestAuthorship.sendTransaction(
+      this.deployedContract.manifestAuthorship.sendTransaction(
         manifestation.hash, manifestation.title, {from: account})
         .then(function(receipt) {
           if (!receipt) {

@@ -3,7 +3,6 @@ import Web3 from 'web3';
 
 import {Web3Service} from './web3.service';
 
-import registry_artifacts from '../../../build/contracts/Registry.json';
 const TRUFFLE_CONFIG = require('../../../truffle');
 
 declare let window: any;
@@ -19,30 +18,32 @@ describe('Web3Service', () => {
     expect(service).toBeTruthy();
   }));
 
-  it('should inject a default local node web3 on a contract',
+  it('should set development local node as Web3 provider',
     inject([Web3Service], (service: Web3Service) => {
       const localNode = 'http://' + TRUFFLE_CONFIG.networks.development.host + ':' +
         TRUFFLE_CONFIG.networks.development.port;
-
-      service.bootstrapWeb3();
-
-      return service.artifactsToContract(registry_artifacts).then((abstraction) => {
-        expect(abstraction.currentProvider.host).toBe(localNode);
-      });
+      expect(service.web3.currentProvider.host).toBe(localNode);
     })
   );
+});
 
-  it('should inject the browser web3 on a contract if available',
+describe('Web3Service', () => {
+  beforeEach(() => {
+    window.web3 = {
+      currentProvider: new Web3.providers.HttpProvider('http://localhost:1337')
+    };
+    TestBed.configureTestingModule({
+      providers: [Web3Service]
+    });
+  });
+
+  it('should be created', inject([Web3Service], (service: Web3Service) => {
+    expect(service).toBeTruthy();
+  }));
+
+  it('should set provided node as Web3 provider',
     inject([Web3Service], (service: Web3Service) => {
-      window.web3 = {
-        currentProvider: new Web3.providers.HttpProvider('http://localhost:1337')
-      };
-
-      service.bootstrapWeb3();
-
-      return service.artifactsToContract(registry_artifacts).then((abstraction) => {
-        expect(abstraction.currentProvider.host).toBe('http://localhost:1337');
-      });
+      expect(service.web3.currentProvider.host).toBe('http://localhost:1337');
     })
   );
 });

@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
-import * as contract from 'truffle-contract';
 
 declare let require: any;
 declare let window: any;
-
 const Web3 = require('web3');
 const TRUFFLE_CONFIG = require('../../../truffle');
 
 @Injectable()
 export class Web3Service {
-  private web3: any;
+  public web3: any;
 
   constructor() {
     if (typeof window.web3 !== 'undefined') {
@@ -27,16 +25,13 @@ export class Web3Service {
     }
   }
 
-  public artifactsToContract(artifacts) {
-    const contractAbstraction = contract(artifacts);
-    contractAbstraction.setProvider(this.web3.currentProvider);
-    return contractAbstraction;
-  }
-
   public getAccounts(): Observable<string[]> {
     return new Observable((observer) => {
       this.web3.eth.getAccounts()
         .then(function(accounts) {
+          if (accounts.length === 0) {
+            observer.error('Couldn\'t get any accounts. Make sure you are logged in MetaMask')
+          }
           observer.next(accounts);
           observer.complete();
         })
