@@ -33,14 +33,14 @@ export class ManifestSingleComponent implements OnInit {
         this.accounts = accounts;
         this.account = accounts[0];
         },
-      error => this.setStatus(<any>error.message));
+      error => this.setStatus(error));
   }
 
   manifest() {
     this.setStatus('Initiating registration... (please wait)');
     this.registryContractService.manifest(this.manifestation, this.account)
       .subscribe((receipt) => {
-        console.log('Transaction receipt:' + receipt);
+        console.log('Transaction receipt: ' + receipt);
         this.setStatus('Registration submitted!');
       }, error => {
         this.setStatus(error);
