@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { ErrorMessageService } from '../../error-handler/error-message.service';
 import { Web3Service } from '../../util/web3.service';
-import { MatSnackBar } from '@angular/material';
 import { RegistryContractService } from '../registry-contract.service';
 import { Manifestation } from '../manifestation';
 
@@ -14,12 +14,12 @@ export class RegistrySearchComponent implements OnInit {
 
   constructor(private web3Service: Web3Service,
               private registryContractService: RegistryContractService,
-              private matSnackBar: MatSnackBar) {}
+              private errorMessageService: ErrorMessageService) {}
 
   ngOnInit(): void { }
 
   setStatus(status) {
-    this.matSnackBar.open(status, null, {duration: 5000});
+    this.errorMessageService.showErrorMessage(status);
   }
 
   getManifestation(hash: string) {
@@ -27,7 +27,7 @@ export class RegistrySearchComponent implements OnInit {
       .subscribe((manifestation: Manifestation) => {
         this.manifestation = manifestation;
         if (!this.manifestation.title) {
-          this.setStatus('Work not found, unregistered');
+          this.setStatus('Content hash not found, unregistered');
         }
       }, error => {
         this.setStatus(error);

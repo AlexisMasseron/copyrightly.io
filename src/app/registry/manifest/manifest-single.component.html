@@ -1,32 +1,44 @@
-<mat-card>
-  <mat-card-header>
-    <div mat-card-avatar><mat-icon fontSet="fa" fontIcon="fa-gavel"></mat-icon></div>
-    <mat-card-title>Register Your Work</mat-card-title>
-    <mat-card-subtitle>Provide creation title and content hash for registration</mat-card-subtitle>
-  </mat-card-header>
-  <form (ngSubmit)="manifest()" #manifestForm="ngForm">
-    <mat-card-content>
-      <mat-form-field id="address-selector" class="address-field">
-        <mat-select id="account" name="account" [(ngModel)]="account" placeholder="Creator">
-          <mat-option *ngFor="let account of accounts" [value]="account">{{account}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-button type="button" id="refresh-accounts" (click)="getAccounts()">
-        <mat-icon fontSet="fa" fontIcon="fa-sync-alt"></mat-icon>
-      </button>
-      <br>
-      <mat-form-field>
-        <input type="text" matInput id="title" name="title" [(ngModel)]="manifestation.title"
-               #title="ngModel" placeholder="Work Title">
-      </mat-form-field>
-      <br>
-      <mat-form-field>
-        <input type="text" matInput id="hash" name="hash" [(ngModel)]="manifestation.hash"
-               #hash="ngModel" placeholder="Content Hash">
-      </mat-form-field>
-    </mat-card-content>
-    <mat-card-actions>
-      <button mat-button type="submit" id="manifest">Register Creation</button>
-    </mat-card-actions>
-  </form>
-</mat-card>
+<h4><span class="fa fa-gavel"></span> Register Your Work</h4>
+<p class="lead">Provide creation title and content hash for registration</p>
+
+<form id="manifest-form" (ngSubmit)="manifest()" #manifestForm="ngForm">
+  <fieldset>
+
+    <!-- Content author select -->
+    <div class="form-group" [class.was-validated]="inputAuthor.dirty || inputAuthor.touched">
+      <label class="control-label" for="inputAuthor">Author*</label>
+      <span class="row pl-3 pr-3">
+        <select id="inputAuthor" name="inputAuthor" class="form-control col" required
+                [(ngModel)]="account" #inputAuthor="ngModel">
+          <option *ngFor="let account of accounts" [ngValue]="account">{{account}}</option>
+        </select>
+        <button id="refresh-accounts" type="button" (click)="getAccounts()">
+          <span class="fa fa-sync-alt"></span>
+        </button>
+      </span>
+    </div>
+
+    <!-- Content title input -->
+    <div class="form-group" [class.was-validated]="inputTitle.dirty || inputTitle.touched">
+      <label class="control-label" for="inputTitle">Title*</label>
+      <input id="inputTitle" name="inputTitle" type="text" class="form-control" required
+             [(ngModel)]="manifestation.title" #inputTitle="ngModel" placeholder="Content title">
+      <div class="invalid-feedback">A content title is required</div>
+    </div>
+
+    <!-- Content hash input -->
+    <div class="form-group" [class.was-validated]="inputHash.dirty || inputHash.touched">
+      <label class="control-label" for="inputHash">Username*</label>
+      <input id="inputHash" name="inputHash" type="text" class="form-control" required
+             [(ngModel)]="manifestation.hash" #inputHash="ngModel" placeholder="Content hash">
+      <div class="invalid-feedback">A content hash is required</div>
+    </div>
+
+    <!-- Button -->
+    <div class="form-group">
+      <button id="manifest" type="submit" class="btn btn-success pull-right"
+              [disabled]="!manifestForm.form.valid">Register</button>
+    </div>
+
+  </fieldset>
+</form>

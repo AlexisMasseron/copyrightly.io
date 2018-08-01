@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material';
-
+import { ErrorMessageService } from '../../error-handler/error-message.service';
 import { Web3Service } from '../../util/web3.service';
 import { RegistryContractService } from '../registry-contract.service';
 import { Manifestation } from '../manifestation';
@@ -17,14 +16,15 @@ export class ManifestSingleComponent implements OnInit {
 
   constructor(private web3Service: Web3Service,
               private registryContractService: RegistryContractService,
-              private matSnackBar: MatSnackBar) {}
+              private errorMessageService: ErrorMessageService) {}
 
   ngOnInit(): void {
     this.getAccounts();
+    this.watchManifestEvents();
   }
 
   setStatus(status) {
-    this.matSnackBar.open(status, null, {duration: 5000});
+    this.errorMessageService.showErrorMessage(status);
   }
 
   getAccounts() {

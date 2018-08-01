@@ -1,9 +1,6 @@
-<mat-toolbar color="primary">
-  <div class="logo">
-    <mat-icon fontSet="fas" fontIcon="fa-copyright"></mat-icon>
-    <span class="logo-text">opyrightLY Registry</span>
-  </div>
-  <button mat-button id="menu-register" routerLink="/register">Register</button>
-  <button mat-button id="menu-search" routerLink="/search">Search</button>
-</mat-toolbar>
-<router-outlet></router-outlet>
+<app-navbar></app-navbar>
+
+<main role="main" class="container mt-5">
+  <app-error-alert></app-error-alert>
+  <router-outlet></router-outlet>
+</main>

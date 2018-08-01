@@ -1,10 +1,9 @@
 import { NgModule } from '@angular/core';
-import { UtilModule } from '../util/util.module';
-import { RouterModule } from '@angular/router';
-import { MatButtonModule, MatCardModule, MatFormFieldModule, MatIconModule, MatInputModule,
-  MatOptionModule, MatSelectModule, MatSnackBarModule } from '@angular/material';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { UtilModule } from '../util/util.module';
+import { ErrorHandlerModule } from '../error-handler/error-handler.module';
 import { ManifestSingleComponent } from './manifest/manifest-single.component';
 import { RegistrySearchComponent } from './search/registry-search.component';
 import { RegistryContractService } from './registry-contract.service';
@@ -15,18 +14,11 @@ import { RegistryContractService } from './registry-contract.service';
     RegistrySearchComponent
   ],
   imports: [
-    BrowserAnimationsModule,
+    CommonModule,
     FormsModule,
     RouterModule,
-    MatButtonModule,
-    MatCardModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatOptionModule,
-    MatSelectModule,
-    MatSnackBarModule,
-    MatIconModule,
-    UtilModule
+    UtilModule,
+    ErrorHandlerModule
   ],
   exports: [
     ManifestSingleComponent,
