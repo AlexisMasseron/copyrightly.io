@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { Manifestation } from './manifestation';
 
 import * as contract from 'truffle-contract';
+import { Subject } from 'rxjs/internal/Subject';
 
 declare const require: any;
 const artifacts = require('../../assets/Registry.json');
@@ -14,12 +15,18 @@ const artifacts = require('../../assets/Registry.json');
 export class RegistryContractService {
 
   private deployedContract: any;
+  private manifestEventSource = new Subject<Manifestation>();
+  private firstEvent = false;
 
   constructor(private web3Service: Web3Service) {
     const contractAbstraction = contract(artifacts);
     contractAbstraction.setProvider(web3Service.web3.currentProvider);
     contractAbstraction.deployed()
-      .then((deployedContract) => this.deployedContract = deployedContract);
+      .then((deployedContract) => {
+        this.deployedContract = deployedContract;
+        this.firstEvent = true;
+        this.watchContractEvents();
+      });
   }
 
   public getManifestation(hash: string): Observable<Manifestation> {
@@ -55,6 +62,26 @@ export class RegistryContractService {
           observer.error(new Error('Error registering creation, see log for details'));
         });
       return { unsubscribe() {} };
+    });
+  }
+
+  public events(): Observable<Manifestation> {
+    return this.manifestEventSource.asObservable();
+  }
+
+  private watchContractEvents() {
+    this.deployedContract.allEvents({ fromBlock: 'latest' }, (error, event) => {
+      if (!error) {
+        if (this.firstEvent) { // Ignore first as it is the last one
+          this.firstEvent = false;
+          return
+        }
+        this.manifestEventSource.next(new Manifestation({
+          hash: event.args.hash, title: event.args.title, authors: event.args.authors
+        }));
+      } else {
+        console.error(error);
+      }
     });
   }
 }

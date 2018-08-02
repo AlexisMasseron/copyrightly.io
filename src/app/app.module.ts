@@ -9,7 +9,7 @@ import { AppComponent } from './app.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { AboutComponent } from './about/about.component';
 import { RegistryModule } from './registry/registry.module';
-import { ErrorHandlerModule } from './error-handler/error-handler.module';
+import { AlertsModule } from './alerts/alerts.module';
 
 
 @NgModule({
@@ -22,7 +22,7 @@ import { ErrorHandlerModule } from './error-handler/error-handler.module';
     HttpClientModule,
     AppRoutingModule,
     NgbModule.forRoot(),
-    ErrorHandlerModule,
+    AlertsModule,
     RegistryModule
   ],
   providers: [ ],

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Web3Service } from '../util/web3.service';
-import { ErrorMessageService } from '../error-handler/error-message.service';
+import { AlertsService } from '../alerts/alerts.service';
 
 @Component({
   selector: 'app-navbar',
@@ -12,7 +12,7 @@ export class NavbarComponent implements OnInit {
   public account: string;
 
   constructor(private web3Service: Web3Service,
-              private errorMessageService: ErrorMessageService) {}
+              private errorMessageService: AlertsService) {}
 
 
 ngOnInit() {
@@ -21,6 +21,6 @@ ngOnInit() {
       (accounts: string[]) => {
         this.account = accounts[0];
       },
-      error => this.errorMessageService.showErrorMessage(error));
+      error => this.errorMessageService.error(error));
   }
 }

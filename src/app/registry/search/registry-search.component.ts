@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ErrorMessageService } from '../../error-handler/error-message.service';
+import { AlertsService } from '../../alerts/alerts.service';
 import { Web3Service } from '../../util/web3.service';
 import { RegistryContractService } from '../registry-contract.service';
 import { Manifestation } from '../manifestation';
@@ -14,23 +14,19 @@ export class RegistrySearchComponent implements OnInit {
 
   constructor(private web3Service: Web3Service,
               private registryContractService: RegistryContractService,
-              private errorMessageService: ErrorMessageService) {}
+              private alertsService: AlertsService) {}
 
   ngOnInit(): void { }
-
-  setStatus(status) {
-    this.errorMessageService.showErrorMessage(status);
-  }
 
   getManifestation(hash: string) {
     this.registryContractService.getManifestation(hash)
       .subscribe((manifestation: Manifestation) => {
         this.manifestation = manifestation;
         if (!this.manifestation.title) {
-          this.setStatus('Content hash not found, unregistered');
+          this.alertsService.info('Content hash not found, unregistered');
         }
       }, error => {
-        this.setStatus(error);
+        this.alertsService.error(error);
       });
   }
 }
