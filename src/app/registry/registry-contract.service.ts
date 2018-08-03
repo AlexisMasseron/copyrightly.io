@@ -70,11 +70,19 @@ export class RegistryContractService {
           deployedContract.allEvents({ filter: filters, fromBlock: 'latest' }, (error, event) => {
             if (!error) {
               const manifestation = new Manifestation({
-                hash: event.args.hash, title: event.args.title, authors: event.args.authors });
+                hash: event.args.hash,
+                title: event.args.title,
+                authors: event.args.authors });
               const manifestationEvent = new ManifestationEvent( {
-                type: event.event, who: event.args.manifester, what: manifestation, when: event.blockNumber
+                type: event.event,
+                who: event.args.manifester,
+                what: manifestation
               });
-              observer.next(manifestationEvent);
+              this.web3Service.getBlockDate(event.blockNumber)
+                .subscribe(date => {
+                  manifestationEvent.when = date;
+                  observer.next(manifestationEvent);
+                });
             } else {
               console.log(error);
               observer.error(new Error('Error listening to contract events, see log for details'));
