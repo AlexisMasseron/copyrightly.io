@@ -42,4 +42,18 @@ export class Web3Service {
       return { unsubscribe() {} };
     });
   }
+
+  public getBlockDate(blockNumber: number): Observable<Date> {
+    return new Observable((observer) => {
+      this.web3.eth.getBlock(blockNumber)
+      .then(function(block) {
+        observer.next(new Date(block.timestamp));
+        observer.complete();
+      })
+      .catch(function(error) {
+        console.error(error);
+      });
+      return { unsubscribe() {} };
+    });
+  }
 }
