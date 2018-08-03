@@ -1,11 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subscription } from 'rxjs/internal/Subscription';
-import { skip } from 'rxjs/operators';
+import { Subject } from 'rxjs/internal/Subject';
+import { takeUntil } from 'rxjs/operators';
 import { AlertsService } from '../../alerts/alerts.service';
 import { Web3Service } from '../../util/web3.service';
 import { RegistryContractService } from '../registry-contract.service';
 import { Manifestation } from '../manifestation';
-import { ManifestationEvent } from '../manifestation-event';
 
 @Component({
   selector: 'app-manifest-single',
@@ -13,7 +12,7 @@ import { ManifestationEvent } from '../manifestation-event';
   styleUrls: ['./manifest-single.component.css']
 })
 export class ManifestSingleComponent implements OnInit, OnDestroy {
-  private subscription: Subscription;
+  private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   accounts: string[];
   account: string;
@@ -25,15 +24,11 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getAccounts();
-    this.watchManifestEvents({});
-  }
-
-  ngOnDestroy() {
-    this.unwatchManifestEvents();
   }
 
   getAccounts() {
-    this.web3Service.getAccounts().subscribe(
+    this.web3Service.getAccounts().pipe(takeUntil(this.ngUnsubscribe))
+    .subscribe(
       (accounts: string[]) => {
         this.accounts = accounts;
         this.account = accounts[0];
@@ -43,6 +38,7 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
 
   manifest() {
     this.registryContractService.manifest(this.manifestation, this.account)
+      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((receipt) => {
         console.log('Transaction receipt: ' + receipt);
         this.alertsService.info('Registration submitted, waiting for confirmation...<br>' +
@@ -52,18 +48,8 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
       });
   }
 
-  watchManifestEvents(filters) {
-    this.subscription = this.registryContractService.watchEvents(filters)
-      .pipe(skip(1)) // TODO: omitting one as it is the past last retrieved on load, confirm
-      .subscribe( (event: ManifestationEvent) => {
-        console.log(event);
-        this.alertsService.success(event.toHTML());
-      }, error => {
-        this.alertsService.error(error);
-      });
-  }
-
-  unwatchManifestEvents() {
-    this.subscription.unsubscribe();
+  ngOnDestroy() {
+    this.ngUnsubscribe.next();
+    this.ngUnsubscribe.complete();
   }
 }
