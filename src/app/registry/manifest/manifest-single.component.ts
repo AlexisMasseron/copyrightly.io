@@ -1,9 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
+import { skip } from 'rxjs/operators';
 import { AlertsService } from '../../alerts/alerts.service';
 import { Web3Service } from '../../util/web3.service';
 import { RegistryContractService } from '../registry-contract.service';
 import { Manifestation } from '../manifestation';
+import { ManifestationEvent } from '../manifestation-event';
 
 @Component({
   selector: 'app-manifest-single',
@@ -23,7 +25,7 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getAccounts();
-    this.watchManifestEvents();
+    this.watchManifestEvents({});
   }
 
   ngOnDestroy() {
@@ -43,17 +45,19 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
     this.registryContractService.manifest(this.manifestation, this.account)
       .subscribe((receipt) => {
         console.log('Transaction receipt: ' + receipt);
-        this.alertsService.info('Registration submitted!');
+        this.alertsService.info('Registration submitted, waiting for confirmation...<br>' +
+          'Receipt: <a href="' + receipt + '">' + receipt + '</a>');
       }, error => {
         this.alertsService.error(error);
       });
   }
 
-  watchManifestEvents() {
-    this.subscription = this.registryContractService.events()
-      .subscribe((manifestation) => {
-        console.log('Manifest Event: ' + manifestation.title);
-        this.alertsService.success('Manifest Event: ' + manifestation.title);
+  watchManifestEvents(filters) {
+    this.subscription = this.registryContractService.watchEvents(filters)
+      .pipe(skip(1)) // TODO: omitting one as it is the past last retrieved on load, confirm
+      .subscribe( (event: ManifestationEvent) => {
+        console.log(event);
+        this.alertsService.success(event.toHTML());
       }, error => {
         this.alertsService.error(error);
       });

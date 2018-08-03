@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Web3Service } from '../util/web3.service';
 import { Observable } from 'rxjs/internal/Observable';
+import { Event } from './event';
+import { ManifestationEvent } from './manifestation-event';
 import { Manifestation } from './manifestation';
 
 import * as contract from 'truffle-contract';
-import { Subject } from 'rxjs/internal/Subject';
 
 declare const require: any;
 const artifacts = require('../../assets/Registry.json');
@@ -14,18 +15,15 @@ const artifacts = require('../../assets/Registry.json');
 })
 export class RegistryContractService {
 
+  private contractAbstraction: any;
   private deployedContract: any;
-  private manifestEventSource = new Subject<Manifestation>();
-  private firstEvent = false;
 
   constructor(private web3Service: Web3Service) {
-    const contractAbstraction = contract(artifacts);
-    contractAbstraction.setProvider(web3Service.web3.currentProvider);
-    contractAbstraction.deployed()
+    this.contractAbstraction = contract(artifacts);
+    this.contractAbstraction.setProvider(web3Service.web3.currentProvider);
+    this.contractAbstraction.deployed()
       .then((deployedContract) => {
         this.deployedContract = deployedContract;
-        this.firstEvent = true;
-        this.watchContractEvents();
       });
   }
 
@@ -65,23 +63,25 @@ export class RegistryContractService {
     });
   }
 
-  public events(): Observable<Manifestation> {
-    return this.manifestEventSource.asObservable();
-  }
-
-  private watchContractEvents() {
-    this.deployedContract.allEvents({ fromBlock: 'latest' }, (error, event) => {
-      if (!error) {
-        if (this.firstEvent) { // Ignore first as it is the last one
-          this.firstEvent = false;
-          return
-        }
-        this.manifestEventSource.next(new Manifestation({
-          hash: event.args.hash, title: event.args.title, authors: event.args.authors
-        }));
-      } else {
-        console.error(error);
-      }
+  public watchEvents(filters: any): Observable<Event> {
+    return new Observable((observer) => {
+      this.contractAbstraction.deployed()
+        .then((deployedContract) => {
+          deployedContract.allEvents({ filter: filters, fromBlock: 'latest' }, (error, event) => {
+            if (!error) {
+              const manifestation = new Manifestation({
+                hash: event.args.hash, title: event.args.title, authors: event.args.authors });
+              const manifestationEvent = new ManifestationEvent( {
+                type: event.event, who: event.args.manifester, what: manifestation, when: event.blockNumber
+              });
+              observer.next(manifestationEvent);
+            } else {
+              console.log(error);
+              observer.error(new Error('Error listening to contract events, see log for details'));
+            }
+          })
+        });
+      return { unsubscribe() {} };
     });
   }
 }
