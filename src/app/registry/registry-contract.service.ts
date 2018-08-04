@@ -71,7 +71,7 @@ export class RegistryContractService {
         events = deployedContract.ManifestEvent(
           { manifester: account }, { fromBlock: 'latest' });
         events.watch((error, event) => {
-          if (!error && !event.removed) {
+          if (!error) {
             const manifestation = new Manifestation({
               hash: event.args.hash,
               title: event.args.title,
@@ -93,7 +93,7 @@ export class RegistryContractService {
           }
         })
       });
-      return { unsubscribe() {} };
+      return { unsubscribe() { events.stopWatching(); } };
     });
   }
 
