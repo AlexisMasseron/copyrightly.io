@@ -15,7 +15,7 @@ export class ManifestationEvent extends Event {
            '<p> When: ' + this.when + '</p>' +
            '<h6> What: </h6>' +
            '<p>Title: ' + this.what.title + '</p>' +
-           '<p>Authors: ' + this.what.title + '</p>' +
+           '<p>Authors: ' + this.what.authors + '</p>' +
            '<p>Hash: ' + this.what.hash + '</p>';
   }
 }
