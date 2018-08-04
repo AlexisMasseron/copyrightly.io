@@ -5,6 +5,7 @@ import { AlertsService } from '../../alerts/alerts.service';
 import { Web3Service } from '../../util/web3.service';
 import { RegistryContractService } from '../registry-contract.service';
 import { Manifestation } from '../manifestation';
+import { AuthenticationService } from '../../navbar/authentication.service';
 
 @Component({
   selector: 'app-manifest-single',
@@ -14,26 +15,18 @@ import { Manifestation } from '../manifestation';
 export class ManifestSingleComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  accounts: string[];
   account: string;
   manifestation = new Manifestation();
 
   constructor(private web3Service: Web3Service,
               private registryContractService: RegistryContractService,
-              private alertsService: AlertsService) {}
+              private alertsService: AlertsService,
+              private authenticationService: AuthenticationService) {}
 
   ngOnInit(): void {
-    this.getAccounts();
-  }
-
-  getAccounts() {
-    this.web3Service.getAccounts().pipe(takeUntil(this.ngUnsubscribe))
-    .subscribe(
-      (accounts: string[]) => {
-        this.accounts = accounts;
-        this.account = accounts[0];
-        },
-      error => this.alertsService.error(error));
+    this.authenticationService.getSelectedAccount()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(account => this.account = account );
   }
 
   manifest() {

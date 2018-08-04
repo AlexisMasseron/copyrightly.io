@@ -7,15 +7,8 @@
     <!-- Content author select -->
     <div class="form-group" [class.was-validated]="inputAuthor.dirty || inputAuthor.touched">
       <label class="control-label" for="inputAuthor">Author*</label>
-      <span class="row pl-3 pr-3">
-        <select id="inputAuthor" name="inputAuthor" class="form-control col" required
-                [(ngModel)]="account" #inputAuthor="ngModel">
-          <option *ngFor="let account of accounts" [ngValue]="account">{{account}}</option>
-        </select>
-        <button id="refresh-accounts" type="button" (click)="getAccounts()">
-          <span class="fa fa-sync-alt"></span>
-        </button>
-      </span>
+      <input id="inputAuthor" name="inputAuthor" type="text" class="form-control" disabled
+             [ngModel]="account" #inputAuthor="ngModel" placeholder="Content author">
     </div>
 
     <!-- Content title input -->

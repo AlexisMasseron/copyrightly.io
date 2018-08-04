@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
-import { flatMap, map, takeUntil } from 'rxjs/operators';
+import { flatMap, takeUntil } from 'rxjs/operators';
 import { AlertsService } from '../../alerts/alerts.service';
 import { Web3Service } from '../../util/web3.service';
 import { RegistryContractService } from '../registry-contract.service';
+import { AuthenticationService } from '../../navbar/authentication.service';
 import { ManifestationEvent } from '../manifestation-event';
 
 @Component({
@@ -19,17 +20,18 @@ export class ListComponent implements OnInit, OnDestroy {
   constructor(private web3Service: Web3Service,
               private registryContractService: RegistryContractService,
               private alertsService: AlertsService,
-              private ref: ChangeDetectorRef) {}
+              private ref: ChangeDetectorRef,
+              private authenticationService: AuthenticationService) {}
 
   ngOnInit(): void {
-    this.web3Service.getAccounts()
+    this.authenticationService.getSelectedAccount()
       .pipe(takeUntil(this.ngUnsubscribe))
-      .pipe(flatMap((accounts: string[]) =>
-        this.registryContractService.listManifestEvents(accounts[0])))
-          .subscribe(events => {
-              this.manifestationEvents.push(events);
-              this.ref.detectChanges();
-            },error => this.alertsService.error(error));
+      .pipe(flatMap((account: string) =>
+        this.registryContractService.listManifestEvents(account)))
+      .subscribe(events => {
+            this.manifestationEvents.push(events);
+            this.ref.detectChanges();
+          },error => this.alertsService.error(error));
   }
 
   ngOnDestroy() {

@@ -28,6 +28,14 @@
         </div>
       </li>
     </ul>
-    <ul class="navbar-nav">{{account}}</ul>
+    <ul class="navbar-nav">
+        <select id="account" name="accounts" class="form-control col" required
+                [(ngModel)]="account" (ngModelChange)="onChange($event)">
+          <option *ngFor="let account of accounts" [ngValue]="account">{{account}}</option>
+        </select>
+        <button id="refresh-accounts" type="button" (click)="refreshAccounts()">
+          <span class="fa fa-sync-alt"></span>
+        </button>
+    </ul>
   </div>
 </nav>
