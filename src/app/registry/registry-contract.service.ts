@@ -46,7 +46,7 @@ export class RegistryContractService {
   public manifest(manifestation: Manifestation, account: string): Observable<any> {
     return new Observable((observer) => {
       this.deployedContract.manifestAuthorship.sendTransaction(
-        manifestation.hash, manifestation.title, {from: account})
+        manifestation.hash, manifestation.title, { from: account, gas: 100000 })
         .then(function(receipt) {
           if (!receipt) {
             observer.error(new Error('Transaction failed!'));
