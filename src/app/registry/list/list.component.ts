@@ -25,8 +25,7 @@ export class ListComponent implements OnInit, OnDestroy {
     this.web3Service.getAccounts()
       .pipe(takeUntil(this.ngUnsubscribe))
       .pipe(flatMap((accounts: string[]) =>
-        this.registryContractService.listEvents(
-          'ManifestEvent', { manifester: accounts[0] })))
+        this.registryContractService.listManifestEvents(accounts[0])))
           .subscribe(events => {
               this.manifestationEvents.push(events);
               this.ref.detectChanges();

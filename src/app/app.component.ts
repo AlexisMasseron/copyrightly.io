@@ -19,16 +19,16 @@ export class AppComponent implements OnInit, OnDestroy {
               private alertsService: AlertsService) {}
 
   ngOnInit(): void {
-    this.watchManifestEvents({});
+    this.watchManifestEvents();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  watchManifestEvents(filters) {
-    this.subscription = this.registryContractService.watchEvents(filters)
-    .pipe(skip(1)) // TODO: omitting one as it is the past last retrieved on load, confirm
+  watchManifestEvents() {
+    this.subscription = this.registryContractService.watchManifestEvents('0x627306090abaB3A6e1400e9345bC60c78a8BEf57')
+    .pipe(skip(1)) // TODO: omitting one as it is the past last retrieved on load, issue when first event by contract
     .subscribe( (event: ManifestationEvent) => {
       console.log(event);
       this.alertsService.success(event.toHTML());

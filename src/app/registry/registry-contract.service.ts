@@ -63,42 +63,47 @@ export class RegistryContractService {
     });
   }
 
-  public watchEvents(filters: any): Observable<Event> {
+  public watchManifestEvents(account: string): Observable<Event> {
     return new Observable((observer) => {
+      let events;
       this.contractAbstraction.deployed()
-        .then((deployedContract) => {
-          deployedContract.allEvents({ filter: filters, fromBlock: 'latest' }, (error, event) => {
-            if (!error) {
-              const manifestation = new Manifestation({
-                hash: event.args.hash,
-                title: event.args.title,
-                authors: event.args.authors });
-              const manifestationEvent = new ManifestationEvent( {
-                type: event.event,
-                who: event.args.manifester,
-                what: manifestation
-              });
-              this.web3Service.getBlockDate(event.blockNumber)
-                .subscribe(date => {
-                  manifestationEvent.when = date;
-                  observer.next(manifestationEvent);
-                });
-            } else {
-              console.log(error);
-              observer.error(new Error('Error listening to contract events, see log for details'));
-            }
-          })
-        });
+      .then((deployedContract) => {
+        events = deployedContract.ManifestEvent(
+          { manifester: account }, { fromBlock: 'latest' });
+        events.watch((error, event) => {
+          if (!error && !event.removed) {
+            const manifestation = new Manifestation({
+              hash: event.args.hash,
+              title: event.args.title,
+              authors: event.args.authors
+            });
+            const manifestationEvent = new ManifestationEvent({
+              type: event.event,
+              who: event.args.manifester,
+              what: manifestation
+            });
+            this.web3Service.getBlockDate(event.blockNumber)
+            .subscribe(date => {
+              manifestationEvent.when = date;
+              observer.next(manifestationEvent);
+            });
+          } else {
+            console.log(error);
+            observer.error(new Error('Error listening to contract events, see log for details'));
+          }
+        })
+      });
       return { unsubscribe() {} };
     });
   }
 
-  public listEvents(eventType: string, filters: any): Observable<ManifestationEvent> {
+  public listManifestEvents(account: string): Observable<ManifestationEvent> {
     return new Observable((observer) => {
+      let events;
       this.contractAbstraction.deployed()
       .then((deployedContract) => {
-        const events = deployedContract.ManifestEvent(
-          filters, { fromBlock: 0, toBlock: 'latest' });
+        events = deployedContract.ManifestEvent(
+          { manifester: account }, { fromBlock: 0 });
         events.get((error, events) => {
           if (!error) {
             events.map(event => {
