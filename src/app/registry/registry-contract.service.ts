@@ -68,8 +68,7 @@ export class RegistryContractService {
       let events;
       this.contractAbstraction.deployed()
       .then((deployedContract) => {
-        events = deployedContract.ManifestEvent(
-          { manifester: account }, { fromBlock: 'latest' });
+        events = deployedContract.ManifestEvent({ manifester: account }, { fromBlock: 'latest' });
         events.watch((error, event) => {
           if (!error) {
             const manifestation = new Manifestation({
@@ -97,16 +96,15 @@ export class RegistryContractService {
     });
   }
 
-  public listManifestEvents(account: string): Observable<ManifestationEvent> {
+  public listManifestEvents(account: string): Observable<ManifestationEvent[]> {
     return new Observable((observer) => {
       let events;
       this.contractAbstraction.deployed()
       .then((deployedContract) => {
-        events = deployedContract.ManifestEvent(
-          { manifester: account }, { fromBlock: 0 });
+        events = deployedContract.ManifestEvent({ manifester: account }, { fromBlock: 0 });
         events.get((error, events) => {
           if (!error) {
-            events.map(event => {
+            observer.next(events.map(event => {
               const manifestation = new Manifestation({
                 hash: event.args.hash,
                 title: event.args.title,
@@ -119,9 +117,9 @@ export class RegistryContractService {
               this.web3Service.getBlockDate(event.blockNumber)
               .subscribe(date => {
                 manifestationEvent.when = date;
-                observer.next(manifestationEvent);
               });
-            });
+              return manifestationEvent;
+            }));
           } else {
             console.log(error);
             observer.error(new Error('Error listening to contract events, see log for details'));

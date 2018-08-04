@@ -20,7 +20,6 @@ export class ListComponent implements OnInit, OnDestroy {
   constructor(private web3Service: Web3Service,
               private registryContractService: RegistryContractService,
               private alertsService: AlertsService,
-              private ref: ChangeDetectorRef,
               private authenticationService: AuthenticationService) {}
 
   ngOnInit(): void {
@@ -29,8 +28,7 @@ export class ListComponent implements OnInit, OnDestroy {
       .pipe(flatMap((account: string) =>
         this.registryContractService.listManifestEvents(account)))
       .subscribe(events => {
-            this.manifestationEvents.push(events);
-            this.ref.detectChanges();
+            this.manifestationEvents = events;
           },error => this.alertsService.error(error));
   }
 
