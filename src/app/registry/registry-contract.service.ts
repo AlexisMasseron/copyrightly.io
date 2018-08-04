@@ -92,4 +92,38 @@ export class RegistryContractService {
       return { unsubscribe() {} };
     });
   }
+
+  public listEvents(eventType: string, filters: any): Observable<ManifestationEvent> {
+    return new Observable((observer) => {
+      this.contractAbstraction.deployed()
+      .then((deployedContract) => {
+        const events = deployedContract.ManifestEvent(
+          filters, { fromBlock: 0, toBlock: 'latest' });
+        events.get((error, events) => {
+          if (!error) {
+            events.map(event => {
+              const manifestation = new Manifestation({
+                hash: event.args.hash,
+                title: event.args.title,
+                authors: event.args.authors });
+              const manifestationEvent = new ManifestationEvent( {
+                type: event.event,
+                who: event.args.manifester,
+                what: manifestation
+              });
+              this.web3Service.getBlockDate(event.blockNumber)
+              .subscribe(date => {
+                manifestationEvent.when = date;
+                observer.next(manifestationEvent);
+              });
+            });
+          } else {
+            console.log(error);
+            observer.error(new Error('Error listening to contract events, see log for details'));
+          }
+        });
+      });
+      return { unsubscribe() {} };
+    });
+  }
 }

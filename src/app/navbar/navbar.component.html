@@ -18,6 +18,8 @@
            aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>Registry</a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown" ngbDropdownMenu>
           <a class="dropdown-item" [routerLinkActive]="'active'" [routerLinkActiveOptions]="{ exact: true }"
+             [routerLink]="['/list']"><span class="fa fa-list"></span> List</a>
+          <a class="dropdown-item" [routerLinkActive]="'active'" [routerLinkActiveOptions]="{ exact: true }"
              [routerLink]="['/register']"><span class="fa fa-gavel"></span> Register</a>
           <a class="dropdown-item" [routerLinkActive]="'active'" [routerLinkActiveOptions]="{ exact: true }"
              [routerLink]="['/search']"><span class="fa fa-search"></span> Search</a>

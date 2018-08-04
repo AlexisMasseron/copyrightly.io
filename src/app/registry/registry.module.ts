@@ -4,14 +4,16 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { UtilModule } from '../util/util.module';
 import { AlertsModule } from '../alerts/alerts.module';
+import { RegistryContractService } from './registry-contract.service';
 import { ManifestSingleComponent } from './manifest/manifest-single.component';
 import { RegistrySearchComponent } from './search/registry-search.component';
-import { RegistryContractService } from './registry-contract.service';
+import { ListComponent } from './list/list.component';
 
 @NgModule({
   declarations: [
     ManifestSingleComponent,
-    RegistrySearchComponent
+    RegistrySearchComponent,
+    ListComponent
   ],
   imports: [
     CommonModule,
@@ -22,7 +24,8 @@ import { RegistryContractService } from './registry-contract.service';
   ],
   exports: [
     ManifestSingleComponent,
-    RegistrySearchComponent
+    RegistrySearchComponent,
+    ListComponent
   ],
   providers: [
     RegistryContractService
