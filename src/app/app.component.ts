@@ -29,7 +29,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.authenticationService.getSelectedAccount()
       .pipe(takeUntil(this.ngUnsubscribe))
       .pipe(flatMap((account: string) => this.registryContractService.watchManifestEvents(account)))
-      .pipe(skip(1)) // TODO: omitting one as it is the past last retrieved on load, issue when first event by contract
       .subscribe( (event: ManifestationEvent) => {
         console.log(event);
         this.alertsService.success(event.toHTML());
