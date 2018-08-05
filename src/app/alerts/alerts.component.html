@@ -1,4 +1,4 @@
-<div *ngFor="let alert of alerts.slice().reverse()">
+<div id="alerts" *ngFor="let alert of alerts.slice().reverse()">
   <ngb-alert type="{{alert.type}}" (close)="close(alert)">
     <div [innerHtml]="alert.message"></div>
   </ngb-alert>

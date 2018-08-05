@@ -6,7 +6,7 @@ import { RegistrySearchComponent } from './registry/search/registry-search.compo
 import { ListComponent } from './registry/list/list.component';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/register', pathMatch: 'full' },
+  { path: '', redirectTo: '/about', pathMatch: 'full' },
   { path: 'about', component: AboutComponent },
   { path: 'register', component: ManifestSingleComponent },
   { path: 'search', component: RegistrySearchComponent },

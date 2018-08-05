@@ -1,5 +1,5 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="#">
+<nav id="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand" [routerLink]="['/']">
     <span class="fas fa-copyright logo-icon"></span>
     <span class="logo-text">opyright</span><span class="logo-boldtext">LY</span>
   </a>
@@ -29,7 +29,7 @@
       </li>
     </ul>
     <ul class="navbar-nav">
-        <select id="account" name="accounts" class="form-control col" required
+        <select id="accounts" name="accounts" class="form-control col" required
                 [(ngModel)]="account" (ngModelChange)="onChange($event)">
           <option *ngFor="let account of accounts" [ngValue]="account">{{account}}</option>
         </select>
