@@ -15,13 +15,10 @@ export class Web3Service {
       console.log('Using Web3 provided by the browser');
       this.web3 = new Web3(window.web3.currentProvider);
     } else {
-      const localNode = 'http://' + TRUFFLE_CONFIG.networks.development.host + ':' +
+      const localNode = 'ws://' + TRUFFLE_CONFIG.networks.development.host + ':' +
         TRUFFLE_CONFIG.networks.development.port;
       console.log('Using Web3 for local node: ' + localNode);
-      this.web3 = new Web3(new Web3.providers.HttpProvider(localNode));
-
-      // Hack to provide backwards compatibility for Truffle, which uses web3js 0.20.x
-      Web3.providers.HttpProvider.prototype.sendAsync = Web3.providers.HttpProvider.prototype.send;
+      this.web3 = new Web3(new Web3.providers.WebsocketProvider(localNode));
     }
   }
 

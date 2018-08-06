@@ -33,9 +33,9 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
     this.registryContractService.manifest(this.manifestation, this.account)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((receipt) => {
-        console.log('Transaction receipt: ' + receipt);
+        console.log('Transaction receipt: ' + receipt.transactionHash);
         this.alertsService.info('Registration submitted, waiting for confirmation...<br>' +
-          'Receipt: <a href="' + receipt + '">' + receipt + '</a>');
+          'Receipt: <a href="' + receipt + '">' + receipt.transactionHash + '</a>');
       }, error => {
         this.alertsService.error(error);
       });

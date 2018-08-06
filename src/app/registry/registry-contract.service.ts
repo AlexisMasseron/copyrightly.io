@@ -4,8 +4,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { Event } from './event';
 import { ManifestationEvent } from './manifestation-event';
 import { Manifestation } from './manifestation';
-
-import * as contract from 'truffle-contract';
+import { ReplaySubject } from 'rxjs';
 
 declare const require: any;
 const artifacts = require('../../assets/Registry.json');
@@ -15,40 +14,42 @@ const artifacts = require('../../assets/Registry.json');
 })
 export class RegistryContractService {
 
-  private contractAbstraction: any;
-  private deployedContract: any;
+  private deployedContract = new ReplaySubject<any>(1);
 
   constructor(private web3Service: Web3Service,
               private ngZone: NgZone) {
-    this.contractAbstraction = contract(artifacts);
-    this.contractAbstraction.setProvider(web3Service.web3.currentProvider);
-    this.contractAbstraction.deployed()
-      .then((deployedContract) => {
-        this.deployedContract = deployedContract;
-      });
+    this.web3Service.web3.eth.net.getId()
+    .then(network_id => {
+      const deployedAddress = artifacts.networks[network_id].address;
+      this.deployedContract.next(
+        new this.web3Service.web3.eth.Contract(artifacts.abi, deployedAddress));
+    });
   }
 
   public getManifestation(hash: string): Observable<Manifestation> {
     return new Observable((observer) => {
-      this.deployedContract.getManifestation(hash)
-        .then(function(result) {
+      this.deployedContract.subscribe(contract => {
+        contract.methods.getManifestation(hash).call()
+        .then(function (result) {
           observer.next(new Manifestation(
-            { hash: hash, title: result[0], authors: result[1]}));
+            {hash: hash, title: result[0], authors: result[1]}));
           observer.complete();
         })
-        .catch(function(error) {
+        .catch(function (error) {
           console.error(error);
           observer.error(new Error('Error retrieving manifestation, see logs for details'));
         });
+      });
       return { unsubscribe() {} };
     });
   }
 
   public manifest(manifestation: Manifestation, account: string): Observable<any> {
     return new Observable((observer) => {
-      this.deployedContract.manifestAuthorship.sendTransaction(
-        manifestation.hash, manifestation.title, { from: account, gas: 100000 })
-        .then(function(receipt) {
+      this.deployedContract.subscribe(contract => {
+        contract.methods.manifestAuthorship(manifestation.hash, manifestation.title)
+          .send({from: account, gas: 100000})
+        .then(receipt => {
           if (!receipt) {
             observer.error(new Error('Transaction failed!'));
           } else {
@@ -56,31 +57,29 @@ export class RegistryContractService {
             observer.complete();
           }
         })
-        .catch(function(error) {
+        .catch(error => {
           console.error(error);
           observer.error(new Error('Error registering creation, see log for details'));
         });
+      });
       return { unsubscribe() {} };
     });
   }
 
   public watchManifestEvents(account: string): Observable<Event> {
     return new Observable((observer) => {
-      let events;
-      this.contractAbstraction.deployed()
-      .then((deployedContract) => {
-        this.ngZone.runOutsideAngular(() => {
-          events = deployedContract.ManifestEvent({manifester: account}, {fromBlock: 'latest'});
-          events.watch((error, event) => {
-            if (!error) {
+      this.ngZone.runOutsideAngular(() => {
+        this.deployedContract.subscribe(contract => {
+          contract.events.ManifestEvent({ filter: { manifester: account }, fromBlock: 'latest' })
+            .on('data', event => {
               const manifestation = new Manifestation({
-                hash: event.args.hash,
-                title: event.args.title,
-                authors: event.args.authors
+                hash: event.returnValues.hash,
+                title: event.returnValues.title,
+                authors: event.returnValues.authors
               });
               const manifestationEvent = new ManifestationEvent({
                 type: event.event,
-                who: event.args.manifester,
+                who: event.returnValues.manifester,
                 what: manifestation
               });
               this.web3Service.getBlockDate(event.blockNumber)
@@ -88,46 +87,45 @@ export class RegistryContractService {
                 manifestationEvent.when = date;
                 this.ngZone.run(() => observer.next(manifestationEvent));
               });
-            } else {
+            })
+            .on('error', error => {
               console.log(error);
               this.ngZone.run(() =>
                 observer.error(new Error('Error listening to contract events, see log for details')));
-            }
+            });
           });
         });
-      });
-      return { unsubscribe() { events.stopWatching(); } };
+      return { unsubscribe() {} };
     });
   }
 
   public listManifestEvents(account: string): Observable<ManifestationEvent[]> {
     return new Observable((observer) => {
-      let events;
-      this.contractAbstraction.deployed()
-      .then((deployedContract) => {
-        events = deployedContract.ManifestEvent({ manifester: account }, { fromBlock: 0 });
-        events.get((error, events) => {
-          if (!error) {
-            observer.next(events.map(event => {
-              const manifestation = new Manifestation({
-                hash: event.args.hash,
-                title: event.args.title,
-                authors: event.args.authors });
-              const manifestationEvent = new ManifestationEvent( {
-                type: event.event,
-                who: event.args.manifester,
-                what: manifestation
-              });
-              this.web3Service.getBlockDate(event.blockNumber)
-              .subscribe(date => {
-                this.ngZone.run(() => manifestationEvent.when = date);
-              });
-              return manifestationEvent;
-            }));
-          } else {
-            console.log(error);
-            observer.error(new Error('Error listening to contract events, see log for details'));
-          }
+      this.deployedContract.subscribe(contract => {
+        contract.getPastEvents('ManifestEvent',
+          { filter: { manifester: account }, fromBlock: 0 })
+        .then(events => {
+          observer.next(events.map(event => {
+            const manifestation = new Manifestation({
+              hash: event.returnValues.hash,
+              title: event.returnValues.title,
+              authors: event.returnValues.authors
+            });
+            const manifestationEvent = new ManifestationEvent({
+              type: event.event,
+              who: event.returnValues.manifester,
+              what: manifestation
+            });
+            this.web3Service.getBlockDate(event.blockNumber)
+            .subscribe(date => {
+              this.ngZone.run(() => manifestationEvent.when = date);
+            });
+            return manifestationEvent;
+          }));
+        })
+        .catch(error => {
+          console.log(error);
+          observer.error(new Error('Error listening to contract events, see log for details'));
         });
       });
       return { unsubscribe() {} };
