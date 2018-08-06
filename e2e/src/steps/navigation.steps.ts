@@ -11,7 +11,6 @@ export class NavigationSteps {
 
   @given(/^I'm on the home page and authenticated$/)
   async iMInHomePageAuthenticated() {
-    browser.waitForAngularEnabled(false);
     await browser.get('http://localhost:4200');
     expect(await this.navBar.getSelectedAccount()).to.not.be.empty;
   }
