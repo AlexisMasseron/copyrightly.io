@@ -8,8 +8,8 @@ Feature: Manifest Single Authorship
     When I click submenu option "Register" in menu "Registry"
     And I fill the register form with title "A nice picture" and content hash "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG"
     And I click the "Register" button
-    And I see alert with text "A nice picture" and close it
-    Then I see alert with text "Registration submitted, waiting for confirmation..." and close it
+    Then I see alert with text "A nice picture" and close it
+    And I see alert with text "Registration submitted, waiting for confirmation..." and close it
 
   Scenario: Register a piece of content previously registered
     Given I go to the home page

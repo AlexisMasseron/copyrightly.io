@@ -18,4 +18,9 @@ export class ResultsPage {
         .all(by.xpath('following-sibling::p')).getText();
     }
   }
+
+  async getResultsCount(): Promise<number> {
+    browser.wait(ExpectedConditions.presenceOf(this.results.first()));
+    return await this.results.count();
+  }
 }
