@@ -11,3 +11,5 @@ const options = {
   };
 
 reporter.generate(options);
+
+process.exit();

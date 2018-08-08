@@ -1,11 +1,11 @@
-import { element, by, browser } from 'protractor';
+import { element, by, browser, ElementFinder } from 'protractor';
 
 export class RegisterFormPage {
 
-  private form;
-  private author;
-  private title;
-  private hash;
+  private form: ElementFinder;
+  private author: ElementFinder;
+  private title: ElementFinder;
+  private hash: ElementFinder;
 
   constructor() {
     this.form = element(by.id('manifest-form'));

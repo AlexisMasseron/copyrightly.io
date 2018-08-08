@@ -23,12 +23,9 @@
 </form>
 
 <div class="card" *ngIf="manifestation.title">
+  <p class="col-md-12 p-3">Search result:</p>
   <div class="card-block">
-    <h5 class="card-title col-md-12 p-3">Search result:</h5>
-    <div class="p-3">
-      <h6 class="card-subtitle text-muted">Title</h6>
-      <p class="card-text">{{manifestation.title}}</p>
-    </div>
+    <h5 class="card-title col-md-12 p-3">{{manifestation.title}}</h5>
     <div class="p-3">
       <h6 class="card-subtitle text-muted">Authors</h6>
       <p class="card-text">{{manifestation.authors}}</p>
