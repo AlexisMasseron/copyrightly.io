@@ -68,7 +68,6 @@
     "protractor-cucumber-framework": "^6.0.0",
     "solhint": "^1.2.1",
     "solidity-cli": "^1.0.1",
-    "truffle-contract": "^3.0.6",
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
     "truffle": "^4.1.13",
