@@ -1,13 +1,9 @@
-import { defineSupportCode } from 'cucumber';
+import { Given, When, Then } from 'cucumber';
 import { RegisterFormPage } from '../pages/registry/register-form.page';
 
+const userForm = new RegisterFormPage();
 
-defineSupportCode(({Given, When, Then, Before}) => {
-
-  const userForm = new RegisterFormPage();
-
-  When(/^I fill the form with title "([^"]*)" and content hash "([^"]*)"$/,
-    async (title, hash) => {
-    await userForm.fillRegisterForm(title, hash)
-  });
+When(/^I fill the form with title "([^"]*)" and content hash "([^"]*)"$/,
+  async (title: string, hash: string) => {
+  await userForm.fillRegisterForm(title, hash)
 });

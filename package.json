@@ -55,7 +55,6 @@
     "codelyzer": "~4.2.1",
     "cucumber": "^4.2.1",
     "cucumber-html-reporter": "^4.0.3",
-    "cucumber-tsflow": "^2.2.0",
     "ganache-cli": "^6.1.6",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
