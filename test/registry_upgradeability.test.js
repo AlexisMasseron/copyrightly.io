@@ -16,10 +16,10 @@ contract('Registry Upgradeability', function (accounts) {
     await registry.manifestAuthorship(HASH1, TITLE, {from: MANIFESTER});
 
     const newRegistry = await Registry.new();
-    await registryProxy.upgradeTo(newRegistry.address);
+    await registryProxy.upgradeTo(newRegistry.address, {from: OWNER});
 
     const newVersion = await registryProxy.implementation();
-    const result = await registry.getManifestation(HASH1, { from: accounts[1] });
+    const result = await registry.getManifestation(HASH1, { from: MANIFESTER });
 
     assert.notEqual(currentVersion, newVersion,
         'proxy implementation should be upgraded');

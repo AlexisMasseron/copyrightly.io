@@ -1,11 +1,11 @@
 pragma solidity ^0.4.24;
 
-import "zos-lib/contracts/migrations/Initializable.sol";
+import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 
 
-/// @title Copyrightly Registry contract for copyright registration and authorship evidence storage
+/// @title Registry contract for copyright registration and authorship evidence storage
 /// @author Roberto García (http://rhizomik.net/~roberto/)
-contract Registry is Initializable {
+contract Registry is Pausable {
 
     struct Manifestation {
         string title;
@@ -16,14 +16,12 @@ contract Registry is Initializable {
 
     mapping(string => Manifestation) private manifestations;
 
-    function initialize() public isInitializer { }
-
     /// @notice Register single authorship for `msg.sender` of the manifestation with title `title`
     /// and hash `hash`. Requires hash not previously registered.
     /// @dev To be used when their is just one author, which is considered to be the message sender
     /// @param hash Hash of the manifestation content, for instance IPFS Base58 Hash
     /// @param title The title of the manifestation
-    function manifestAuthorship(string hash, string title) public {
+    function manifestAuthorship(string hash, string title) public whenNotPaused() {
         require(manifestations[hash].authors.length == 0, "Manifestation already registered");
         address[] memory authors = new address[](1);
         authors[0] = msg.sender;
@@ -40,7 +38,8 @@ contract Registry is Initializable {
     /// @param title The title of the manifestation
     /// @param additionalAuthors The additional authors,
     /// including the one registering that becomes the first author
-    function manifestJointAuthorship(string hash, string title, address[] additionalAuthors) public {
+    function manifestJointAuthorship(string hash, string title, address[] additionalAuthors)
+    public whenNotPaused() {
         require(manifestations[hash].authors.length == 0, "Manifestation already registered");
         require(additionalAuthors.length < 256, "Joint authorship limited to 256 authors");
         address[] memory authors = new address[](additionalAuthors.length + 1);
