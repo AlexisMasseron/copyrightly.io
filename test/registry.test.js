@@ -1,15 +1,17 @@
-var Registry = artifacts.require('Registry');
+const Registry = artifacts.require('Registry');
+const RegistryProxy = artifacts.require("AdminUpgradeabilityProxy");
 
 contract('Registry - Single Authorship', function (accounts) {
 
-  const MANIFESTER = accounts[0];
+  const MANIFESTER = accounts[1];
   const HASH = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
   const TITLE = "A nice picture";
 
   let manifestHash, manifestTitle, manifestAuthors, manifestManifester;
 
   it("should register a previously unregistered manifestation", async () => {
-    const registry = await Registry.deployed();
+    const registryProxy = await RegistryProxy.deployed();
+    const registry = await Registry.at(registryProxy.address);
     let eventEmitted = false;
     const event = registry.ManifestEvent();
     await event.watch((error, result) => {
@@ -37,9 +39,10 @@ contract('Registry - Single Authorship', function (accounts) {
   });
 
   it("should retrieve a previously registered manifestation", async () => {
-    const registry = await Registry.deployed();
+    const registryProxy = await RegistryProxy.deployed();
+    const registry = await Registry.at(registryProxy.address);
 
-    const result = await registry.getManifestation(HASH);
+    const result = await registry.getManifestation(HASH, { from: accounts[1] });
 
     assert.equal(result[0], TITLE,
         'unexpected manifestation title');
@@ -50,7 +53,9 @@ contract('Registry - Single Authorship', function (accounts) {
   });
 
   it("shouldn't register a previously registered manifestation", async () => {
-    const registry = await Registry.deployed();
+    const registryProxy = await RegistryProxy.deployed();
+    const registry = await Registry.at(registryProxy.address);
+
     let eventEmitted = false;
     const event = registry.ManifestEvent();
     await event.watch(() => {
@@ -70,15 +75,17 @@ contract('Registry - Single Authorship', function (accounts) {
 
 contract('Registry - Joint Authorship', function (accounts) {
 
-  const MANIFESTER = accounts[0];
-  const ADDITIONAL_AUTHORS = [accounts[1], accounts[2], accounts[3]];
+  const MANIFESTER = accounts[1];
+  const ADDITIONAL_AUTHORS = [accounts[2], accounts[3], accounts[4]];
   const HASH = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
   const TITLE = "A nice picture";
 
   let manifestHash, manifestTitle, manifestAuthors, manifestManifester;
 
   it("should register joint authorship for unregistered manifestation", async () => {
-    const registry = await Registry.deployed();
+    const registryProxy = await RegistryProxy.deployed();
+    const registry = await Registry.at(registryProxy.address);
+
     let eventEmitted = false;
     const event = registry.ManifestEvent();
     await event.watch((error, result) => {
@@ -102,20 +109,21 @@ contract('Registry - Joint Authorship', function (accounts) {
       'unexpected amount of authors in manifest event');
     assert.equal(manifestAuthors[0], MANIFESTER,
       'unexpected first author in manifest event authors');
-    assert.equal(manifestAuthors[1], accounts[1],
+    assert.equal(manifestAuthors[1], accounts[2],
       'unexpected second author in manifest event authors');
-    assert.equal(manifestAuthors[2], accounts[2],
+    assert.equal(manifestAuthors[2], accounts[3],
       'unexpected third author in manifest event authors');
-    assert.equal(manifestAuthors[3], accounts[3],
+    assert.equal(manifestAuthors[3], accounts[4],
       'unexpected fourth author in manifest event authors');
     assert.equal(manifestManifester, MANIFESTER,
       'unexpected manifest event manifester');
   });
 
   it("should retrieve a previously registered joint authorship manifestation", async () => {
-    const registry = await Registry.deployed();
+    const registryProxy = await RegistryProxy.deployed();
+    const registry = await Registry.at(registryProxy.address);
 
-    const result = await registry.getManifestation(HASH);
+    const result = await registry.getManifestation(HASH, { from: accounts[1] });
 
     assert.equal(result[0], TITLE,
       'unexpected manifestation title');
@@ -123,16 +131,18 @@ contract('Registry - Joint Authorship', function (accounts) {
       'unexpected amount of authors in manifestation');
     assert.equal(result[1][0], MANIFESTER,
       'unexpected first author in manifestation authors');
-    assert.equal(result[1][1], accounts[1],
+    assert.equal(result[1][1], accounts[2],
       'unexpected second author in manifest event authors');
-    assert.equal(result[1][2], accounts[2],
+    assert.equal(result[1][2], accounts[3],
       'unexpected third author in manifest event authors');
-    assert.equal(result[1][3], accounts[3],
+    assert.equal(result[1][3], accounts[4],
       'unexpected fourth author in manifest event authors');
   });
 
   it("shouldn't register a previously registered joint authorship manifestation", async () => {
-    const registry = await Registry.deployed();
+    const registryProxy = await RegistryProxy.deployed();
+    const registry = await Registry.at(registryProxy.address);
+
     let eventEmitted = false;
     const event = registry.ManifestEvent();
     await event.watch(() => {

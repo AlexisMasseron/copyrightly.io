@@ -1,8 +1,11 @@
 pragma solidity ^0.4.24;
 
+import "zos-lib/contracts/migrations/Initializable.sol";
+
+
 /// @title Copyrightly Registry contract for copyright registration and authorship evidence storage
 /// @author Roberto García (http://rhizomik.net/~roberto/)
-contract Registry {
+contract Registry is Initializable {
 
     struct Manifestation {
         string title;
@@ -12,6 +15,8 @@ contract Registry {
     event ManifestEvent(string hash, string title, address[] authors, address indexed manifester);
 
     mapping(string => Manifestation) private manifestations;
+
+    function initialize() public isInitializer { }
 
     /// @notice Register single authorship for `msg.sender` of the manifestation with title `title`
     /// and hash `hash`. Requires hash not previously registered.

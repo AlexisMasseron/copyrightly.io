@@ -6,8 +6,7 @@ import "../contracts/Registry.sol";
 
 
 contract TestRegistry {
-    Registry private registry =
-        Registry(DeployedAddresses.Registry());
+    Registry private registry = Registry(DeployedAddresses.AdminUpgradeabilityProxy());
 
     string constant HASH1 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
     string constant HASH2 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPBDG";
@@ -71,9 +70,10 @@ contract TestRegistry {
         Registry(address(throwProxy)).manifestAuthorship(HASH1, TITLE);
         bool r = throwProxy.execute.gas(200000)();
 
-        Assert.isFalse(r, "Should be false, as it should be reverted");
+        Assert.isFalse(r, "Should be false, as it should be reverted if already registered");
     }
 }
+
 
 // Proxy contract for testing reverts
 contract ThrowProxy {
