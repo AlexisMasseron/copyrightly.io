@@ -3,7 +3,9 @@ const RegistryProxy = artifacts.require("AdminUpgradeabilityProxy");
 
 contract('Registry - Single Authorship', function (accounts) {
 
-  const MANIFESTER = accounts[1];
+  const OWNER = accounts[0];
+  const PROXYADMIN = accounts[1];
+  const MANIFESTER = accounts[2];
   const HASH = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
   const TITLE = "A nice picture";
 
@@ -42,7 +44,7 @@ contract('Registry - Single Authorship', function (accounts) {
     const registryProxy = await RegistryProxy.deployed();
     const registry = await Registry.at(registryProxy.address);
 
-    const result = await registry.getManifestation(HASH, { from: accounts[1] });
+    const result = await registry.getManifestation(HASH);
 
     assert.equal(result[0], TITLE,
         'unexpected manifestation title');
@@ -75,8 +77,10 @@ contract('Registry - Single Authorship', function (accounts) {
 
 contract('Registry - Joint Authorship', function (accounts) {
 
-  const MANIFESTER = accounts[1];
-  const ADDITIONAL_AUTHORS = [accounts[2], accounts[3], accounts[4]];
+  const OWNER = accounts[0];
+  const PROXYADMIN = accounts[1];
+  const MANIFESTER = accounts[2];
+  const ADDITIONAL_AUTHORS = [accounts[3], accounts[4], accounts[5]];
   const HASH = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
   const TITLE = "A nice picture";
 
@@ -109,11 +113,11 @@ contract('Registry - Joint Authorship', function (accounts) {
       'unexpected amount of authors in manifest event');
     assert.equal(manifestAuthors[0], MANIFESTER,
       'unexpected first author in manifest event authors');
-    assert.equal(manifestAuthors[1], accounts[2],
+    assert.equal(manifestAuthors[1], accounts[3],
       'unexpected second author in manifest event authors');
-    assert.equal(manifestAuthors[2], accounts[3],
+    assert.equal(manifestAuthors[2], accounts[4],
       'unexpected third author in manifest event authors');
-    assert.equal(manifestAuthors[3], accounts[4],
+    assert.equal(manifestAuthors[3], accounts[5],
       'unexpected fourth author in manifest event authors');
     assert.equal(manifestManifester, MANIFESTER,
       'unexpected manifest event manifester');
@@ -123,7 +127,7 @@ contract('Registry - Joint Authorship', function (accounts) {
     const registryProxy = await RegistryProxy.deployed();
     const registry = await Registry.at(registryProxy.address);
 
-    const result = await registry.getManifestation(HASH, { from: accounts[1] });
+    const result = await registry.getManifestation(HASH);
 
     assert.equal(result[0], TITLE,
       'unexpected manifestation title');
@@ -131,11 +135,11 @@ contract('Registry - Joint Authorship', function (accounts) {
       'unexpected amount of authors in manifestation');
     assert.equal(result[1][0], MANIFESTER,
       'unexpected first author in manifestation authors');
-    assert.equal(result[1][1], accounts[2],
+    assert.equal(result[1][1], accounts[3],
       'unexpected second author in manifest event authors');
-    assert.equal(result[1][2], accounts[3],
+    assert.equal(result[1][2], accounts[4],
       'unexpected third author in manifest event authors');
-    assert.equal(result[1][3], accounts[4],
+    assert.equal(result[1][3], accounts[5],
       'unexpected fourth author in manifest event authors');
   });
 

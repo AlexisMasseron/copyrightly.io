@@ -1,11 +1,12 @@
 pragma solidity ^0.4.24;
 
+import "zos-lib/contracts/migrations/Initializable.sol";
 import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 
 
 /// @title Registry contract for copyright registration and authorship evidence storage
 /// @author Roberto García (http://rhizomik.net/~roberto/)
-contract Registry is Pausable {
+contract Registry is Pausable, Initializable {
 
     struct Manifestation {
         string title;
@@ -15,6 +16,10 @@ contract Registry is Pausable {
     event ManifestEvent(string hash, string title, address[] authors, address indexed manifester);
 
     mapping(string => Manifestation) private manifestations;
+
+    function initialize(address _owner) public isInitializer {
+        owner = _owner;
+    }
 
     /// @notice Register single authorship for `msg.sender` of the manifestation with title `title`
     /// and hash `hash`. Requires hash not previously registered.

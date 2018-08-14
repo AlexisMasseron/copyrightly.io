@@ -6,7 +6,7 @@ import "../contracts/Registry.sol";
 
 
 contract TestRegistry {
-    Registry private registry = Registry(DeployedAddresses.AdminUpgradeabilityProxy());
+    Registry private registry = Registry(DeployedAddresses.Registry());
 
     string constant HASH1 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
     string constant HASH2 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPBDG";
