@@ -9,8 +9,9 @@ export class Alert {
   }
 
   async getLastAlertMessage(): Promise<string> {
-    browser.wait(ExpectedConditions.presenceOf(this.alerts));
-    return await this.alerts.all(by.css('div.alert')).first().getText();
+    const lastAlert = this.alerts.all(by.css('div.alert')).first();
+    browser.wait(ExpectedConditions.presenceOf(lastAlert));
+    return await lastAlert.getText();
   }
 
   async closeLastAlert() {

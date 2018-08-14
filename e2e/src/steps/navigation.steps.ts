@@ -1,6 +1,6 @@
 import { Given, When, Then } from 'cucumber';
 import { expect } from 'chai';
-import { browser } from 'protractor';
+import { browser, ExpectedConditions } from 'protractor';
 import { NavigationBar } from '../pages/navbar.page';
 import { MainContentPage } from '../pages/main-content.page';
 

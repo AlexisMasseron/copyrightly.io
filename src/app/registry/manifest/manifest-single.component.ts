@@ -37,6 +37,8 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
       .subscribe((hash: string) => {
         this.manifestation.hash = hash;
       }, error => this.alertsService.error(error));
+    } else {
+      this.manifestation.hash = '';
     }
   }
 

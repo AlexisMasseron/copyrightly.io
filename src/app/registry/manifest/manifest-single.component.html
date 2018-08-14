@@ -25,14 +25,14 @@
       <input id="inputHash" name="inputHash" type="text" class="form-control" disabled required
              [(ngModel)]="manifestation.hash" #inputHash="ngModel" placeholder="Uploaded content hash">
       <input id="inputFile" name="inputFile" type="file" class="form-control"
-             (change)="loadFile(inputFile)" #inputFile placeholder="Content file">
+             (change)="loadFile(inputFile)" #inputFile>
       <div class="invalid-feedback">A content hash is required, upload a file to generate it</div>
     </div>
 
     <!-- Button -->
     <div class="form-group">
       <button id="manifest" type="submit" class="btn btn-success pull-right"
-              [disabled]="!manifestForm.form.valid">Register</button>
+              [disabled]="!manifestForm.form.valid || !inputHash.value">Register</button>
     </div>
 
   </fieldset>

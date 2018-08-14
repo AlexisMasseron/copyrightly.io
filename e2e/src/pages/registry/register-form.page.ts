@@ -1,21 +1,25 @@
-import { element, by, browser, ElementFinder } from 'protractor';
+import { element, by, browser, ElementFinder, ExpectedConditions } from 'protractor';
+
+const path = require('path');
 
 export class RegisterFormPage {
 
-  private form: ElementFinder;
-  private author: ElementFinder;
-  private title: ElementFinder;
-  private hash: ElementFinder;
+  private form; author; title; hash; file; button: ElementFinder;
 
   constructor() {
     this.form = element(by.id('manifest-form'));
     this.author = this.form.element(by.id('inputAuthor'));
     this.title = this.form.element(by.id('inputTitle'));
     this.hash = this.form.element(by.id('inputHash'));
+    this.file = this.form.element(by.id('inputFile'));
+    this.button = this.form.element(by.id('manifest'));
   }
 
-  async fillRegisterForm(title: string, hash: string) {
+  async fillRegisterForm(title: string, relativePath: string) {
     await this.title.sendKeys(title);
-    await this.hash.sendKeys(hash);
+
+    const absolutePath = path.resolve(__dirname, relativePath);
+    await this.file.sendKeys(absolutePath);
+    await browser.waitForAngular();
   }
 }

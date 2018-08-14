@@ -6,7 +6,7 @@ Feature: Search Manifestation
   Scenario: Search a piece of content previously registered
     Given I'm on the home page and authenticated
     When I click submenu option "Search" in menu "Registry"
-    And I fill the search form with content hash "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG"
+    And I fill the search form with content hash "QmeY5M3QNTboahehXWriMXCzCpv4hvA6TdozRHCSx3cY6m"
     And I click the "Search" button
     Then I see a result with "Title" "A nice picture"
     And I see a result with "Authors" "0x627306090abaB3A6e1400e9345bC60c78a8BEf57"

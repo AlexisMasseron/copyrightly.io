@@ -1,4 +1,4 @@
-import { element, by, browser } from 'protractor';
+import { element, by, browser, ExpectedConditions } from 'protractor';
 
 export class MainContentPage {
 
@@ -14,7 +14,9 @@ export class MainContentPage {
   }
 
   async clickButtonWithText(text: string) {
-    await this.mainContainer.element(by.partialButtonText(text)).click();
+    const button = this.mainContainer.element(by.partialButtonText(text));
+    browser.wait(ExpectedConditions.elementToBeClickable(button));
+    await button.click();
     browser.waitForAngular();
   }
 }
