@@ -19,12 +19,14 @@
       <div class="invalid-feedback">A content title is required</div>
     </div>
 
-    <!-- Content hash input -->
+    <!-- Content file input -->
     <div class="form-group" [class.was-validated]="inputHash.dirty || inputHash.touched">
-      <label class="control-label" for="inputHash">Username*</label>
-      <input id="inputHash" name="inputHash" type="text" class="form-control" required
-             [(ngModel)]="manifestation.hash" #inputHash="ngModel" placeholder="Content hash">
-      <div class="invalid-feedback">A content hash is required</div>
+      <label class="control-label" for="inputHash">Content*</label>
+      <input id="inputHash" name="inputHash" type="text" class="form-control" disabled required
+             [(ngModel)]="manifestation.hash" #inputHash="ngModel" placeholder="Uploaded content hash">
+      <input id="inputFile" name="inputFile" type="file" class="form-control"
+             (change)="loadFile(inputFile)" #inputFile placeholder="Content file">
+      <div class="invalid-feedback">A content hash is required, upload a file to generate it</div>
     </div>
 
     <!-- Button -->

@@ -2,10 +2,11 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 import { takeUntil } from 'rxjs/operators';
 import { AlertsService } from '../../alerts/alerts.service';
+import { AuthenticationService } from '../../navbar/authentication.service';
 import { Web3Service } from '../../util/web3.service';
+import { IpfsService } from '../../util/ipfs.service';
 import { RegistryContractService } from '../registry-contract.service';
 import { Manifestation } from '../manifestation';
-import { AuthenticationService } from '../../navbar/authentication.service';
 
 @Component({
   selector: 'app-manifest-single',
@@ -19,6 +20,7 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
   manifestation = new Manifestation();
 
   constructor(private web3Service: Web3Service,
+              private ipfsService: IpfsService,
               private registryContractService: RegistryContractService,
               private alertsService: AlertsService,
               private authenticationService: AuthenticationService) {}
@@ -27,6 +29,15 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
     this.authenticationService.getSelectedAccount()
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(account => this.account = account );
+  }
+
+  loadFile(event) {
+    if (event.files.length > 0) {
+      this.ipfsService.uploadFile(event.files[0])
+      .subscribe((hash: string) => {
+        this.manifestation.hash = hash;
+      }, error => this.alertsService.error(error));
+    }
   }
 
   manifest() {
