@@ -40,6 +40,7 @@
     "@ng-bootstrap/ng-bootstrap": "^2.2.1",
     "bootstrap-css-only": "^4.1.1",
     "core-js": "^2.5.4",
+    "ipfs-api": "^23.0.0",
     "rxjs": "^6.0.0",
     "web3": "^1.0.0-beta.35",
     "zone.js": "^0.8.26"

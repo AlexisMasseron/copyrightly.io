@@ -1,30 +1,47 @@
 import { Injectable } from '@angular/core';
-
-declare let require: any;
-const IPFS_API = require('ipfs-api');
+import { Observable } from 'rxjs';
+import IPFS_API from 'ipfs-api';
 
 declare const Buffer;
 
 @Injectable()
 export class IpfsService {
-  private ipfs: any;
+  private ipfsApi: any;
 
   constructor() {
-    this.ipfs = IPFS_API('ipfs.infura.io', '5001', {protocol: 'https'});
+    this.ipfsApi = IPFS_API('ipfs.infura.io', '5001', {protocol: 'https'});
   }
 
-  public upload(file) {
-    const reader = new FileReader();
-    reader.addEventListener('load', (event: any) => {
-      const content = [];
-      content.push({
-        path: file.name,
-        content: Buffer.from(event.target.result)
-      });
-      this.ipfs.files.add(content, (err, res) => {
-        console.log(err, res);
-      });
+  public uploadFile (file): Observable<string> {
+    return new Observable((observer) => {
+      const reader = new FileReader();
+      reader.onprogress = (progress) => console.log(`Loaded: ${progress}`);
+      reader.onloadend = () => {
+        this.saveToIpfs(reader).subscribe((hash: string) => {
+          observer.next(hash);
+          observer.complete();
+        }, error => observer.error(error));
+      };
+      reader.readAsArrayBuffer(file);
+      return { unsubscribe() {} };
     });
-    reader.readAsArrayBuffer(file);
+  }
+
+  private saveToIpfs(reader): Observable<string> {
+    return new Observable((observer) => {
+      const buffer = Buffer.from(reader.result);
+      this.ipfsApi.add(buffer, { progress: (progress) => console.log(`Saved: ${progress}`) })
+      .then((response) => {
+        console.log(response);
+        console.log(`IPFS_ID: ${response[0].hash}`);
+        observer.next(response[0].hash);
+        observer.complete();
+      })
+      .catch((err) => {
+        console.error(err);
+        observer.error(new Error('Error uploading file, see logs for details'));
+      });
+      return { unsubscribe() {} };
+    });
   }
 }
