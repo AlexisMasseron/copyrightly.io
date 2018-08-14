@@ -21,13 +21,13 @@ export class AuthenticationService {
       .subscribe(
       (accounts: string[]) => {
         this.accounts.next(accounts);
-        this.selectedAccount.next(accounts[0])
+        this.selectedAccount.next(accounts[0]);
       },
       error => this.alertsService.error(error));
   }
 
   getSelectedAccount(): Observable<string> {
-    return this.selectedAccount.asObservable()
+    return this.selectedAccount.asObservable();
   }
 
   setSelectedAccount(account: string) {
@@ -35,6 +35,6 @@ export class AuthenticationService {
   }
 
   getAccounts(): Observable<string[]> {
-    return this.accounts.asObservable()
+    return this.accounts.asObservable();
   }
 }

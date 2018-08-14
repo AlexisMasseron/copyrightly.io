@@ -20,9 +20,9 @@ describe('Web3Service', () => {
 
   it('should set development local node as Web3 provider',
     inject([Web3Service], (service: Web3Service) => {
-      const localNode = 'http://' + TRUFFLE_CONFIG.networks.development.host + ':' +
-        TRUFFLE_CONFIG.networks.development.port;
-      expect(service.web3.currentProvider.host).toBe(localNode);
+      const localNode = 'ws://' + TRUFFLE_CONFIG.networks.development.host + ':' +
+        TRUFFLE_CONFIG.networks.development.port + '/';
+      expect(service.web3.currentProvider.connection.url).toBe(localNode);
     })
   );
 });

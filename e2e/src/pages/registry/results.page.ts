@@ -10,7 +10,7 @@ export class ResultsPage {
 
   async getResultAttributeValue(attribute: string): Promise<string> {
     browser.wait(ExpectedConditions.presenceOf(this.results.first()));
-    if (attribute == 'Title') {
+    if (attribute === 'Title') {
       return await this.results.all(by.css('.card-title')).getText();
     } else {
       return await this.results

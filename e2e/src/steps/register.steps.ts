@@ -5,5 +5,5 @@ const userForm = new RegisterFormPage();
 
 When(/^I fill the register form with title "([^"]*)" and content hash "([^"]*)"$/,
   async (title: string, hash: string) => {
-  await userForm.fillRegisterForm(title, hash)
+  await userForm.fillRegisterForm(title, hash);
 });

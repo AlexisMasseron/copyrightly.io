@@ -4,9 +4,9 @@
   "description": "ÐApp for Copyright Management",
   "scripts": {
     "postinstall": "node patch.js",
-    "lint": "npm-run-all -p -c solhint eslint",
+    "lint": "npm-run-all -p -c solhint nglint",
     "solhint": "solhint ./contracts/*.sol",
-    "eslint": "ng lint",
+    "nglint": "ng lint",
     "network": "ganache-cli -m 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'",
     "migrate": "truffle migrate --reset",
     "test": "npm-run-all -p -c soltest ngtest",

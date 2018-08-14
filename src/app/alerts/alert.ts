@@ -1,7 +1,7 @@
 export class Alert {
 
   private readonly _type: AlertType;
-  private readonly ALERT_CLASS: string[] = ["danger", "info", "success", "warning"];
+  private readonly ALERT_CLASS: string[] = ['danger', 'info', 'success', 'warning'];
   message: string;
   timerId: number;
 

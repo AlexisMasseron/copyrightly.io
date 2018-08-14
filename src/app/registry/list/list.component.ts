@@ -29,7 +29,7 @@ export class ListComponent implements OnInit, OnDestroy {
         this.registryContractService.listManifestEvents(account)))
       .subscribe(events => {
             this.manifestationEvents = events;
-          },error => this.alertsService.error(error));
+          }, error => this.alertsService.error(error));
   }
 
   ngOnDestroy() {

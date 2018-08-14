@@ -4,7 +4,6 @@ import { filter, flatMap, takeUntil } from 'rxjs/operators';
 import { RegistryContractService } from './registry/registry-contract.service';
 import { AlertsService } from './alerts/alerts.service';
 import { Web3Service } from './util/web3.service';
-import { Subscription } from 'rxjs/internal/Subscription';
 import { Subject } from 'rxjs/internal/Subject';
 import { AuthenticationService } from './navbar/authentication.service';
 
@@ -28,7 +27,7 @@ export class AppComponent implements OnInit, OnDestroy {
   watchManifestEvents() {
     this.authenticationService.getSelectedAccount()
       .pipe(takeUntil(this.ngUnsubscribe))
-      .pipe(filter(account => account != ''))
+      .pipe(filter(account => account !== ''))
       .pipe(flatMap((account: string) => this.registryContractService.watchManifestEvents(account)))
       .subscribe( (event: ManifestationEvent) => {
         console.log(event);

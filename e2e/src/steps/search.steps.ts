@@ -8,7 +8,7 @@ const results = new ResultsPage();
 
 When(/^I fill the search form with content hash "([^"]*)"$/,
   async (hash: string) => {
-  await searchForm.fillSearchForm(hash)
+  await searchForm.fillSearchForm(hash);
 });
 
 Then(/^I see a result with "([^"]*)" "([^"]*)"$/,

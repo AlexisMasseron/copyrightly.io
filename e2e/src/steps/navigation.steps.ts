@@ -9,7 +9,7 @@ const mainContent = new MainContentPage();
 
 Given(/^I'm on the home page and authenticated$/, async () => {
   await browser.get('http://localhost:4200');
-  expect(await navBar.getSelectedAccount()).to.not.be.empty;
+  expect(await navBar.getSelectedAccount()).to.have.lengthOf.at.least(1);
 });
 
 When(/^I go to the home page$/, async () => {

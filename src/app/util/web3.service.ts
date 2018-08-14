@@ -27,7 +27,7 @@ export class Web3Service {
       this.web3.eth.getAccounts()
         .then(function(accounts) {
           if (accounts.length === 0) {
-            observer.error('Couldn\'t get any accounts. Make sure you are logged in MetaMask')
+            observer.error('Couldn\'t get any accounts. Make sure you are logged in MetaMask');
           }
           observer.next(accounts);
           observer.complete();
