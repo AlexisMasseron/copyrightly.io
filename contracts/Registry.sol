@@ -2,6 +2,7 @@ pragma solidity ^0.4.24;
 
 import "zos-lib/contracts/migrations/Initializable.sol";
 import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
+import "zos-lib/contracts/upgradeability/AdminUpgradeabilityProxy.sol";
 
 
 /// @title Registry contract for copyright registration and authorship evidence storage
