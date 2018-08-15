@@ -7,7 +7,8 @@ import { Manifestation } from './manifestation';
 import { ReplaySubject } from 'rxjs';
 
 declare const require: any;
-const artifacts = require('../../assets/Registry.json');
+const artifacts = require('../../assets/contracts/Registry.json');
+const proxy = require('../../assets/contracts/AdminUpgradeabilityProxy.json');
 
 @Injectable({
   providedIn: 'root'
@@ -20,9 +21,14 @@ export class RegistryContractService {
               private ngZone: NgZone) {
     this.web3Service.web3.eth.net.getId()
     .then(network_id => {
-      const deployedAddress = artifacts.networks[network_id].address;
-      this.deployedContract.next(
-        new this.web3Service.web3.eth.Contract(artifacts.abi, deployedAddress));
+      if (proxy.networks[network_id]) {
+        const deployedAddress = proxy.networks[network_id].address;
+        this.deployedContract.next(
+          new this.web3Service.web3.eth.Contract(artifacts.abi, deployedAddress));
+      } else {
+        this.deployedContract.error(new Error('Registry contract ' +
+          'not found in current network with id '+network_id));
+      }
     });
   }
 
@@ -39,7 +45,7 @@ export class RegistryContractService {
           console.error(error);
           observer.error(new Error('Error retrieving manifestation, see logs for details'));
         });
-      });
+      }, error => observer.error(error));
       return { unsubscribe() {} };
     });
   }
@@ -61,7 +67,7 @@ export class RegistryContractService {
           console.error(error);
           observer.error(new Error('Error registering creation, see log for details'));
         });
-      });
+      }, error => observer.error(error));
       return { unsubscribe() {} };
     });
   }
@@ -93,7 +99,7 @@ export class RegistryContractService {
               this.ngZone.run(() =>
                 observer.error(new Error('Error listening to contract events, see log for details')));
             });
-          });
+          }, error => observer.error(error));
         });
       return { unsubscribe() {} };
     });
@@ -127,7 +133,7 @@ export class RegistryContractService {
           console.log(error);
           observer.error(new Error('Error listening to contract events, see log for details'));
         });
-      });
+      }, error => observer.error(error));
       return { unsubscribe() {} };
     });
   }
