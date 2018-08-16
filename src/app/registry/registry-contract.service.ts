@@ -2,7 +2,7 @@ import { Injectable, NgZone } from '@angular/core';
 import { Web3Service } from '../util/web3.service';
 import { Observable } from 'rxjs/internal/Observable';
 import { Event } from './event';
-import { ManifestationEvent } from './manifestation-event';
+import { ManifestEvent } from './manifest-event';
 import { Manifestation } from './manifestation';
 import { ReplaySubject } from 'rxjs';
 
@@ -50,24 +50,32 @@ export class RegistryContractService {
     });
   }
 
-  public manifest(manifestation: Manifestation, account: string): Observable<any> {
+  public manifest(manifestation: Manifestation, account: string): Observable<string | ManifestEvent> {
     return new Observable((observer) => {
-      this.deployedContract.subscribe(contract => {
-        contract.methods.manifestAuthorship(manifestation.hash, manifestation.title)
-          .send({from: account, gas: 100000})
-        .then(receipt => {
-          if (!receipt) {
-            observer.error(new Error('Transaction failed!'));
-          } else {
-            observer.next(receipt);
-            observer.complete();
-          }
-        })
-        .catch(error => {
-          console.error(error);
-          observer.error(new Error('Error registering creation, see log for details'));
-        });
-      }, error => observer.error(error));
+      this.ngZone.runOutsideAngular(() => {
+        this.deployedContract.subscribe(contract => {
+          contract.methods.manifestAuthorship(manifestation.hash, manifestation.title)
+          .send({from: account, gas: 150000})
+          .on('transactionHash', hash =>
+            this.ngZone.run(() => observer.next(hash)))
+          .on('receipt', receipt => {
+            let manifestEvent = new ManifestEvent(receipt.events.ManifestEvent);
+            this.web3Service.getBlockDate(receipt.events.ManifestEvent.blockNumber)
+            .subscribe(date => {
+              this.ngZone.run(() => {
+                manifestEvent.when = date;
+                observer.next(manifestEvent);
+                observer.complete();
+              });
+            });
+          })
+          .on('error', error => {
+            console.error(error);
+            this.ngZone.run(() => observer.error(
+              new Error('Error registering creation, see log for details')));
+          });
+        }, error => this.ngZone.run(() => observer.error(error)));
+      });
       return { unsubscribe() {} };
     });
   }
@@ -78,62 +86,49 @@ export class RegistryContractService {
         this.deployedContract.subscribe(contract => {
           contract.events.ManifestEvent({ filter: { manifester: account }, fromBlock: 'latest' })
             .on('data', event => {
-              const manifestation = new Manifestation({
-                hash: event.returnValues.hash,
-                title: event.returnValues.title,
-                authors: event.returnValues.authors
-              });
-              const manifestationEvent = new ManifestationEvent({
-                type: event.event,
-                who: event.returnValues.manifester,
-                what: manifestation
-              });
+              let manifestEvent = new ManifestEvent(event);
               this.web3Service.getBlockDate(event.blockNumber)
               .subscribe(date => {
-                manifestationEvent.when = date;
-                this.ngZone.run(() => observer.next(manifestationEvent));
+                this.ngZone.run(() => {
+                  manifestEvent.when = date;
+                  observer.next(manifestEvent);
+                });
               });
             })
             .on('error', error => {
               console.log(error);
-              this.ngZone.run(() =>
-                observer.error(new Error('Error listening to contract events, see log for details')));
+              this.ngZone.run(() => observer.error(
+                new Error('Error listening to contract events, see log for details')));
             });
-          }, error => observer.error(error));
+          }, error => this.ngZone.run(() => observer.error(error)));
         });
       return { unsubscribe() {} };
     });
   }
 
-  public listManifestEvents(account: string): Observable<ManifestationEvent[]> {
+  public listManifestEvents(account: string): Observable<ManifestEvent[]> {
     return new Observable((observer) => {
-      this.deployedContract.subscribe(contract => {
-        contract.getPastEvents('ManifestEvent',
-          { filter: { manifester: account }, fromBlock: 0 })
-        .then(events => {
-          observer.next(events.map(event => {
-            const manifestation = new Manifestation({
-              hash: event.returnValues.hash,
-              title: event.returnValues.title,
-              authors: event.returnValues.authors
-            });
-            const manifestationEvent = new ManifestationEvent({
-              type: event.event,
-              who: event.returnValues.manifester,
-              what: manifestation
-            });
-            this.web3Service.getBlockDate(event.blockNumber)
-            .subscribe(date => {
-              this.ngZone.run(() => manifestationEvent.when = date);
-            });
-            return manifestationEvent;
-          }));
-        })
-        .catch(error => {
-          console.log(error);
-          observer.error(new Error('Error listening to contract events, see log for details'));
-        });
-      }, error => observer.error(error));
+      this.ngZone.runOutsideAngular(() => {
+        this.deployedContract.subscribe(contract => {
+          contract.getPastEvents('ManifestEvent',
+            {filter: {manifester: account}, fromBlock: 0})
+          .then(events => {
+            observer.next(events.map(event => {
+              let manifestEvent = new ManifestEvent(event);
+              this.web3Service.getBlockDate(event.blockNumber)
+              .subscribe(date =>
+                this.ngZone.run(() => manifestEvent.when = date)
+              );
+              return manifestEvent;
+            }));
+          })
+          .catch(error => {
+            console.log(error);
+            this.ngZone.run(() => observer.error(
+              new Error('Error listening to contract events, see log for details')));
+          });
+        }, error => this.ngZone.run(() => observer.error(error)));
+      });
       return { unsubscribe() {} };
     });
   }

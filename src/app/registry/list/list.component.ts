@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 import { flatMap, takeUntil } from 'rxjs/operators';
 import { AlertsService } from '../../alerts/alerts.service';
 import { Web3Service } from '../../util/web3.service';
 import { RegistryContractService } from '../registry-contract.service';
 import { AuthenticationService } from '../../navbar/authentication.service';
-import { ManifestationEvent } from '../manifestation-event';
+import { ManifestEvent } from '../manifest-event';
 
 @Component({
   selector: 'app-list',
@@ -15,7 +15,7 @@ import { ManifestationEvent } from '../manifestation-event';
 export class ListComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
-  public manifestationEvents: ManifestationEvent[] = [];
+  public manifestationEvents: ManifestEvent[] = [];
 
   constructor(private web3Service: Web3Service,
               private registryContractService: RegistryContractService,

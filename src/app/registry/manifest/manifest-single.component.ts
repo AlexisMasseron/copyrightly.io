@@ -50,10 +50,16 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
   manifest() {
     this.registryContractService.manifest(this.manifestation, this.account)
       .pipe(takeUntil(this.ngUnsubscribe))
-      .subscribe((receipt) => {
-        console.log('Transaction receipt: ' + receipt.transactionHash);
-        this.alertsService.info('Registration submitted, waiting for confirmation...<br>' +
-          'Receipt: <a href="' + receipt + '">' + receipt.transactionHash + '</a>');
+      .subscribe(result => {
+        if (typeof result === "string") {
+          console.log('Transaction hash: ' + result);
+          this.alertsService.info('Registration submitted, waiting for confirmation...<br>' +
+            'Receipt: <a target="_blank" href="https://ropsten.etherscan.io/tx/' + result + '">' + result + '</a>');
+          this.manifestation.hash = '';
+        } else {
+          console.log(result);
+          this.alertsService.success(result.toHTML());
+        }
       }, error => {
         this.alertsService.error(error);
       });

@@ -1,12 +1,16 @@
 import { Event } from './event';
 import { Manifestation } from './manifestation';
 
-export class ManifestationEvent extends Event {
+export class ManifestEvent extends Event {
   what: Manifestation;
 
-  constructor(values: Object = {}) {
-    super(values);
-    this.what = values['what'];
+  constructor(event: any) {
+    super({ type: event.event, who: event.returnValues.manifester });
+    this.what = new Manifestation({
+      hash: event.returnValues.hash,
+      title: event.returnValues.title,
+      authors: event.returnValues.authors
+    });
   }
 
   toHTML(): string {
