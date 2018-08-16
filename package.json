@@ -1,5 +1,5 @@
 {
-  "name": "copyrightly.eth",
+  "name": "copyrightly.io",
   "version": "0.0.1",
   "description": "ÐApp for Copyright Management",
   "scripts": {
@@ -80,12 +80,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rogargon/copyrightly.eth.git"
+    "url": "git+https://github.com/rogargon/copyrightly.io.git"
   },
   "author": "http://rhizomik.net/~roberto/",
   "license": "SEE LICENSE IN LICENSE",
   "bugs": {
-    "url": "https://github.com/rogargon/copyrightly.eth/issues"
+    "url": "https://github.com/rogargon/copyrightly.io/issues"
   },
   "browser": { "fs": false }
 }
