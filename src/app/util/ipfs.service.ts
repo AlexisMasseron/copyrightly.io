@@ -16,7 +16,7 @@ export class IpfsService {
     return new Observable((observer) => {
       this.ngZone.runOutsideAngular(() => {
         const reader = new FileReader();
-        reader.onprogress = (progress) => console.log(`Loaded: ${progress}`);
+        reader.onprogress = (progress) => console.log(`Loaded: ${progress.loaded}/${progress.total}`);
         reader.onloadend = () => {
           this.saveToIpfs(reader).subscribe((hash: string) => {
             this.ngZone.run(() => {
@@ -37,7 +37,6 @@ export class IpfsService {
         const buffer = Buffer.from(reader.result);
         this.ipfsApi.add(buffer, {progress: (progress) => console.log(`Saved: ${progress}`)})
         .then((response) => {
-          console.log(response);
           console.log(`IPFS_ID: ${response[0].hash}`);
           observer.next(response[0].hash);
           observer.complete();
