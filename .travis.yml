@@ -34,7 +34,7 @@ script:
   - npm run lint
   - npm run network > /dev/null &
   - npm run migrate
-  - npm test
+  - npm run soltest
   - npm run e2e
   - npm run migrate -- --network ropsten
   - npm run build
@@ -47,5 +47,5 @@ after_success:
       docker build -f Dockerfile -t $REPO:$TRAVIS_COMMIT .;
       docker tag $REPO:$TRAVIS_COMMIT $REPO:$TAG;
       docker push $REPO;
-      rancher-compose --project-name copyrightly-io --verbose up --pull --force-upgrade --confirm-upgrade -d
+      rancher-compose --project-name copyrightly-io --verbose up --pull --force-upgrade --confirm-upgrade -d;
     fi
