@@ -41,7 +41,8 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
         this.manifestation.hash = hash;
       }, error => {
         this.status = 'Register';
-        this.alertsService.error(error) });
+        this.alertsService.error(error);
+      });
     } else {
       this.manifestation.hash = '';
     }
@@ -51,7 +52,7 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
     this.registryContractService.manifest(this.manifestation, this.account)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(result => {
-        if (typeof result === "string") {
+        if (typeof result === 'string') {
           console.log('Transaction hash: ' + result);
           this.alertsService.info('Registration submitted, waiting for confirmation...<br>' +
             'Receipt: <a target="_blank" href="https://ropsten.etherscan.io/tx/' + result + '">' + result + '</a>');

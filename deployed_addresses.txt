@@ -1,6 +1,6 @@
 Ropsten:
- - Registry: 0xecca3be188a76e96eaa2e71bab51b2f4a2ead03b
- - AdminUpgradeabilityProxy: 0xb41af51f5e3f4f8f2eafa3e2216804a5cf276243
+ - Registry: 0xf269d85bd7575fcd9dcbca3c04bc7acc47d40f47
+ - AdminUpgradeabilityProxy: 0x92d2ba2cb7d74ddb3754207f2a188f7a31d09d19
 
 Rinkeby:
  - Registry: 0xc9959d09475ea04efbb7d319e6048c62d3692b6d

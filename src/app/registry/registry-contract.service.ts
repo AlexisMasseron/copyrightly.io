@@ -27,7 +27,7 @@ export class RegistryContractService {
           new this.web3Service.web3.eth.Contract(artifacts.abi, deployedAddress));
       } else {
         this.deployedContract.error(new Error('Registry contract ' +
-          'not found in current network with id '+network_id));
+          'not found in current network with id ' + network_id));
       }
     });
   }
@@ -59,7 +59,7 @@ export class RegistryContractService {
           .on('transactionHash', hash =>
             this.ngZone.run(() => observer.next(hash)))
           .on('receipt', receipt => {
-            let manifestEvent = new ManifestEvent(receipt.events.ManifestEvent);
+            const manifestEvent = new ManifestEvent(receipt.events.ManifestEvent);
             this.web3Service.getBlockDate(receipt.events.ManifestEvent.blockNumber)
             .subscribe(date => {
               this.ngZone.run(() => {
@@ -86,7 +86,7 @@ export class RegistryContractService {
         this.deployedContract.subscribe(contract => {
           contract.events.ManifestEvent({ filter: { manifester: account }, fromBlock: 'latest' })
             .on('data', event => {
-              let manifestEvent = new ManifestEvent(event);
+              const manifestEvent = new ManifestEvent(event);
               this.web3Service.getBlockDate(event.blockNumber)
               .subscribe(date => {
                 this.ngZone.run(() => {
@@ -114,7 +114,7 @@ export class RegistryContractService {
             {filter: {manifester: account}, fromBlock: 0})
           .then(events => {
             observer.next(events.map(event => {
-              let manifestEvent = new ManifestEvent(event);
+              const manifestEvent = new ManifestEvent(event);
               this.web3Service.getBlockDate(event.blockNumber)
               .subscribe(date =>
                 this.ngZone.run(() => manifestEvent.when = date)
