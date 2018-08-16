@@ -18,6 +18,7 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
 
   account: string;
   manifestation = new Manifestation();
+  status = 'Register';
 
   constructor(private web3Service: Web3Service,
               private ipfsService: IpfsService,
@@ -33,10 +34,14 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
 
   loadFile(event) {
     if (event.files.length > 0) {
+      this.status = 'Uploading...';
       this.ipfsService.uploadFile(event.files[0])
       .subscribe((hash: string) => {
+        this.status = 'Register';
         this.manifestation.hash = hash;
-      }, error => this.alertsService.error(error));
+      }, error => {
+        this.status = 'Register';
+        this.alertsService.error(error) });
     } else {
       this.manifestation.hash = '';
     }
