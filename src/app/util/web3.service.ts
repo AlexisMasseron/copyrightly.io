@@ -44,7 +44,7 @@ export class Web3Service {
     return new Observable((observer) => {
       this.web3.eth.getBlock(blockNumber)
       .then(function(block) {
-        observer.next(new Date(block.timestamp));
+        observer.next(new Date(block.timestamp * 1000));
         observer.complete();
       })
       .catch(function(error) {
