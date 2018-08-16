@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ManifestationEvent } from './registry/manifestation-event';
+import { ManifestEvent } from './registry/manifest-event';
 import { filter, flatMap, takeUntil } from 'rxjs/operators';
 import { RegistryContractService } from './registry/registry-contract.service';
 import { AlertsService } from './alerts/alerts.service';
@@ -21,7 +21,8 @@ export class AppComponent implements OnInit, OnDestroy {
               private alertsService: AlertsService) {}
 
   ngOnInit(): void {
-    this.watchManifestEvents();
+    // this.watchManifestEvents();
+    // TODO: Disabled because not working with current MetaMask, using events in tx receipt instead
   }
 
   watchManifestEvents() {
@@ -29,7 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.ngUnsubscribe))
       .pipe(filter(account => account !== ''))
       .pipe(flatMap((account: string) => this.registryContractService.watchManifestEvents(account)))
-      .subscribe( (event: ManifestationEvent) => {
+      .subscribe( (event: ManifestEvent) => {
         console.log(event);
         this.alertsService.success(event.toHTML());
       }, error => {
