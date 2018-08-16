@@ -36,6 +36,15 @@ module.exports = {
       network_id: 3,
       gas: 1700000,
       gasPrice: 1000000000
+    },
+    rinkeby: {
+      provider: function() {
+        return new HDWalletProvider("candy maple cake sugar pudding cream honey rich smooth crumble sweet treat",
+          "https://rinkeby.infura.io/" + process.env.INFURA_TOKEN, 0, 2)
+      },
+      network_id: 4,
+      gas: 1700000,
+      gasPrice: 1000000000
     }
   }
 };
