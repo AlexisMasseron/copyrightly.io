@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
-import { flatMap, takeUntil } from 'rxjs/operators';
+import { filter, flatMap, takeUntil } from 'rxjs/operators';
 import { AlertsService } from '../../alerts/alerts.service';
 import { Web3Service } from '../../util/web3.service';
 import { RegistryContractService } from '../registry-contract.service';
@@ -25,6 +25,7 @@ export class ListComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.authenticationService.getSelectedAccount()
       .pipe(takeUntil(this.ngUnsubscribe))
+      .pipe(filter(account => account !== ''))
       .pipe(flatMap((account: string) =>
         this.registryContractService.listManifestEvents(account)))
       .subscribe(events => {
