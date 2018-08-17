@@ -10,7 +10,6 @@
 
 # Protractor report
 /e2e/protractor-cucumber-report.json
-/e2e/protractor-cucumber_report.html
 
 # IDEs and editors
 /.idea

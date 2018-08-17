@@ -2,9 +2,33 @@
 
 Decentralized Application (ÐApp) for Copyright Management
 
+[![Build Status](https://travis-ci.org/rogargon/copyrightly.io.svg?branch=master)](https://travis-ci.org/rogargon/copyrightly.io)
+
+## Table of Contents
+
+* [Features](#features)
+* [Running Locally](#running-locally)
+   * [Required Tools](#required-tools)
+   * [Smart Contracts Deployment](#smart-contracts-deployment)
+   * [Launch Web Application](#launch-web-application)
+* [Testing](#testing)
+   * [Registry Contract](#registry-contract)
+* [Design Pattern Requirements](#design-pattern-requirements)
+* [Security Tools / Common Attacks](#security-tools--common-attacks)
+* [Library / EthPM](#library--ethpm)
+* [Additional Requirements](#additional-requirements)
+* [Stretch Goals](#stretch-goals)
+   * [IPFS](#ipfs)
+   * [uPort](#uport)
+   * [Ethereum Name Service](#ethereum-name-service)
+   * [Oracles](#oracles)
+   * [Upgradable Pattern Registry or Delegation](#upgradable-pattern-registry-or-delegation)
+   * [LLL / Vyper](#lll--vyper)
+   * [Testnet Deployment](#testnet-deployment)
+
 ## Features
 
-Functionality provided to the users by the ÐApp through its Web application:
+The functionality provided to the users by the ÐApp through its Web application is:
 
 1. [Minifest Single Authorship](e2e/features/1.manifest-single-authorship.feature)
   * Scenario: Register a piece of content not previously registered
@@ -17,14 +41,15 @@ Functionality provided to the users by the ÐApp through its Web application:
 3. [List Own Manifestations](e2e/features/3.list-own-manifestations.feature)
   * Scenario: List when I have previously registered a piece of content
 
-For each feature, the linked feature file the specifies the steps to accomplish each scenario.
+For each feature, the linked feature file specifies the steps to accomplish each scenario.
 The steps are implemented in the [steps](e2e/src/steps) and [pages](e2e/src/pages) folders so 
 it is possible to automatically check that the application implements the specified behaviour
 using End-to-End (E2E) tests based on [Cucumber](https://cucumber.io) and [Protractor](https://www.protractortest.org). 
 
-A report of the feature tests results is available: [protractor-cucumber_report](e2e/protractor-cucumber_report.html)
+A report of the feature tests results is available: 
+[protractor-cucumber_report](https://rawgit.com/rogargon/copyrightly.io/master/e2e/protractor-cucumber_report.html)
 
-## Running on a Local Development Server
+## Running Locally
 
 ### Required Tools
 
@@ -41,7 +66,7 @@ npm install
 
 ### Smart Contracts Deployment
 
-After all dependencies have been installed by npm, it is time to deploy the ÐApp smart contracts.
+After npm has installed all dependencies, it is time to deploy the ÐApp smart contracts.
 
 First, start a local development network:
 
@@ -49,7 +74,7 @@ First, start a local development network:
 npm run network
 ```
 
-This will start Ganache in http://127.0.0.1:8545 together with 10 sample accounts. 
+This command will start Ganache in http://127.0.0.1:8545 together with 10 sample accounts. 
 These accounts are fixed using the seed 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'.
 
 Then, deploy the contracts from a different terminal (leave Ganache running on the previous one):
@@ -59,11 +84,12 @@ npm run migrate
 ```
 
 If there are no errors, the contracts will be then deployed to the local development network. 
-In case the contract have been previously deployed and we want to force redeployment, use the following command:
 
-```
-npm run migrate -- --reset
-```
+> In case the contracts have been previously deployed, and we want to force redeployment:
+> 
+> ```
+> npm run migrate -- --reset
+> ```
 
 ### Launch Web Application
 
@@ -75,12 +101,16 @@ npm start
 
 Once started, it will be available at: [http://localhost:4200]()
 
-The client application provides the features listed [here](). It can be tested using the accounts provided by Ganache without requiring
+The client application provides the features listed in the [Features](#features) section above. 
+
+It can be tested using the accounts provided by Ganache without requiring
 a Web3 enabled browser. 
 
-However, if the MetaMask extension is available, it can be used to configure custom accounts and to sign transactions. 
-Support for uPort is pending but other Web3 enabled browsers can also be used, for instance [Cipher](https://www.cipherbrowser.com/) in mobile devices,
-which provides nice features like transactions signing using TouchID/FaceID on iOS or Fingerprint Authentication on Android.
+However, if the [MetaMask](https://metamask.io) extension is available, it can be used to 
+configure custom accounts and to sign transactions. Support for uPort is pending, but other 
+Web3 enabled browsers can also be used, for instance [Cipher](https://www.cipherbrowser.com) 
+in mobile devices. It provides nice features like transactions signing using TouchID/FaceID on iOS 
+or Fingerprint Authentication on Android.
 
 ## Testing
 
@@ -90,24 +120,24 @@ The Solidity smart contracts feature a set of tests that can be launched with th
 npm run soltest
 ```
 
-The application contract, and all those imported by them, are compiled before running the tests. 
-Some warnings might appear but all them are related to the imported contracts, 
-Proxy and AdminUpgradeabilityProxy from ZeppelinOs.
+The application contracts, and all those imported by them, are compiled before running the tests. 
+Some warnings might appear, but all of them are related to the imported contracts: 
+*Proxy* and *AdminUpgradeabilityProxy* from ZeppelinOs.
 
-The expected output contains the following results, described for each contract:
+The following sections describe the test for each smart contract, link to the test files and list 
+their expected outputs.
 
 ### Registry Contract
 
 This contract is responsible for registering *Manifestations*, the expressions of authors ideas into
-pieces of content that can be then used to prove authorship. A manifestation is based on a content 
-hash, some metadata (currently just the title) and the address of the account corresponding to its
+pieces of content that can be then used to prove authorship. A manifestation is based on a content hash, 
+some metadata (currently just the title) and the address of the account corresponding to its
 author (or a list of addresses in the case of joint authorship).
 
-The are 4 Solidity Tests that test the fundamental behaviour of the contract, i.e. that the contract
-can register single and joint authorship (multiple authors for the same manifestation). It is also
-tested that using the joint authorship providing just one author is equivalent to stating single
-authorship. Finally, it is tested that the contract fails if and already registered content hash is
-used.
+There are 4 Solidity Tests that test the fundamental behavior of the contract: that the contract
+can register single and joint authorship (multiple authors for the same manifestation), that registering 
+joint authorship providing just one author is equivalent to stating single authorship, and, finally, 
+that the contract fails if and already registered content hash is used.
 
 [TestRegistry.sol](test/TestRegistry.sol)
 ```
@@ -135,9 +165,9 @@ retrieved.
     ✓ shouldn't register a previously registered joint authorship manifestation
 ```
 
-Then, there are tests for the behaviours inherited from the contracts extended by Registry. 
+Then, there are tests for the behaviors inherited from the contracts extended by *Registry*. 
 
-From OpenZeppelin's Pausable and Ownable, that the contract can be paused and resumed but just
+From OpenZeppelin's *Pausable* and *Ownable*, that the contract can be paused and resumed but just
 by the contract owner.
 
 [registry_pausable.test.js](test/registry_pausable.test.js)
@@ -148,11 +178,11 @@ by the contract owner.
     ✓ shouldn't be paused by a non-owner
 ```
 
-From ZeppelinOS' AdminUpgradeabilityProxy, that Registry is upgradable and retains state after an update
+From ZeppelinOS' *AdminUpgradeabilityProxy*, that *Registry* is upgradable and retains state after an update
 after it is upgraded by the proxy admin. Then, that the proxy admin cannot use the proxy to 
-call the underlying Registry contract, required for security reasons. Finally, that the Registry
+call the underlying *Registry* contract, required for security reasons. Finally, that the Registry
 cannot be re-initialized after it has been already initialized during the initial deployment
-(migration). This behaviour is required to make Registry upgradable, inherited by extending
+(migration). This behavior is required to make Registry upgradable, inherited by extending
 
 [registry_upgradeability.test.js](test/registry_upgradeability.test.js)
 ```
@@ -170,7 +200,7 @@ The output of the test should end with the following statement about all 16 bein
 
 ## Design Pattern Requirements
 
-Implemented a "Circuit Breaker / Emergency Stop" for the Registry contract using OpenZeppelin Pausable contract, 
+Implemented a "Circuit Breaker / Emergency Stop" for the Registry contract using OpenZeppelin *Pausable* contract, 
 [https://openzeppelin.org/api/docs/lifecycle_Pausable.html]()
 
 What other design patterns have you used or not used?
@@ -201,12 +231,12 @@ At least one of the project contracts includes an import from a library or an et
 If none of the project contracts do, then there is a demonstration contract that does.
 
 Imported from ZeppelinOS:
- - AdminUpgradeabilityProxy: the proxy contract to implement upgradeability.
- - Initializable: extended by upgradable contracts so they can be initialized from the corresponding proxy.
+ - *AdminUpgradeabilityProxy*: the proxy contract to implement upgradeability.
+ - *Initializable*: extended by upgradable contracts so they can be initialized from the corresponding proxy.
  
 Imported from OpenZeppelin:
- - Pausable: to implement the "Circuit Breaker / Emergency Stop" design pattern. 
- It also extends Ownable to control that just the owner can stop it
+ - *Pausable*: to implement the "Circuit Breaker / Emergency Stop" design pattern. 
+ It also extends *Ownable* to control that just the owner can stop it.
 
 ## Additional Requirements
 
@@ -215,37 +245,35 @@ https://solidity.readthedocs.io/en/v0.4.21/layout-of-source-files.html#comments"
 
 ## Stretch Goals
 
-### Project uses IPFS
+### IPFS
 
-When a user registers a piece of content using a digital file, it is uploaded to IPFS and the corresponding IPFS identifier (hash) is
-used to register the manifestation of the content in Ethereum.
+When a user registers a piece of content using a digital file, it is uploaded to IPFS and 
+the corresponding IPFS identifier (hash) is used to register the manifestation of the content in Ethereum.
 
-### Project uses uPort
+### uPort
 
-### Project uses the Ethereum Name Service
+### Ethereum Name Service
 
-### Project uses an Oracle
+### Oracles
 
-### Project implements an Upgradable Pattern Registry or Delegation
+### Upgradable Pattern Registry or Delegation
 
 To make contracts upgradable, the Delegation pattern has been used through a Relay or Proxy. 
-Concretely, the AdminUpgradeabilityProxy provided by the ZeppelinOS Library, as detailed in 
+Concretely, the *AdminUpgradeabilityProxy* provided by the ZeppelinOS Library, as detailed in 
 [https://docs.zeppelinos.org/docs/low_level_contract.html]()
 
-### Project includes one of their smart contracts implemented in LLL / Vyper
+### LLL / Vyper
 
 ### Testnet Deployment
 
-Deployments to both Ropsten and Rinkeby at the addresses detailed in the file at the project root: "deployed_addresses.txt".
+Deployments to both Ropsten and Rinkeby at the addresses detailed in the file: [deployed_addresses.txt](deployed_addresses.txt)
 
 **Ropsten** deployment uses private HDWallet, so the owner and proxy admin accounts are not available. 
-These are the contracts used by the client Web application deployed at:
-
-[https://copyrightly.io]()
+These are the contracts used by the client Web application deployed at: [https://copyrightly.io]()
 
 **Rinkeby** using public HDWallet with mnemonic: 
 
     candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 
-Therefore, anyone can test restricted methods like *pause()* or *unpause()* for the contracts' owner (account[0]) or 
-*upgradeTo()* for the proxy contracts' admin (accounts[1]).
+Therefore, anyone can test restricted methods like *pause()* or *unpause()* for the contracts' owner ( account[0] ) or 
+*upgradeTo()* for the proxy contracts' admin ( accounts[1] ).
