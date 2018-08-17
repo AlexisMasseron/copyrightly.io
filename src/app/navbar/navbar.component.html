@@ -11,7 +11,7 @@
   <div class="collapse navbar-collapse" id="navbarContent" [ngbCollapse]="isCollapsed">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item" [routerLinkActive]="'active'" [routerLinkActiveOptions]="{ exact: true }">
-        <a class="nav-link" [routerLink]="['/about']"><span class="fa fa-question-circle"></span> About</a>
+        <a class="nav-link" [routerLink]="['/about']">About</a>
       </li>
       <li class="nav-item dropdown" ngbDropdown>
         <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
@@ -29,13 +29,18 @@
       </li>
     </ul>
     <ul class="navbar-nav">
-        <select id="accounts" name="accounts" class="form-control col" required
-                [(ngModel)]="account" (ngModelChange)="onChange($event)">
-          <option *ngFor="let account of accounts" [ngValue]="account">{{account}}</option>
-        </select>
-        <button id="refresh-accounts" type="button" (click)="refreshAccounts()">
-          <span class="fa fa-sync-alt"></span>
-        </button>
+      <li class="nav-item">
+        <span class="nav-link">Account:
+          <select id="accounts" name="accounts" class="" required title="{{account}}"
+                  [(ngModel)]="account" (ngModelChange)="onChange($event)">
+            <option *ngFor="let account of accounts" [ngValue]="account" title="{{account}}">
+              {{account | slice:0:6}}...{{account | slice:-4}}</option>
+          </select>
+          <a id="refresh-accounts" class="refresh-account" (click)="refreshAccounts()">
+            <span class="fa fa-sync-alt"></span>
+          </a>
+        </span>
+      </li>
     </ul>
   </div>
 </nav>
