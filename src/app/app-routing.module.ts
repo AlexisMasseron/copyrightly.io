@@ -4,6 +4,7 @@ import { AboutComponent } from './about/about.component';
 import { ManifestSingleComponent } from './registry/manifest/manifest-single.component';
 import { RegistrySearchComponent } from './registry/search/registry-search.component';
 import { ListComponent } from './registry/list/list.component';
+import { ManifestationDetailsComponent } from './registry/details/manifestation-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/about', pathMatch: 'full' },
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'register', component: ManifestSingleComponent },
   { path: 'search', component: RegistrySearchComponent },
   { path: 'list', component: ListComponent },
+  { path: 'manifestations/:id', component: ManifestationDetailsComponent },
 ];
 
 @NgModule({

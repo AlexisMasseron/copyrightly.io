@@ -17,4 +17,7 @@
       <p class="card-text">{{event?.when}}</p>
     </div>
   </div>
+  <div class="card-footer">
+    <a [routerLink]="['/manifestations', event?.what?.hash]" class="btn btn-info">Details</a>
+  </div>
 </div>

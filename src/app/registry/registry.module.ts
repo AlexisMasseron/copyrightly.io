@@ -9,13 +9,15 @@ import { ManifestSingleComponent } from './manifest/manifest-single.component';
 import { RegistrySearchComponent } from './search/registry-search.component';
 import { ListComponent } from './list/list.component';
 import { ManifestUnregisteredDirective } from './manifest/manifest-unregistered.directive';
+import { ManifestationDetailsComponent } from './details/manifestation-details.component';
 
 @NgModule({
   declarations: [
     ManifestSingleComponent,
     RegistrySearchComponent,
     ListComponent,
-    ManifestUnregisteredDirective
+    ManifestUnregisteredDirective,
+    ManifestationDetailsComponent
   ],
   imports: [
     CommonModule,

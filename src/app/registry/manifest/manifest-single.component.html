@@ -39,6 +39,7 @@
       <button id="manifest" type="submit" class="btn btn-success pull-right"
               [disabled]="!manifestForm.form.valid || !inputHash.value">{{status}}</button>
       <button id="inspect" type="button" class="btn btn-info pull-right ml-2"
+              [routerLink]="['/manifestations', manifestation.hash]"
               [hidden]="!inputHash.errors?.manifestUnregistered">Inspect</button>
     </div>
 
