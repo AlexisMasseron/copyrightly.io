@@ -8,12 +8,14 @@ import { RegistryContractService } from './registry-contract.service';
 import { ManifestSingleComponent } from './manifest/manifest-single.component';
 import { RegistrySearchComponent } from './search/registry-search.component';
 import { ListComponent } from './list/list.component';
+import { ManifestUnregisteredDirective } from './manifest/manifest-unregistered.directive';
 
 @NgModule({
   declarations: [
     ManifestSingleComponent,
     RegistrySearchComponent,
-    ListComponent
+    ListComponent,
+    ManifestUnregisteredDirective
   ],
   imports: [
     CommonModule,

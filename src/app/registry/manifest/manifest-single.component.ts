@@ -7,6 +7,7 @@ import { Web3Service } from '../../util/web3.service';
 import { IpfsService } from '../../util/ipfs.service';
 import { RegistryContractService } from '../registry-contract.service';
 import { Manifestation } from '../manifestation';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-manifest-single',
@@ -48,7 +49,7 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
     }
   }
 
-  manifest() {
+  manifest(form: NgForm) {
     this.registryContractService.manifest(this.manifestation, this.account)
       .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(result => {
@@ -56,7 +57,7 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
           console.log('Transaction hash: ' + result);
           this.alertsService.info('Registration submitted, waiting for confirmation...<br>' +
             'Receipt: <a target="_blank" href="https://ropsten.etherscan.io/tx/' + result + '">' + result + '</a>');
-          this.manifestation.hash = '';
+          form.reset();
         } else {
           console.log(result);
           this.alertsService.success(result.toHTML());
