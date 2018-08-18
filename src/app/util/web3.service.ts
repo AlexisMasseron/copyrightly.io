@@ -11,16 +11,28 @@ export class Web3Service {
   public web3: any;
 
   constructor() {
-    if (typeof window.web3 !== 'undefined') {
-      console.log('Using Web3 provided by the browser');
-      this.web3 = new Web3(window.web3.currentProvider);
-    } else {
+    if (typeof window.web3 === 'undefined') {
+      // Listen for provider injection
+      window.addEventListener('message', ({ data }) => {
+        if (data && data.type && data.type === 'ETHEREUM_PROVIDER_SUCCESS') {
+          console.log('Using Web3 provided by the browser as requested');
+          this.web3 = new Web3(window.ethereum);
+        }
+      });
+      // Request provider
+      window.postMessage({ type: 'ETHEREUM_PROVIDER_REQUEST' }, '*');
+
+      // Default, use local network defined by Truffle config if none provided
       const localNode = 'ws://' + TRUFFLE_CONFIG.networks.development.host + ':' +
         TRUFFLE_CONFIG.networks.development.port;
       console.log('Using Web3 for local node: ' + localNode);
       this.web3 = new Web3(new Web3.providers.WebsocketProvider(localNode));
+    } else {
+      console.log('Using Web3 provided by the browser');
+      this.web3 = new Web3(window.web3.currentProvider);
     }
   }
+
 
   public getAccounts(): Observable<string[]> {
     return new Observable((observer) => {
