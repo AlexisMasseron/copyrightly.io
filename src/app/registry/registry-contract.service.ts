@@ -34,18 +34,23 @@ export class RegistryContractService {
 
   public getManifestation(hash: string): Observable<Manifestation> {
     return new Observable((observer) => {
-      this.deployedContract.subscribe(contract => {
-        contract.methods.getManifestation(hash).call()
-        .then(function (result) {
-          observer.next(new Manifestation(
-            {hash: hash, title: result[0], authors: result[1]}));
-          observer.complete();
-        })
-        .catch(function (error) {
-          console.error(error);
-          observer.error(new Error('Error retrieving manifestation, see logs for details'));
-        });
-      }, error => observer.error(error));
+      this.ngZone.runOutsideAngular(() => {
+        this.deployedContract.subscribe(contract => {
+          contract.methods.getManifestation(hash).call()
+          .then(result => {
+            this.ngZone.run(() => {
+              observer.next(new Manifestation(
+                {hash: hash, title: result[0], authors: result[1]}));
+              observer.complete();
+            });
+          })
+          .catch(error => {
+            console.error(error);
+            this.ngZone.run(() =>
+              observer.error(new Error('Error retrieving manifestation, see logs for details')));
+          });
+        }, error => this.ngZone.run(() => observer.error(error)));
+      });
       return { unsubscribe() {} };
     });
   }
