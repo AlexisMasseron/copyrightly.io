@@ -1,12 +1,13 @@
-import { element, by, browser, ExpectedConditions } from 'protractor';
+import { element, by, browser, ExpectedConditions, ElementFinder } from 'protractor';
 
 export class NavigationBar {
-  private navbar;
-  private accounts;
-  private refreshButton;
-  private home;
+  private navbar: ElementFinder;
+  private accounts: ElementFinder;
+  private refreshButton: ElementFinder;
+  private home: ElementFinder;
 
   constructor() {
+    this.navbar = element(by.id('navbar'));
     this.accounts = element(by.id('accounts'));
     this.refreshButton = element(by.id('refresh-accounts'));
     this.home = element(by.className('navbar-brand'));
@@ -17,7 +18,7 @@ export class NavigationBar {
   }
 
   async goToMenuOption(option: string) {
-    await element(by.partialLinkText(option)).click();
+    await this.navbar.element(by.partialLinkText(option)).click();
   }
 
   async refreshAccounts() {

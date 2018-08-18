@@ -29,3 +29,15 @@ When(/^I click submenu option "([^"]*)" in menu "([^"]*)"$/,
 When(/^I click the "([^"]*)" button$/, async (text: string) => {
   await mainContent.clickButtonWithText(text);
 });
+
+Then(/^The "([^"]*)" button is disabled$/, async (text: string) => {
+  const button = await mainContent.getButtonWithText(text);
+  expect(await button.isEnabled(), 'Button with text "' + text + '" should be disabled')
+    .to.equal(false);
+});
+
+Then(/^The "([^"]*)" button is enabled/, async (text: string) => {
+  const button = await mainContent.getButtonWithText(text);
+  expect(await button.isEnabled(), 'Button with text "' + text + '" should be enabled')
+    .to.equal(true);
+});

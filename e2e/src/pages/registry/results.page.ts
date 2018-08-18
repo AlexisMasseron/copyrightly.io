@@ -9,7 +9,6 @@ export class ResultsPage {
   }
 
   async getResultAttributeValue(attribute: string): Promise<string> {
-    browser.waitForAngular();
     browser.wait(ExpectedConditions.presenceOf(this.results.first()));
     if (attribute === 'Title') {
       return await this.results.all(by.css('.card-title')).getText();
@@ -21,7 +20,6 @@ export class ResultsPage {
   }
 
   async getResultsCount(): Promise<number> {
-    browser.waitForAngular();
     browser.wait(ExpectedConditions.presenceOf(this.results.first()));
     return await this.results.count();
   }

@@ -1,8 +1,9 @@
-import { element, by, browser, ExpectedConditions } from 'protractor';
+import { element, by, browser, ExpectedConditions, ElementFinder } from 'protractor';
+import { expect } from 'chai';
 
 export class MainContentPage {
 
-  private mainContainer;
+  private mainContainer: ElementFinder;
 
   constructor() {
     this.mainContainer = element(by.css('main.container'));
@@ -18,5 +19,9 @@ export class MainContentPage {
     browser.wait(ExpectedConditions.elementToBeClickable(button));
     await button.click();
     browser.waitForAngular();
+  }
+
+  async getButtonWithText(text: string): Promise<ElementFinder> {
+    return this.mainContainer.element(by.partialButtonText(text));
   }
 }
