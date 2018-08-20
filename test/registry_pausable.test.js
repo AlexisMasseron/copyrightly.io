@@ -1,7 +1,7 @@
-const Registry = artifacts.require('Registry');
-const RegistryProxy = artifacts.require("AdminUpgradeabilityProxy");
+const Manifestations = artifacts.require('Manifestations');
+const Proxy = artifacts.require("AdminUpgradeabilityProxy");
 
-contract('Registry Pausable', function (accounts) {
+contract('Manifestations - Pausable', function (accounts) {
 
   const OWNER = accounts[0];
   const MANIFESTER = accounts[2];
@@ -9,33 +9,33 @@ contract('Registry Pausable', function (accounts) {
   const HASH2 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnpBDg";
   const TITLE = "A nice picture";
 
-  let registryProxy, registry;
+  let proxy, manifestations;
 
   beforeEach('setup contracts for each test', async () => {
-    registryProxy = await RegistryProxy.deployed();
-    registry = await Registry.at(registryProxy.address);
+    proxy = await Proxy.deployed();
+    manifestations = await Manifestations.at(proxy.address);
   });
 
-  it("shouldn't work when registry logic paused by owner", async () => {
+  it("shouldn't work when paused by owner", async () => {
     let eventEmitted = false;
-    let event = registry.Pause();
+    let event = manifestations.Pause();
     await event.watch(() => {
       eventEmitted = true;
     });
 
-    await registry.pause({from: OWNER});
+    await manifestations.pause({from: OWNER});
 
     assert.equal(eventEmitted, true,
       'should have emitted the Pause() event on pause');
 
     eventEmitted = false;
-    event = registry.ManifestEvent();
+    event = manifestations.ManifestEvent();
     await event.watch((error, result) => {
       eventEmitted = true;
     });
 
     try {
-      await registry.manifestAuthorship(HASH1, TITLE, {from: MANIFESTER});
+      await manifestations.manifestAuthorship(HASH1, TITLE, {from: MANIFESTER});
     } catch(e) {
       assert(e.message, "Error: VM Exception while processing transaction: revert");
     }
@@ -44,20 +44,20 @@ contract('Registry Pausable', function (accounts) {
       'shouldn\'t have emitted a ManifestEvent');
   });
 
-  it("should work again when registry logic unpaused by owner", async () => {
+  it("should work again when unpaused by owner", async () => {
     let eventEmitted = false;
-    let event = registry.Unpause();
+    let event = manifestations.Unpause();
     await event.watch(() => {
       eventEmitted = true;
     });
 
-    await registry.unpause({from: OWNER});
+    await manifestations.unpause({from: OWNER});
 
     assert.equal(eventEmitted, true,
       'should have emitted the Unpause() event on pause');
 
     eventEmitted = false;
-    event = registry.ManifestEvent();
+    event = manifestations.ManifestEvent();
     await event.watch((error, result) => {
       manifestHash = result.args.hash;
       manifestTitle = result.args.title;
@@ -66,7 +66,7 @@ contract('Registry Pausable', function (accounts) {
       eventEmitted = true;
     });
 
-    await registry.manifestAuthorship(HASH2, TITLE, {from: MANIFESTER});
+    await manifestations.manifestAuthorship(HASH2, TITLE, {from: MANIFESTER});
 
     assert.equal(eventEmitted, true,
       'manifesting authorship should emit a ManifestEvent');
@@ -84,13 +84,13 @@ contract('Registry Pausable', function (accounts) {
 
   it("shouldn't be paused by a non-owner", async () => {
     let eventEmitted = false;
-    const event = registry.Pause();
+    const event = manifestations.Pause();
     await event.watch(() => {
       eventEmitted = true;
     });
 
     try {
-      await registryImpl.pause({from: MANIFESTER});
+      await manifestations.pause({from: MANIFESTER});
     } catch(e) {
       assert(e.message, "Error: VM Exception while processing transaction: revert");
     }

@@ -1,7 +1,7 @@
-const Registry = artifacts.require('Registry');
-const RegistryProxy = artifacts.require("AdminUpgradeabilityProxy");
+const Manifestations = artifacts.require('Manifestations');
+const Proxy = artifacts.require("AdminUpgradeabilityProxy");
 
-contract('Registry - Single Authorship', function (accounts) {
+contract('Manifestations - Single Authorship', function (accounts) {
 
   const OWNER = accounts[0];
   const PROXYADMIN = accounts[1];
@@ -10,12 +10,18 @@ contract('Registry - Single Authorship', function (accounts) {
   const TITLE = "A nice picture";
 
   let manifestHash, manifestTitle, manifestAuthors, manifestManifester;
+  let proxy, manifestations;
+
+  beforeEach('setup contracts for each test', async () => {
+    proxy = await Proxy.deployed();
+    manifestations = await Manifestations.at(proxy.address);
+  });
 
   it("should register a previously unregistered manifestation", async () => {
-    const registryProxy = await RegistryProxy.deployed();
-    const registry = await Registry.at(registryProxy.address);
+    proxy = await Proxy.deployed();
+    manifestations = await Manifestations.at(proxy.address);
     let eventEmitted = false;
-    const event = registry.ManifestEvent();
+    const event = manifestations.ManifestEvent();
     await event.watch((error, result) => {
       manifestHash = result.args.hash;
       manifestTitle = result.args.title;
@@ -24,7 +30,7 @@ contract('Registry - Single Authorship', function (accounts) {
       eventEmitted = true;
     });
 
-    await registry.manifestAuthorship(HASH, TITLE, {from: MANIFESTER});
+    await manifestations.manifestAuthorship(HASH, TITLE, {from: MANIFESTER});
 
     assert.equal(eventEmitted, true,
         'manifesting authorship should emit a ManifestEvent');
@@ -41,10 +47,10 @@ contract('Registry - Single Authorship', function (accounts) {
   });
 
   it("should retrieve a previously registered manifestation", async () => {
-    const registryProxy = await RegistryProxy.deployed();
-    const registry = await Registry.at(registryProxy.address);
+    proxy = await Proxy.deployed();
+    manifestations = await Manifestations.at(proxy.address);
 
-    const result = await registry.getManifestation(HASH);
+    const result = await manifestations.getManifestation(HASH);
 
     assert.equal(result[0], TITLE,
         'unexpected manifestation title');
@@ -55,17 +61,17 @@ contract('Registry - Single Authorship', function (accounts) {
   });
 
   it("shouldn't register a previously registered manifestation", async () => {
-    const registryProxy = await RegistryProxy.deployed();
-    const registry = await Registry.at(registryProxy.address);
+    proxy = await Proxy.deployed();
+    manifestations = await Manifestations.at(proxy.address);
 
     let eventEmitted = false;
-    const event = registry.ManifestEvent();
+    const event = manifestations.ManifestEvent();
     await event.watch(() => {
       eventEmitted = true;
     });
 
     try {
-      await registry.manifestAuthorship(HASH, TITLE, {from: MANIFESTER});
+      await manifestations.manifestAuthorship(HASH, TITLE, {from: MANIFESTER});
     } catch(e) {
       assert(e.message, "Error: VM Exception while processing transaction: revert");
     }
@@ -75,7 +81,7 @@ contract('Registry - Single Authorship', function (accounts) {
   });
 });
 
-contract('Registry - Joint Authorship', function (accounts) {
+contract('Manifestations - Joint Authorship', function (accounts) {
 
   const OWNER = accounts[0];
   const PROXYADMIN = accounts[1];
@@ -85,13 +91,19 @@ contract('Registry - Joint Authorship', function (accounts) {
   const TITLE = "A nice picture";
 
   let manifestHash, manifestTitle, manifestAuthors, manifestManifester;
+  let proxy, manifestations;
+
+  beforeEach('setup contracts for each test', async () => {
+    proxy = await Proxy.deployed();
+    manifestations = await Manifestations.at(proxy.address);
+  });
 
   it("should register joint authorship for unregistered manifestation", async () => {
-    const registryProxy = await RegistryProxy.deployed();
-    const registry = await Registry.at(registryProxy.address);
+    proxy = await Proxy.deployed();
+    manifestations = await Manifestations.at(proxy.address);
 
     let eventEmitted = false;
-    const event = registry.ManifestEvent();
+    const event = manifestations.ManifestEvent();
     await event.watch((error, result) => {
       manifestHash = result.args.hash;
       manifestTitle = result.args.title;
@@ -100,7 +112,7 @@ contract('Registry - Joint Authorship', function (accounts) {
       eventEmitted = true;
     });
 
-    await registry.manifestJointAuthorship(
+    await manifestations.manifestJointAuthorship(
       HASH, TITLE, ADDITIONAL_AUTHORS, {from: MANIFESTER});
 
     assert.equal(eventEmitted, true,
@@ -124,10 +136,10 @@ contract('Registry - Joint Authorship', function (accounts) {
   });
 
   it("should retrieve a previously registered joint authorship manifestation", async () => {
-    const registryProxy = await RegistryProxy.deployed();
-    const registry = await Registry.at(registryProxy.address);
+    proxy = await Proxy.deployed();
+    manifestations = await Manifestations.at(proxy.address);
 
-    const result = await registry.getManifestation(HASH);
+    const result = await manifestations.getManifestation(HASH);
 
     assert.equal(result[0], TITLE,
       'unexpected manifestation title');
@@ -144,17 +156,17 @@ contract('Registry - Joint Authorship', function (accounts) {
   });
 
   it("shouldn't register a previously registered joint authorship manifestation", async () => {
-    const registryProxy = await RegistryProxy.deployed();
-    const registry = await Registry.at(registryProxy.address);
+    proxy = await Proxy.deployed();
+    manifestations = await Manifestations.at(proxy.address);
 
     let eventEmitted = false;
-    const event = registry.ManifestEvent();
+    const event = manifestations.ManifestEvent();
     await event.watch(() => {
       eventEmitted = true;
     });
 
     try {
-      await registry.manifestJointAuthorship(
+      await manifestations.manifestJointAuthorship(
         HASH, TITLE, ADDITIONAL_AUTHORS, {from: MANIFESTER});
     } catch(e) {
       assert(e.message, "Error: VM Exception while processing transaction: revert");

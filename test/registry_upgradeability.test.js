@@ -1,7 +1,7 @@
-const Registry = artifacts.require('Registry');
-const RegistryProxy = artifacts.require("AdminUpgradeabilityProxy");
+const Manifestations = artifacts.require('Manifestations');
+const Proxy = artifacts.require("AdminUpgradeabilityProxy");
 
-contract('Registry Upgradeability', function (accounts) {
+contract('Manifestations - Upgradeability', function (accounts) {
 
   const OWNER = accounts[0];
   const PROXYADMIN = accounts[1];
@@ -10,22 +10,22 @@ contract('Registry Upgradeability', function (accounts) {
   const HASH2 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnpBDg";
   const TITLE = "A nice picture";
 
-  let registryProxy, registry;
+  let proxy, manifestations;
 
   beforeEach('setup contracts for each test', async () => {
-    registryProxy = await RegistryProxy.deployed();
-    registry = await Registry.at(registryProxy.address);
+    proxy = await Proxy.deployed();
+    manifestations = await Manifestations.at(proxy.address);
   });
 
   it("should keep stored manifestations after upgrade", async () => {
-    const currentVersion = await registryProxy.implementation({from: PROXYADMIN});
-    await registry.manifestAuthorship(HASH1, TITLE, {from: MANIFESTER});
+    const currentVersion = await proxy.implementation({from: PROXYADMIN});
+    await manifestations.manifestAuthorship(HASH1, TITLE, {from: MANIFESTER});
 
-    const newRegistry = await Registry.new({from: OWNER});
-    await registryProxy.upgradeTo(newRegistry.address, {from: PROXYADMIN});
+    const newManifestations = await Manifestations.new({from: OWNER});
+    await proxy.upgradeTo(newManifestations.address, {from: PROXYADMIN});
 
-    const newVersion = await registryProxy.implementation({from: PROXYADMIN});
-    const result = await registry.getManifestation(HASH1, { from: MANIFESTER });
+    const newVersion = await proxy.implementation({from: PROXYADMIN});
+    const result = await manifestations.getManifestation(HASH1, { from: MANIFESTER });
 
     assert.notEqual(currentVersion, newVersion,
         'proxy implementation should be upgraded');
@@ -39,13 +39,13 @@ contract('Registry Upgradeability', function (accounts) {
 
   it("shouldn't work when called by admin through proxy for security", async () => {
     let eventEmitted = false;
-    const event = registry.ManifestEvent();
+    const event = manifestations.ManifestEvent();
     await event.watch(() => {
       eventEmitted = true;
     });
 
     try {
-      await registry.manifestAuthorship(HASH2, TITLE, {from: PROXYADMIN});
+      await manifestations.manifestAuthorship(HASH2, TITLE, {from: PROXYADMIN});
     } catch(e) {
       assert(e.message, "Error: VM Exception while processing transaction: revert");
     }
@@ -58,7 +58,7 @@ contract('Registry Upgradeability', function (accounts) {
     let failed = false;
 
     try {
-      await registry.initialize(OWNER);
+      await manifestations.initialize(OWNER);
     } catch(e) {
       failed = true;
       assert(e.message, "Error: VM Exception while processing transaction: revert");

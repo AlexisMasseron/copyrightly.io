@@ -2,11 +2,11 @@ pragma solidity ^0.4.24;
 
 import "truffle/Assert.sol";
 import "truffle/DeployedAddresses.sol";
-import "../contracts/Registry.sol";
+import "../contracts/Manifestations.sol";
 
 
-contract TestRegistry {
-    Registry private registry = Registry(DeployedAddresses.Registry());
+contract TestManifestations {
+    Manifestations private manifestations = Manifestations(DeployedAddresses.Manifestations());
 
     string constant HASH1 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
     string constant HASH2 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPBDG";
@@ -19,8 +19,8 @@ contract TestRegistry {
         string memory title;
         address[] memory authors;
 
-        registry.manifestAuthorship(HASH1, TITLE);
-        (title, authors) = registry.getManifestation(HASH1);
+        manifestations.manifestAuthorship(HASH1, TITLE);
+        (title, authors) = manifestations.getManifestation(HASH1);
 
         Assert.equal(title, TITLE, "The title of manifestation should match the registered one");
         Assert.equal(authors[0], expectedAuthor, "First author should be the expected one");
@@ -37,8 +37,8 @@ contract TestRegistry {
         string memory title;
         address[] memory authors;
 
-        registry.manifestJointAuthorship(HASH2, TITLE, ADDITIONAL_AUTHORS);
-        (title, authors) = registry.getManifestation(HASH2);
+        manifestations.manifestJointAuthorship(HASH2, TITLE, ADDITIONAL_AUTHORS);
+        (title, authors) = manifestations.getManifestation(HASH2);
 
         Assert.equal(title, TITLE, "The title of manifestation should match the registered one");
         Assert.equal(authors.length, 4, "There should 4 authors");
@@ -55,8 +55,8 @@ contract TestRegistry {
         string memory title;
         address[] memory authors;
 
-        registry.manifestJointAuthorship(HASH3, TITLE, ADDITIONAL_AUTHORS);
-        (title, authors) = registry.getManifestation(HASH3);
+        manifestations.manifestJointAuthorship(HASH3, TITLE, ADDITIONAL_AUTHORS);
+        (title, authors) = manifestations.getManifestation(HASH3);
 
         Assert.equal(title, TITLE, "The title of manifestation should match the registered one");
         Assert.equal(authors.length, 1, "There should 4 authors");
@@ -65,9 +65,9 @@ contract TestRegistry {
 
     // Testing that trying to re-register content fails
     function testAlreadyRegistered() public {
-        ThrowProxy throwProxy = new ThrowProxy(address(registry));
+        ThrowProxy throwProxy = new ThrowProxy(address(manifestations));
 
-        Registry(address(throwProxy)).manifestAuthorship(HASH1, TITLE);
+        Manifestations(address(throwProxy)).manifestAuthorship(HASH1, TITLE);
         bool r = throwProxy.execute.gas(200000)();
 
         Assert.isFalse(r, "Should be false, as it should be reverted if already registered");

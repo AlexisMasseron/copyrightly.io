@@ -5,9 +5,9 @@ import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "zos-lib/contracts/upgradeability/AdminUpgradeabilityProxy.sol";
 
 
-/// @title Registry contract for copyright registration and authorship evidence storage
+/// @title Contract for copyright authorship registration through creations manifestations
 /// @author Roberto García (http://rhizomik.net/~roberto/)
-contract Registry is Pausable, Initializable {
+contract Manifestations is Pausable, Initializable {
 
     struct Manifestation {
         string title;
@@ -64,6 +64,4 @@ contract Registry is Pausable, Initializable {
     returns (string title, address[] authors) {
         return (manifestations[hash].title, manifestations[hash].authors);
     }
-
-    /// TODO: Change ownership, ruled by external oracle with role judge. Can change title and authors
 }

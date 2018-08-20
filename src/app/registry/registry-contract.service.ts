@@ -7,7 +7,7 @@ import { Manifestation } from './manifestation';
 import { ReplaySubject } from 'rxjs';
 
 declare const require: any;
-const artifacts = require('../../assets/contracts/Registry.json');
+const artifacts = require('../../assets/contracts/Manifestations.json');
 const proxy = require('../../assets/contracts/AdminUpgradeabilityProxy.json');
 
 @Injectable({

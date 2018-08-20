@@ -12,7 +12,7 @@ Decentralized Application (ÐApp) for Copyright Management
    * [Smart Contracts Deployment](#smart-contracts-deployment)
    * [Launch Web Application](#launch-web-application)
 * [Testing](#testing)
-   * [Registry Contract](#registry-contract)
+   * [Manifestations Contract](#manifestations-contract)
 * [Design Pattern Requirements](#design-pattern-requirements)
 * [Security Tools / Common Attacks](#security-tools--common-attacks)
 * [Library / EthPM](#library--ethpm)
@@ -127,7 +127,7 @@ Some warnings might appear, but all of them are related to the imported contract
 The following sections describe the test for each smart contract, link to the test files and list 
 their expected outputs.
 
-### Registry Contract
+### Manifestations Contract
 
 This contract is responsible for registering *Manifestations*, the expressions of authors ideas into
 pieces of content that can be then used to prove authorship. A manifestation is based on a content hash, 
@@ -139,9 +139,9 @@ can register single and joint authorship (multiple authors for the same manifest
 joint authorship providing just one author is equivalent to stating single authorship, and, finally, 
 that the contract fails if and already registered content hash is used.
 
-[TestRegistry.sol](test/TestRegistry.sol)
+[TestManifestations.sol](test/TestManifestations.sol)
 ```
-  TestRegistry
+  TestManifestations
     ✓ testSingleAuthorRegistered (127ms)
     ✓ testJointAuthorRegistered (142ms)
     ✓ testSingleAuthorThroughJointAuthorRegistered (79ms)
@@ -152,41 +152,41 @@ In addition to the previous Solidity tests, there are the following tests of the
 It is tested again that single and joint authorship work, and that a previously registered manifestation can be later
 retrieved.
 
-[registry.test.js](test/registry.test.js)
+[manifestations.test.js](test/manifestations.test.js)
 ```
-  Contract: Registry - Single Authorship
+  Contract: Manifestations - Single Authorship
     ✓ should register a previously unregistered manifestation (57ms)
     ✓ should retrieve a previously registered manifestation
     ✓ shouldn't register a previously registered manifestation
 
-  Contract: Registry - Joint Authorship
+  Contract: Manifestations - Joint Authorship
     ✓ should register joint authorship for unregistered manifestation (55ms)
     ✓ should retrieve a previously registered joint authorship manifestation
     ✓ shouldn't register a previously registered joint authorship manifestation
 ```
 
-Then, there are tests for the behaviors inherited from the contracts extended by *Registry*. 
+Then, there are tests for the behaviors inherited from the contracts extended by *Manifestations*. 
 
 From OpenZeppelin's *Pausable* and *Ownable*, that the contract can be paused and resumed but just
 by the contract owner.
 
-[registry_pausable.test.js](test/registry_pausable.test.js)
+[manifestations.test.js](test/manifestations_pausable.test.js)
 ```
-  Contract: Registry Pausable
-    ✓ shouldn't work when registry logic paused by owner (55ms)
-    ✓ should work again when registry logic unpaused by owner (86ms)
+  Contract: Manifestations - Pausable
+    ✓ shouldn't work when paused by owner (55ms)
+    ✓ should work again when unpaused by owner (86ms)
     ✓ shouldn't be paused by a non-owner
 ```
 
-From ZeppelinOS' *AdminUpgradeabilityProxy*, that *Registry* is upgradable and retains state after an update
+From ZeppelinOS' *AdminUpgradeabilityProxy*, that *Manifestations* is upgradable and retains state after an update
 after it is upgraded by the proxy admin. Then, that the proxy admin cannot use the proxy to 
-call the underlying *Registry* contract, required for security reasons. Finally, that the Registry
+call the underlying *Manifestations* contract, required for security reasons. Finally, that *Manifestations*
 cannot be re-initialized after it has been already initialized during the initial deployment
-(migration). This behavior is required to make Registry upgradable, inherited by extending
+(migration). This behavior is required to make *Manifestations* upgradable, inherited by extending *Initializable*.
 
-[registry_upgradeability.test.js](test/registry_upgradeability.test.js)
+[manifestations_upgradeability.test.js](test/manifestations_upgradeability.test.js)
 ```
-  Contract: Registry Upgradeability
+  Contract: Manifestations - Upgradeability
     ✓ should keep stored manifestations after upgrade (151ms)
     ✓ shouldn't work when called by admin through proxy for security
     ✓ should fail when trying to re-initialize it
@@ -200,7 +200,7 @@ The output of the test should end with the following statement about all 16 bein
 
 ## Design Pattern Requirements
 
-Implemented a "Circuit Breaker / Emergency Stop" for the Registry contract using OpenZeppelin *Pausable* contract, 
+Implemented a "Circuit Breaker / Emergency Stop" for the *Manifestations* contract using OpenZeppelin *Pausable* contract, 
 [https://openzeppelin.org/api/docs/lifecycle_Pausable.html]()
 
 What other design patterns have you used or not used?
@@ -221,6 +221,7 @@ https://consensys.github.io/smart-contract-best-practices/known_attacks/
 * Transaction-Ordering Dependence (TOD) / Front Running
 * Timestamp Dependence
 * Integer Overflow and Underflow
+  * Used OpenZeppelin SafeMath library.
 * DoS with (Unexpected) revert
 * DoS with Block Gas Limit
 * Forcibly Sending Ether to a Contract
@@ -230,13 +231,18 @@ https://consensys.github.io/smart-contract-best-practices/known_attacks/
 At least one of the project contracts includes an import from a library or an ethPM package. 
 If none of the project contracts do, then there is a demonstration contract that does.
 
+Imported the following Libraries and Contracts from ZeppelinOs and OpenZeppelin. 
+In both cases, they where imported as Node packages using NPM because the versions available 
+trough EthPM are outdated.
+
 Imported from ZeppelinOS:
  - *AdminUpgradeabilityProxy*: the proxy contract to implement upgradeability.
  - *Initializable*: extended by upgradable contracts so they can be initialized from the corresponding proxy.
  
 Imported from OpenZeppelin:
- - *Pausable*: to implement the "Circuit Breaker / Emergency Stop" design pattern. 
+ - *Pausable*: contract to implement the "Circuit Breaker / Emergency Stop" design pattern. 
  It also extends *Ownable* to control that just the owner can stop it.
+ - *SafeMath*: library that avoids the integer overflow and underflow issue.
 
 ## Additional Requirements
 
