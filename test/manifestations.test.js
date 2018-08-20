@@ -9,7 +9,7 @@ contract('Manifestations - Single Authorship', function (accounts) {
   const HASH = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
   const TITLE = "A nice picture";
 
-  let manifestHash, manifestTitle, manifestAuthors, manifestManifester;
+  let manifestHash, manifestTitle, manifestManifester;
   let proxy, manifestations;
 
   beforeEach('setup contracts for each test', async () => {
@@ -18,14 +18,11 @@ contract('Manifestations - Single Authorship', function (accounts) {
   });
 
   it("should register a previously unregistered manifestation", async () => {
-    proxy = await Proxy.deployed();
-    manifestations = await Manifestations.at(proxy.address);
     let eventEmitted = false;
     const event = manifestations.ManifestEvent();
     await event.watch((error, result) => {
       manifestHash = result.args.hash;
       manifestTitle = result.args.title;
-      manifestAuthors = result.args.authors;
       manifestManifester = result.args.manifester;
       eventEmitted = true;
     });
@@ -38,18 +35,11 @@ contract('Manifestations - Single Authorship', function (accounts) {
         'unexpected manifest event hash');
     assert.equal(manifestTitle, TITLE,
         'unexpected manifest event title');
-    assert.equal(manifestAuthors.length, 1,
-        'unexpected amount of authors in manifest event');
-    assert.equal(manifestAuthors[0], MANIFESTER,
-        'unexpected first author in manifest event authors');
     assert.equal(manifestManifester, MANIFESTER,
         'unexpected manifest event manifester');
   });
 
   it("should retrieve a previously registered manifestation", async () => {
-    proxy = await Proxy.deployed();
-    manifestations = await Manifestations.at(proxy.address);
-
     const result = await manifestations.getManifestation(HASH);
 
     assert.equal(result[0], TITLE,
@@ -61,9 +51,6 @@ contract('Manifestations - Single Authorship', function (accounts) {
   });
 
   it("shouldn't register a previously registered manifestation", async () => {
-    proxy = await Proxy.deployed();
-    manifestations = await Manifestations.at(proxy.address);
-
     let eventEmitted = false;
     const event = manifestations.ManifestEvent();
     await event.watch(() => {
@@ -99,15 +86,11 @@ contract('Manifestations - Joint Authorship', function (accounts) {
   });
 
   it("should register joint authorship for unregistered manifestation", async () => {
-    proxy = await Proxy.deployed();
-    manifestations = await Manifestations.at(proxy.address);
-
     let eventEmitted = false;
     const event = manifestations.ManifestEvent();
     await event.watch((error, result) => {
       manifestHash = result.args.hash;
       manifestTitle = result.args.title;
-      manifestAuthors = result.args.authors;
       manifestManifester = result.args.manifester;
       eventEmitted = true;
     });
@@ -121,24 +104,11 @@ contract('Manifestations - Joint Authorship', function (accounts) {
       'unexpected manifest event hash');
     assert.equal(manifestTitle, TITLE,
       'unexpected manifest event title');
-    assert.equal(manifestAuthors.length, 4,
-      'unexpected amount of authors in manifest event');
-    assert.equal(manifestAuthors[0], MANIFESTER,
-      'unexpected first author in manifest event authors');
-    assert.equal(manifestAuthors[1], accounts[3],
-      'unexpected second author in manifest event authors');
-    assert.equal(manifestAuthors[2], accounts[4],
-      'unexpected third author in manifest event authors');
-    assert.equal(manifestAuthors[3], accounts[5],
-      'unexpected fourth author in manifest event authors');
     assert.equal(manifestManifester, MANIFESTER,
       'unexpected manifest event manifester');
   });
 
   it("should retrieve a previously registered joint authorship manifestation", async () => {
-    proxy = await Proxy.deployed();
-    manifestations = await Manifestations.at(proxy.address);
-
     const result = await manifestations.getManifestation(HASH);
 
     assert.equal(result[0], TITLE,
@@ -156,9 +126,6 @@ contract('Manifestations - Joint Authorship', function (accounts) {
   });
 
   it("shouldn't register a previously registered joint authorship manifestation", async () => {
-    proxy = await Proxy.deployed();
-    manifestations = await Manifestations.at(proxy.address);
-
     let eventEmitted = false;
     const event = manifestations.ManifestEvent();
     await event.watch(() => {

@@ -3,65 +3,86 @@ pragma solidity ^0.4.24;
 import "zos-lib/contracts/migrations/Initializable.sol";
 import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "zos-lib/contracts/upgradeability/AdminUpgradeabilityProxy.sol";
-
+import "./ExpirableLib.sol";
 
 /// @title Contract for copyright authorship registration through creations manifestations
 /// @author Roberto García (http://rhizomik.net/~roberto/)
 contract Manifestations is Pausable, Initializable {
 
+    using ExpirableLib for ExpirableLib.TimeAndExpiry;
+
     struct Manifestation {
         string title;
         address[] authors;
+        ExpirableLib.TimeAndExpiry time;
     }
 
-    event ManifestEvent(string hash, string title, address[] authors, address indexed manifester);
-
+    uint32 public timeToExpiry;
     mapping(string => Manifestation) private manifestations;
 
-    function initialize(address _owner) public isInitializer {
+    event ManifestEvent(string hash, string title, address indexed manifester);
+
+    constructor(uint32 _timeToExpiry) public {
+        timeToExpiry = _timeToExpiry;
+    }
+
+    /// @dev To be used when proxied (upgradeability) to initialize proxy storage
+    function initialize(address _owner, uint32 _timeToExpiry) public isInitializer {
         owner = _owner;
+        timeToExpiry = _timeToExpiry;
+    }
+
+    /// @dev Modifier implementing the common logic for single and joint authorship.
+    /// Checks title and that hash not registered or expired. Then stores title and sets expiry.
+    /// Finally, emits ManifestEvent
+    modifier registerIfAvailable(string hash, string title) {
+        require(bytes(title).length > 0, "A title is required");
+        require(manifestations[hash].authors.length == 0 || manifestations[hash].time.isExpired(),
+            "Already registered and not expired");
+        _;
+        manifestations[hash].title = title;
+        manifestations[hash].time.setExpiry(timeToExpiry);
+        emit ManifestEvent(hash, title, msg.sender);
     }
 
     /// @notice Register single authorship for `msg.sender` of the manifestation with title `title`
-    /// and hash `hash`. Requires hash not previously registered.
-    /// @dev To be used when their is just one author, which is considered to be the message sender
+    /// and hash `hash`. Requires hash not previously registered or expired.
+    /// @dev To be used when there is just one author, which is considered to be the message sender
     /// @param hash Hash of the manifestation content, for instance IPFS Base58 Hash
     /// @param title The title of the manifestation
-    function manifestAuthorship(string hash, string title) public whenNotPaused() {
-        require(manifestations[hash].authors.length == 0, "Manifestation already registered");
+    function manifestAuthorship(string hash, string title)
+    public registerIfAvailable(hash, title) whenNotPaused() {
         address[] memory authors = new address[](1);
         authors[0] = msg.sender;
-        Manifestation memory manifestation = Manifestation(title, authors);
-        manifestations[hash] = manifestation;
-        emit ManifestEvent(hash, title, authors, msg.sender);
+        manifestations[hash].authors = authors;
     }
 
     /// @notice Register joint authorship for `msg.sender` plus additional authors
     /// `additionalAuthors` of the manifestation with title `title` and hash `hash`.
-    /// Requires hash not previously registered and at most 256 authors, including the one registering.
-    /// @dev To be used when their is just one author, which is considered to be the message sender
+    /// Requires hash not previously registered or expired and at most 64 authors,
+    /// including the one registering.
+    /// @dev To be used when there are multiple authors
     /// @param hash Hash of the manifestation content, for instance IPFS Base58 Hash
     /// @param title The title of the manifestation
     /// @param additionalAuthors The additional authors,
     /// including the one registering that becomes the first author
     function manifestJointAuthorship(string hash, string title, address[] additionalAuthors)
-    public whenNotPaused() {
-        require(manifestations[hash].authors.length == 0, "Manifestation already registered");
-        require(additionalAuthors.length < 256, "Joint authorship limited to 256 authors");
+    public registerIfAvailable(hash, title) whenNotPaused() {
+        require(additionalAuthors.length < 64, "Joint authorship limited to 64 authors");
         address[] memory authors = new address[](additionalAuthors.length + 1);
         authors[0] = msg.sender;
         for (uint8 i = 0; i < additionalAuthors.length; i++)
             authors[i+1] = additionalAuthors[i];
-        Manifestation memory manifestation = Manifestation(title, authors);
-        manifestations[hash] = manifestation;
-        emit ManifestEvent(hash, title, authors, msg.sender);
+        manifestations[hash].authors = authors;
     }
 
     /// @notice Retrieve the title and authors of the manifestation with content hash `hash`.
     /// @param hash Hash of the manifestation content, for instance IPFS Base58 Hash
     /// @return The title and authors of the manifestation
     function getManifestation(string hash) public constant
-    returns (string title, address[] authors) {
-        return (manifestations[hash].title, manifestations[hash].authors);
+    returns (string, address[], uint256) {
+        return (manifestations[hash].title,
+                manifestations[hash].authors,
+                manifestations[hash].time.creationTime);
     }
 }

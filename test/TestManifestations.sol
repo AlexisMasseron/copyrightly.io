@@ -18,13 +18,15 @@ contract TestManifestations {
         address expectedAuthor = this;
         string memory title;
         address[] memory authors;
+        uint256 time;
 
         manifestations.manifestAuthorship(HASH1, TITLE);
-        (title, authors) = manifestations.getManifestation(HASH1);
+        (title, authors, time) = manifestations.getManifestation(HASH1);
 
         Assert.equal(title, TITLE, "The title of manifestation should match the registered one");
         Assert.equal(authors[0], expectedAuthor, "First author should be the expected one");
         Assert.equal(authors.length, 1, "There should be just one author");
+        Assert.equal(time, now, "Manifest time should be now");
     }
 
     // Testing that manifest joint authorship with 3 additional authors works
@@ -36,9 +38,10 @@ contract TestManifestations {
         address firstAuthor = this;
         string memory title;
         address[] memory authors;
+        uint256 time;
 
         manifestations.manifestJointAuthorship(HASH2, TITLE, ADDITIONAL_AUTHORS);
-        (title, authors) = manifestations.getManifestation(HASH2);
+        (title, authors, time) = manifestations.getManifestation(HASH2);
 
         Assert.equal(title, TITLE, "The title of manifestation should match the registered one");
         Assert.equal(authors.length, 4, "There should 4 authors");
@@ -46,6 +49,7 @@ contract TestManifestations {
         Assert.equal(authors[1], ADDITIONAL_AUTHORS[0], "Second author should be the expected one");
         Assert.equal(authors[2], ADDITIONAL_AUTHORS[1], "Third author should be the expected one");
         Assert.equal(authors[3], ADDITIONAL_AUTHORS[2], "Fourth author should be the expected one");
+        Assert.equal(time, now, "Manifest time should be now");
     }
 
     // Testing that manifest joint authorship with 0 additional authors works
@@ -54,13 +58,15 @@ contract TestManifestations {
         address firstAuthor = this;
         string memory title;
         address[] memory authors;
+        uint256 time;
 
         manifestations.manifestJointAuthorship(HASH3, TITLE, ADDITIONAL_AUTHORS);
-        (title, authors) = manifestations.getManifestation(HASH3);
+        (title, authors, time) = manifestations.getManifestation(HASH3);
 
         Assert.equal(title, TITLE, "The title of manifestation should match the registered one");
         Assert.equal(authors.length, 1, "There should 4 authors");
         Assert.equal(authors[0], firstAuthor, "First author should be the expected one");
+        Assert.equal(time, now, "Manifest time should be now");
     }
 
     // Testing that trying to re-register content fails

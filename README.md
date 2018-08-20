@@ -25,6 +25,32 @@ Decentralized Application (ÐApp) for Copyright Management
    * [Upgradable Pattern Registry or Delegation](#upgradable-pattern-registry-or-delegation)
    * [LLL / Vyper](#lll--vyper)
    * [Testnet Deployment](#testnet-deployment)
+   
+* [Table of Contents](#table-of-contents)
+* [Features](#features)
+* [Running Locally](#running-locally)
+  * [Required Tools](#required-tools)
+  * [Smart Contracts Deployment](#smart-contracts-deployment)
+  * [Launch Web Application](#launch-web-application)
+* [Testing](#testing)
+  * [Manifestations Contract](#manifestations-contract)
+  * [Evidences Contract](#evidences-contract)
+  * [Claims Contract](#claims-contract)
+  * [ExpirableLib Library](#expirablelib-library)
+  * [EvidencableLib Library](#evidencablelib-library)
+* [Design Pattern Requirements](#design-pattern-requirements)
+* [Security Tools / Common Attacks](#security-tools--common-attacks)
+* [Library / EthPM](#library--ethpm)
+* [Additional Requirements](#additional-requirements)
+* [Stretch Goals](#stretch-goals)
+  * [IPFS](#ipfs)
+  * [uPort](#uport)
+  * [Ethereum Name Service](#ethereum-name-service)
+  * [Oracles](#oracles)
+  * [Upgradable Pattern Registry or Delegation](#upgradable-pattern-registry-or-delegation)
+  * [LLL / Vyper](#lll--vyper)
+  * [Testnet Deployment](#testnet-deployment)
+
 
 ## Features
 
@@ -127,7 +153,7 @@ Some warnings might appear, but all of them are related to the imported contract
 The following sections describe the test for each smart contract, link to the test files and list 
 their expected outputs.
 
-### Manifestations Contract
+### [Manifestations](contracts/Manifestations.sol) Contract
 
 This contract is responsible for registering *Manifestations*, the expressions of authors ideas into
 pieces of content that can be then used to prove authorship. A manifestation is based on a content hash, 
@@ -192,11 +218,41 @@ cannot be re-initialized after it has been already initialized during the initia
     ✓ should fail when trying to re-initialize it
 ```
 
-The output of the test should end with the following statement about all 16 being successful:
+Finally, the *Manifestations* contract uses the *ExpirableLib* library, detailed next, to make it possible to
+overwrite manifestations have not received any authorship evidence before an expiry time. The test validates that
+a manifestation can be re-registered after it has expired. A new version of the Manifestations contract is deployed
+with a time to expiry of 2 seconds. Re-registration is possible just after more than 2 seconds.
+
+[manifestations_expirable.test.js](test/manifestations_expirable.test.js)
+```
+  Contract: Manifestations - Expirable
+    ✓ should re-register just when already expired (3266ms)
+```
+
+The output of the tests should end with the following statement about all 17 being successfully:
 
 ```
-  16 passing (2s)
+  17 passing (6s)
 ```
+
+### [Evidences](contracts/Evidences.sol) Contract
+
+...
+
+### [Claims](contracts/Claims.sol) Contract
+
+...
+
+### [ExpirableLib](contracts/ExpirableLib.sol) Library
+
+This library contains the logic for items with a creation and expiry time, 
+which is used by the *Manifestations* and *Claims* contracts. It is tested in the tests for those contracts: 
+[manifestations_expirable.test.js](test/manifestations_expirable.test.js) and 
+[claims_expirable.test.js](test/claims_expirable.test.js)
+
+### [EvidencableLib](contracts/EvidencableLib.sol) Library
+
+...
 
 ## Design Pattern Requirements
 

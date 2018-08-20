@@ -61,7 +61,6 @@ contract('Manifestations - Pausable', function (accounts) {
     await event.watch((error, result) => {
       manifestHash = result.args.hash;
       manifestTitle = result.args.title;
-      manifestAuthors = result.args.authors;
       manifestManifester = result.args.manifester;
       eventEmitted = true;
     });
@@ -74,10 +73,6 @@ contract('Manifestations - Pausable', function (accounts) {
       'unexpected manifest event hash');
     assert.equal(manifestTitle, TITLE,
       'unexpected manifest event title');
-    assert.equal(manifestAuthors.length, 1,
-      'unexpected amount of authors in manifest event');
-    assert.equal(manifestAuthors[0], MANIFESTER,
-      'unexpected first author in manifest event authors');
     assert.equal(manifestManifester, MANIFESTER,
       'unexpected manifest event manifester');
   });

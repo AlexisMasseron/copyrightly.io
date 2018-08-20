@@ -9,6 +9,7 @@ contract('Manifestations - Upgradeability', function (accounts) {
   const HASH1 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
   const HASH2 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnpBDg";
   const TITLE = "A nice picture";
+  const timeToExpiry = 60*60*24;
 
   let proxy, manifestations;
 
@@ -21,7 +22,7 @@ contract('Manifestations - Upgradeability', function (accounts) {
     const currentVersion = await proxy.implementation({from: PROXYADMIN});
     await manifestations.manifestAuthorship(HASH1, TITLE, {from: MANIFESTER});
 
-    const newManifestations = await Manifestations.new({from: OWNER});
+    const newManifestations = await Manifestations.new(timeToExpiry, {from: OWNER});
     await proxy.upgradeTo(newManifestations.address, {from: PROXYADMIN});
 
     const newVersion = await proxy.implementation({from: PROXYADMIN});
