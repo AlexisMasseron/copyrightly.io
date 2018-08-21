@@ -1,4 +1,5 @@
 const Manifestations = artifacts.require("./Manifestations.sol");
+const ExpirableLib = artifacts.require("./ExpirableLib.sol");
 const Proxy = artifacts.require("./AdminUpgradeabilityProxy.sol");
 
 module.exports = function (deployer, network, accounts) {
@@ -6,7 +7,11 @@ module.exports = function (deployer, network, accounts) {
   const proxyAdmin = accounts[1];
   const timeToExpiry = 60*60*24;
 
-  deployer.deploy(Manifestations, timeToExpiry, {from: owner})
+  deployer.deploy(ExpirableLib)
+  .then(function() {
+    deployer.link(ExpirableLib, [Manifestations]);
+    return deployer.deploy(Manifestations, timeToExpiry, {from: owner})
+  })
   .then(function (manifestations) {
     return deployer.deploy(Proxy, manifestations.address, {from: proxyAdmin});
   })
