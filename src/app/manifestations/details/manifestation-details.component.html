@@ -3,29 +3,20 @@
 <div class="card mb-4">
   <div class="card-block row m-1">
     <h5 class="card-title col-md-12 p-1">{{manifestation?.title}}</h5>
-    <div class="col-md-4 p-1">
-      <h6 class="card-subtitle text-muted">Authors</h6>
-      <p class="card-text">{{manifestation?.authors}}</p>
-    </div>
-    <div class="col-md-4 p-1">
+    <div class="col-md-6 p-1">
       <h6 class="card-subtitle text-muted">Hash</h6>
       <a class="card-text" href="https://ipfs.infura.io/ipfs/{{manifestation?.hash}}" target="_blank">
         {{manifestation?.hash}}</a>
     </div>
-  </div>
-</div>
-
-<h3>Manifestation Event</h3>
-
-<div class="card mb-4">
-  <div class="card-block row m-1">
-    <div class="col-md-4 p-1">
-      <h6 class="card-subtitle text-muted">Who</h6>
-      <p class="card-text">...</p>
+    <div class="col-md-2 p-1">
+      <h6 class="card-subtitle text-muted">Authors</h6>
+      <p class="card-text" *ngFor="let author of manifestation?.authors" title="{{author}}">
+        {{author | slice:0:6}}...{{author | slice:-4}}
+      </p>
     </div>
     <div class="col-md-4 p-1">
       <h6 class="card-subtitle text-muted">When</h6>
-      <p class="card-text">...</p>
+      <p class="card-text">{{manifestation?.when | date:'medium'}}</p>
     </div>
   </div>
 </div>

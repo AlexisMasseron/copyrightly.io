@@ -20,6 +20,7 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
   account: string;
   manifestation = new Manifestation();
   status = 'Register';
+  uploadToIpfs = false;
 
   constructor(private web3Service: Web3Service,
               private ipfsService: IpfsService,
@@ -36,7 +37,7 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
   loadFile(event) {
     if (event.files.length > 0) {
       this.status = 'Uploading...';
-      this.ipfsService.uploadFile(event.files[0])
+      this.ipfsService.uploadFile(event.files[0], this.uploadToIpfs)
       .subscribe((hash: string) => {
         this.status = 'Register';
         this.manifestation.hash = hash;
@@ -55,7 +56,7 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
       .subscribe(result => {
         if (typeof result === 'string') {
           console.log('Transaction hash: ' + result);
-          this.alertsService.info('Registration submitted, waiting for confirmation...<br>' +
+          this.alertsService.info('Registration submitted, you will be alerted when confirmed.<br>' +
             'Receipt: <a target="_blank" href="https://ropsten.etherscan.io/tx/' + result + '">' + result + '</a>');
           form.reset();
         } else {

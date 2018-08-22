@@ -1,17 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AboutComponent } from './about/about.component';
-import { ManifestSingleComponent } from './registry/manifest/manifest-single.component';
-import { RegistrySearchComponent } from './registry/search/registry-search.component';
-import { ListComponent } from './registry/list/list.component';
-import { ManifestationDetailsComponent } from './registry/details/manifestation-details.component';
+import { ManifestSingleComponent } from './manifestations/manifest/manifest-single.component';
+import { ManifestationsSearchComponent } from './manifestations/search/manifestations-search.component';
+import { ManifestationsListComponent } from './manifestations/list/manifestations-list.component';
+import { ManifestationDetailsComponent } from './manifestations/details/manifestation-details.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/about', pathMatch: 'full' },
   { path: 'about', component: AboutComponent },
   { path: 'register', component: ManifestSingleComponent },
-  { path: 'search', component: RegistrySearchComponent },
-  { path: 'list', component: ListComponent },
+  { path: 'search', component: ManifestationsSearchComponent },
+  { path: 'list', component: ManifestationsListComponent },
   { path: 'manifestations/:id', component: ManifestationDetailsComponent },
 ];
 

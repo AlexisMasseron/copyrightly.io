@@ -7,11 +7,11 @@ import { Manifestation } from '../manifestation';
 import { takeUntil } from 'rxjs/operators';
 
 @Component({
-  selector: 'app-registry-search',
-  templateUrl: './registry-search.component.html',
-  styleUrls: ['./registry-search.component.css']
+  selector: 'app-manifestations-search',
+  templateUrl: './manifestations-search.component.html',
+  styleUrls: ['./manifestations-search.component.css']
 })
-export class RegistrySearchComponent implements OnInit, OnDestroy {
+export class ManifestationsSearchComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   manifestation = new Manifestation();

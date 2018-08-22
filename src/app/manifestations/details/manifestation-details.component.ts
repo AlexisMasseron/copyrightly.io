@@ -1,11 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject } from '../../../../node_modules/rxjs/internal/Subject';
-import { ManifestEvent } from '../manifest-event';
+import { Component, OnInit } from '@angular/core';
 import { Web3Service } from '../../util/web3.service';
 import { RegistryContractService } from '../registry-contract.service';
 import { AlertsService } from '../../alerts/alerts.service';
 import { AuthenticationService } from '../../navbar/authentication.service';
-import { filter, switchMap, takeUntil } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { Manifestation } from '../manifestation';
 

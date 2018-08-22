@@ -8,11 +8,11 @@ import { AuthenticationService } from '../../navbar/authentication.service';
 import { ManifestEvent } from '../manifest-event';
 
 @Component({
-  selector: 'app-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.css']
+  selector: 'app-manifestations-list',
+  templateUrl: './manifestations-list.component.html',
+  styleUrls: ['./manifestations-list.component.css']
 })
-export class ListComponent implements OnInit, OnDestroy {
+export class ManifestationsListComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public manifestationEvents: ManifestEvent[] = [];

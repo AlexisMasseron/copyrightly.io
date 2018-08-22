@@ -1,7 +1,7 @@
 import { Injectable, NgZone } from '@angular/core';
 import { Web3Service } from '../util/web3.service';
 import { Observable } from 'rxjs/internal/Observable';
-import { Event } from './event';
+import { Event } from '../util/event';
 import { ManifestEvent } from './manifest-event';
 import { Manifestation } from './manifestation';
 import { ReplaySubject } from 'rxjs';
@@ -40,7 +40,7 @@ export class RegistryContractService {
           .then(result => {
             this.ngZone.run(() => {
               observer.next(new Manifestation(
-                {hash: hash, title: result[0], authors: result[1]}));
+                {hash: hash, title: result[0], authors: result[1], when: result[2]}));
               observer.complete();
             });
           })

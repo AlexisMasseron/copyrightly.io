@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ManifestEvent } from './registry/manifest-event';
+import { ManifestEvent } from './manifestations/manifest-event';
 import { filter, flatMap, takeUntil } from 'rxjs/operators';
-import { RegistryContractService } from './registry/registry-contract.service';
+import { RegistryContractService } from './manifestations/registry-contract.service';
 import { AlertsService } from './alerts/alerts.service';
 import { Web3Service } from './util/web3.service';
 import { Subject } from 'rxjs/internal/Subject';
 import { AuthenticationService } from './navbar/authentication.service';
+import { ManifestEventComponent } from './manifestations/manifest-event.component';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     // this.watchManifestEvents();
-    // TODO: Disabled because not working with current MetaMask, using events in tx receipt instead
+    // TODO: Disabled because not working with current MetaMask and Web3 1.0, using events in tx receipt instead
   }
 
   watchManifestEvents() {
@@ -32,7 +33,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .pipe(flatMap((account: string) => this.registryContractService.watchManifestEvents(account)))
       .subscribe( (event: ManifestEvent) => {
         console.log(event);
-        this.alertsService.success(event.toHTML());
+        this.alertsService.modal(ManifestEventComponent, event);
       }, error => {
         this.alertsService.error(error);
       });
