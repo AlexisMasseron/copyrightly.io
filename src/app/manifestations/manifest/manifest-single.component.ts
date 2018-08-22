@@ -8,6 +8,7 @@ import { IpfsService } from '../../util/ipfs.service';
 import { RegistryContractService } from '../registry-contract.service';
 import { Manifestation } from '../manifestation';
 import { NgForm } from '@angular/forms';
+import { ManifestEventComponent } from '../manifest-event.component';
 
 @Component({
   selector: 'app-manifest-single',
@@ -61,7 +62,7 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
           form.reset();
         } else {
           console.log(result);
-          this.alertsService.success(result.toHTML());
+          this.alertsService.modal(ManifestEventComponent, result);
         }
       }, error => {
         this.alertsService.error(error);
