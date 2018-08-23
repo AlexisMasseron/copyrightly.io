@@ -2,22 +2,23 @@ const Manifestations = artifacts.require("./Manifestations.sol");
 const ExpirableLib = artifacts.require("./ExpirableLib.sol");
 const Proxy = artifacts.require("./AdminUpgradeabilityProxy.sol");
 
-module.exports = function (deployer, network, accounts) {
+module.exports = async function(deployer, network, accounts) {
   const owner = accounts[0];
   const proxyAdmin = accounts[1];
-  const timeToExpiry = 60*60*24;
+  const timeToExpiry = 60 * 60 * 24;
 
-  deployer.deploy(ExpirableLib)
-  .then(function() {
-    deployer.link(ExpirableLib, [Manifestations]);
-    return deployer.deploy(Manifestations, timeToExpiry, {from: owner})
-  })
-  .then(function (manifestations) {
-    return deployer.deploy(Proxy, manifestations.address, {from: proxyAdmin});
-  })
-  .then(function (proxy) {
-    Manifestations.at(proxy.address).then(function (proxied) {
-      return proxied.initialize(owner, timeToExpiry);
-    });
+  deployer.then(async () => {
+    await deployer.deploy(ExpirableLib);
+    await deployer.link(ExpirableLib, [Manifestations]);
+    await deployer.deploy(Manifestations, timeToExpiry);
+    await deployer.deploy(Proxy, Manifestations.address, {from: proxyAdmin});
+
+    const manifestations = await Manifestations.deployed();
+    const proxy = await Proxy.deployed();
+    const proxied = await Manifestations.at(proxy.address);
+
+    return Promise.all([
+      await proxied.initialize(owner, timeToExpiry)
+    ]);
   });
 };
