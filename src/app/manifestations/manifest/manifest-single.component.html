@@ -21,13 +21,20 @@
 
     <!-- Content file input -->
     <div class="form-group" [class.was-validated]="inputHash.dirty || inputHash.touched">
+      <div class="form-check">
+        <input id="upload" name="upload" type="checkbox" class="form-check-input" [(ngModel)]="uploadToIpfs">
+        <label class="control-label" for="upload"><b>Upload</b> content to IPFS so anyone can
+          access and proof authorship. <b>Un-check</b> if you prefer to keep content <b>private</b>
+          and reveal it later.
+        </label>
+      </div>
       <label class="control-label" for="inputHash">Content*</label>
       <input id="inputHash" name="inputHash" type="text" class="form-control"
              readonly required appManifestUnregistered
-             [(ngModel)]="manifestation.hash" #inputHash="ngModel" placeholder="Uploaded content hash">
+             [(ngModel)]="manifestation.hash" #inputHash="ngModel" placeholder="Loaded content hash">
       <input id="inputFile" name="inputFile" type="file" class="form-control"
              (change)="loadFile(inputFile)" #inputFile>
-      <div class="invalid-feedback">A content hash is required, upload a file to generate it</div>
+      <div class="invalid-feedback">A content hash is required, load a file to generate it</div>
       <div class="invalid-feedback" [hidden]="!inputHash.errors?.manifestUnregistered" style="display:block">
         Content already registered with title "{{inputHash.errors?.manifestUnregistered?.title}}",
         click the "Inspect" button to consider filing a complaint if you are the creator of this content

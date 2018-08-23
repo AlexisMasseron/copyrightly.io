@@ -13,7 +13,12 @@ When(/^I fill the register form with title "([^"]*)" and content file "([^"]*)"$
 When(/^I fill the register form with title "([^"]*)" and content hash "([^"]*)"$/,
   async (title: string, hash: string) => {
     await registerForm.fillHashRegisterForm(title, hash);
-  });
+});
+
+When(/^I uncheck the "([^"]*)" option$/,
+  async (id: string) => {
+    await registerForm.uncheck(id);
+});
 
 Then(/^I see validation feedback for hash input with text '([^']*)'$/,
   async (text: string) => {
@@ -22,8 +27,12 @@ Then(/^I see validation feedback for hash input with text '([^']*)'$/,
 
 When(/^I wait till finished uploading$/,
   async () => {
-  browser.wait(ExpectedConditions.presenceOf(
-      element(by.partialButtonText('Register'))));
+  browser.wait(ExpectedConditions.textToBePresentInElement(element(by.id('manifest')), 'Register'));
+});
+
+Then(/^The Register button is disabled$/, async () => {
+  expect(await element(by.id('manifest')).isEnabled(), 'Button Register should be disabled')
+    .to.equal(false);
 });
 
 

@@ -22,6 +22,6 @@ export class MainContentPage {
   }
 
   async getButtonWithText(text: string): Promise<ElementFinder> {
-    return this.mainContainer.element(by.partialButtonText(text));
+    return await this.mainContainer.element(by.partialButtonText(text));
   }
 }

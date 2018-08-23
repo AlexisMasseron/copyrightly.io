@@ -1,6 +1,6 @@
 import { element, by, ElementFinder, browser, ExpectedConditions } from 'protractor';
 
-export class Alert {
+export class AlertPage {
 
   private alerts: ElementFinder;
 

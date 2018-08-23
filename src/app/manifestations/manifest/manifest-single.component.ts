@@ -21,7 +21,7 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
   account: string;
   manifestation = new Manifestation();
   status = 'Register';
-  uploadToIpfs = false;
+  uploadToIpfs = true;
 
   constructor(private web3Service: Web3Service,
               private ipfsService: IpfsService,

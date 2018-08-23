@@ -35,4 +35,10 @@ export class RegisterFormPage {
     browser.wait(ExpectedConditions.visibilityOf(feedback));
     return feedback.getText();
   }
+
+  async uncheck(id: string) {
+    const checkbox = await this.form.element(by.id(id));
+    await checkbox.click();
+    await browser.waitForAngular();
+  }
 }

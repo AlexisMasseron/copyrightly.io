@@ -15,7 +15,7 @@ export class ResultsPage {
     } else {
       return await this.results
         .all(by.cssContainingText('.card-subtitle', attribute))
-        .all(by.xpath('following-sibling::p')).getText();
+        .all(by.xpath('following-sibling::p')).first().getText();
     }
   }
 
