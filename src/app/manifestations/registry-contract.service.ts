@@ -40,7 +40,8 @@ export class RegistryContractService {
           .then(result => {
             this.ngZone.run(() => {
               observer.next(new Manifestation(
-                {hash: hash, title: result[0], authors: result[1], when: result[2]}));
+                {hash: hash, title: result[0], authors: result[1],
+                        when: result[2], expiry: result[3]}));
               observer.complete();
             });
           })

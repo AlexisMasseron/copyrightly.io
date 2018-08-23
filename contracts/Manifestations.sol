@@ -80,9 +80,10 @@ contract Manifestations is Pausable, Initializable {
     /// @param hash Hash of the manifestation content, for instance IPFS Base58 Hash
     /// @return The title and authors of the manifestation
     function getManifestation(string hash) public constant
-    returns (string, address[], uint256) {
+    returns (string, address[], uint256, uint256) {
         return (manifestations[hash].title,
                 manifestations[hash].authors,
-                manifestations[hash].time.creationTime);
+                manifestations[hash].time.creationTime,
+                manifestations[hash].time.expiryTime);
     }
 }

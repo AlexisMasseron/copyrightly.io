@@ -19,9 +19,10 @@ contract TestManifestations {
         string memory title;
         address[] memory authors;
         uint256 time;
+        uint256 expiry;
 
         manifestations.manifestAuthorship(HASH1, TITLE);
-        (title, authors, time) = manifestations.getManifestation(HASH1);
+        (title, authors, time, expiry) = manifestations.getManifestation(HASH1);
 
         Assert.equal(title, TITLE, "The title of manifestation should match the registered one");
         Assert.equal(authors[0], expectedAuthor, "First author should be the expected one");
@@ -39,9 +40,10 @@ contract TestManifestations {
         string memory title;
         address[] memory authors;
         uint256 time;
+        uint256 expiry;
 
         manifestations.manifestJointAuthorship(HASH2, TITLE, ADDITIONAL_AUTHORS);
-        (title, authors, time) = manifestations.getManifestation(HASH2);
+        (title, authors, time, expiry) = manifestations.getManifestation(HASH2);
 
         Assert.equal(title, TITLE, "The title of manifestation should match the registered one");
         Assert.equal(authors.length, 4, "There should 4 authors");
@@ -59,9 +61,10 @@ contract TestManifestations {
         string memory title;
         address[] memory authors;
         uint256 time;
+        uint256 expiry;
 
         manifestations.manifestJointAuthorship(HASH3, TITLE, ADDITIONAL_AUTHORS);
-        (title, authors, time) = manifestations.getManifestation(HASH3);
+        (title, authors, time, expiry) = manifestations.getManifestation(HASH3);
 
         Assert.equal(title, TITLE, "The title of manifestation should match the registered one");
         Assert.equal(authors.length, 1, "There should 4 authors");
