@@ -13,10 +13,17 @@ library ExpirableLib {
         uint256 expiryTime;
     }
 
+    /// @notice Check if `self` TimeAndExpiry struct expiry time has arrived.
+    /// @dev This method checks if there is a expiry time and if it is expired.
+    /// @param self TimeAndExpiry struct
     function isExpired(TimeAndExpiry storage self) internal constant returns(bool) {
         return (self.expiryTime > 0 && self.expiryTime < now);
     }
 
+    /// @notice Set expiry time for `self` TimeAndExpiry struct to now plus `duration`.
+    /// @dev Call this method to set the creationTime and expiryTime in the TimeAndExpiry struct.
+    /// @param self TimeAndExpiry struct
+    /// @param duration Time from current time till expiry
     function setExpiry(TimeAndExpiry storage self, uint256 duration) internal {
         self.creationTime = now;
         self.expiryTime = now.add(duration);
