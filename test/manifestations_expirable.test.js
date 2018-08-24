@@ -8,7 +8,8 @@ contract('Manifestations - Expirable', function (accounts) {
   const PROXYADMIN = accounts[1];
   const MANIFESTER1 = accounts[2];
   const MANIFESTER2 = accounts[3];
-  const HASH = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
+  const HASH1 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
+  const HASH2 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnpBDg";
   const TITLE_OLD = "A nice picture";
   const TITLE_NEW = "My nice picture";
   const timeToExpiry = 2; // Expiry 2 seconds
@@ -23,9 +24,9 @@ contract('Manifestations - Expirable', function (accounts) {
   });
 
   it("should re-register just when already expired", async () => {
-    await manifestations.manifestAuthorship(HASH, TITLE_OLD, {from: MANIFESTER1});
+    await manifestations.manifestAuthorship(HASH1, TITLE_OLD, {from: MANIFESTER1});
 
-    let result = await manifestations.getManifestation(HASH);
+    let result = await manifestations.getManifestation(HASH1);
 
     assert.equal(result[0], TITLE_OLD,
       'unexpected manifestation title');
@@ -35,12 +36,12 @@ contract('Manifestations - Expirable', function (accounts) {
     await sleep(1*1000);
 
     try {
-      await manifestations.manifestAuthorship(HASH, TITLE_NEW, {from: MANIFESTER2});
+      await manifestations.manifestAuthorship(HASH1, TITLE_NEW, {from: MANIFESTER2});
     } catch(e) {
       assert(e.message, "Error: VM Exception while processing transaction: revert");
     }
 
-    result = await manifestations.getManifestation(HASH);
+    result = await manifestations.getManifestation(HASH1);
     const oldTimestamp = result[2];
 
     assert.equal(result[0], TITLE_OLD,
@@ -50,9 +51,9 @@ contract('Manifestations - Expirable', function (accounts) {
 
     await sleep(2*1000);
 
-    await manifestations.manifestAuthorship(HASH, TITLE_NEW, {from: MANIFESTER2});
+    await manifestations.manifestAuthorship(HASH1, TITLE_NEW, {from: MANIFESTER2});
 
-    result = await manifestations.getManifestation(HASH);
+    result = await manifestations.getManifestation(HASH1);
 
     assert.equal(result[0], TITLE_NEW,
       'unexpected manifestation title');
@@ -60,6 +61,27 @@ contract('Manifestations - Expirable', function (accounts) {
       'unexpected first author in manifestation authors');
     assert(result[2] > oldTimestamp + timeToExpiry,
       'manifestation time not properly updated');
+  });
+
+  it("shouldn't expire if manifestation with evidences", async () => {
+    await manifestations.manifestAuthorship(HASH2, TITLE_OLD, {from: MANIFESTER1});
+
+    await manifestations.addEvidence(HASH2);
+
+    await sleep(3*1000);
+
+    try {
+      await manifestations.manifestAuthorship(HASH2, TITLE_NEW, {from: MANIFESTER2});
+    } catch(e) {
+      assert(e.message, "Error: VM Exception while processing transaction: revert");
+    }
+
+    result = await manifestations.getManifestation(HASH2);
+
+    assert.equal(result[0], TITLE_OLD,
+      'unexpected manifestation title');
+    assert.equal(result[1][0], MANIFESTER1,
+      'unexpected first author in manifestation authors');
   });
 });
 

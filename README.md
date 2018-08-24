@@ -218,21 +218,25 @@ cannot be re-initialized after it has been already initialized during the initia
     ✓ should fail when trying to re-initialize it
 ```
 
-Finally, the *Manifestations* contract uses the *ExpirableLib* library, detailed next, to make it possible to
-overwrite manifestations have not received any authorship evidence before an expiry time. The test validates that
-a manifestation can be re-registered after it has expired. A new version of the Manifestations contract is deployed
-with a time to expiry of 2 seconds. Re-registration is possible just after more than 2 seconds.
+Finally, the *Manifestations* contract uses the *ExpirableLib* and *Evidencable* libraries, detailed next, to make 
+it possible to overwrite manifestations have not received any authorship evidence before an expiry time. 
+The test validates that a manifestation can be re-registered after it has expired, but only if it hasn't 
+received any authorship evidence. 
+
+To do so, a new version of the Manifestations contract is deployed with a time to expiry of 2 seconds. 
+Re-registration is possible just after more than 2 seconds, but just if no evidence has been added.
 
 [manifestations_expirable.test.js](test/manifestations_expirable.test.js)
 ```
   Contract: Manifestations - Expirable
     ✓ should re-register just when already expired (3266ms)
+    ✓ shouldn't expire if manifestation with evidences (3138ms)
 ```
 
-The output of the tests should end with the following statement about all 17 being successfully:
+The output of the tests should end with the following statement about all 18 being successfully:
 
 ```
-  17 passing (6s)
+  18 passing (11s)
 ```
 
 ### [Evidences](contracts/Evidences.sol) Contract
@@ -252,42 +256,52 @@ which is used by the *Manifestations* and *Claims* contracts. It is tested in th
 
 ### [EvidencableLib](contracts/EvidencableLib.sol) Library
 
-...
+This is a library that provides the logic for items that can accumulate evidences. Manifestations or claims
+can receive evidences. They are considered by curators to check the appropriateness of manifestations and claims.
+Moreover, they are counted so manifestations or claims that have accumulated at least one evidence do not expire,
+as tested in [manifestations_expirable.test.js](test/manifestations_expirable.test.js) and 
+[claims_expirable.test.js](test/claims_expirable.test.js)
 
 ## Design Pattern Requirements
 
-Implemented a "Circuit Breaker / Emergency Stop" for the *Manifestations* contract using OpenZeppelin *Pausable* contract, 
+The project implements a "Circuit Breaker / Emergency Stop" for the *Manifestations* contract using OpenZeppelin *Pausable* contract, 
 [https://openzeppelin.org/api/docs/lifecycle_Pausable.html]()
 
-What other design patterns have you used or not used?
-https://consensys.github.io/smart-contract-best-practices/software_engineering/
-- Speed Bumps (Delay contract actions)
-- Rate Limiting
-- Automatic Deprecation
-- Restrict amount of Ether per user/contract
+This pattern is tested in [manifestations.test.js](test/manifestations_pausable.test.js)
+
+Moreover, a pattern similar to "Automatic Deprecation" has been implemented for the registered manifestations. This way, if a
+user registers manifestations but does not provide evidences, the manifestations expire after a given amount of time fixed during
+deployment o the *Manifestations* contract. Expiration in this case means that the manifestation can be overwritten by another user.
+
+This pattern is implemented as a library in [ExpirableLib](contracts/ExpirableLib.sol), to facilitate its reuse. 
+It has been tested in [manifestations_expirable.test.js](test/manifestations_expirable.test.js)
+
+Overall, the contracts have been designed favouring modularity and reusability. Thus, the previous expiration functionality has been
+implemented as a Solidity Library. There is also the "evidencable" functionality, that makes a item capable of accumulating evidences
+supporting it, that has been also implemented using a Solidity Library [EvidencableLib](contracts/EvidencableLib.sol). This facilitates
+making manifestations capable of accumulating evidences supporting them, but also reusing this same behaviour for claims. Moreover,
+making this functionality available as a library reduces deployment costs.
 
 ## Security Tools / Common Attacks
 
-Explain what measures they’ve taken to ensure that their contracts are not susceptible to common attacks.
-https://consensys.github.io/smart-contract-best-practices/known_attacks/
-* Race Conditions
-  * Reentrancy
-  * Cross-function Race Conditions
-  * Pitfalls in Race Condition Solutions
-* Transaction-Ordering Dependence (TOD) / Front Running
-* Timestamp Dependence
-* Integer Overflow and Underflow
-  * Used OpenZeppelin SafeMath library.
-* DoS with (Unexpected) revert
-* DoS with Block Gas Limit
-* Forcibly Sending Ether to a Contract
+All contracts have been verified using both Remix and the [Solhint](https://github.com/protofire/solhint) tool for
+Solidity code linting. Both tools check for common security issues like Reentrancy or Timestamp Dependence. No Reentrancy
+issue is identified by any of these tools, neither after visual inspection of the code. There is a Timestamp Dependence
+warning regarding the ExpirableLib library as timestamps are used to check expiry conditions. However, this is not an issue
+as the intended expiry period is going to be long enough to avoid this issue, currently set to one day.
+
+Regarding Integer Overflow and Underflow, the OpenZeppelin [SafeMath](https://openzeppelin.org/api/docs/math_SafeMath.html) 
+library has been used to avoid this kind of issues.
+
+Finally, Solhint has been set as one of the steps in the Continuous Integration and Deployment workflow defined in 
+[.travis.yml](.travis.yml). This way, each time code is pushed to GitHub, Travis runs all tests (for both the contracts and
+the Angular frontend) and takes care of the deployment if all tests pass. 
+Moreover, the [Solhint](https://github.com/protofire/solhint) tool is also executed before the tests and it helps tracking 
+any security issue that might appear.
 
 ## Library / EthPM
 
-At least one of the project contracts includes an import from a library or an ethPM package. 
-If none of the project contracts do, then there is a demonstration contract that does.
-
-Imported the following Libraries and Contracts from ZeppelinOs and OpenZeppelin. 
+The project imports the following Libraries and Contracts from ZeppelinOs and OpenZeppelin. 
 In both cases, they where imported as Node packages using NPM because the versions available 
 trough EthPM are outdated.
 
@@ -300,10 +314,17 @@ Imported from OpenZeppelin:
  It also extends *Ownable* to control that just the owner can stop it.
  - *SafeMath*: library that avoids the integer overflow and underflow issue.
 
+Moreover, the OraclizeAPI package has been imported using EthPM as defined in [ethpm.json](ethpm.json). 
+From this package, the following contract has been used:
+ - *usingOraclize*: implements the oracle used by YouTubeEvidences to check that a YouTube video is owned 
+ by a particular user and linked to its manifestation.
+
 ## Additional Requirements
 
-Smart Contract code should be commented according to the specs in the documentation
-https://solidity.readthedocs.io/en/v0.4.21/layout-of-source-files.html#comments"
+The smart contracts code has been commented according to the specs in the documentation
+https://solidity.readthedocs.io/en/v0.4.21/layout-of-source-files.html#comments and extended using the
+Ethereum Natural Specification format as documented in 
+https://github.com/ethereum/wiki/wiki/Ethereum-Natural-Specification-Format 
 
 ## Stretch Goals
 
@@ -312,17 +333,35 @@ https://solidity.readthedocs.io/en/v0.4.21/layout-of-source-files.html#comments"
 When a user registers a piece of content using a digital file, it is uploaded to IPFS and 
 the corresponding IPFS identifier (hash) is used to register the manifestation of the content in Ethereum.
 
+The same is done for evidences based on uploading a document to IPFS so it is available for anyone to verify.
+
 ### uPort
 
 ### Ethereum Name Service
 
 ### Oracles
 
+An oracle has been used in the [YouTubeEvidences](contracts/YouTubeEvidences.sol) contract. 
+This contract implements an Oracle that checks if a specific YouTube video, identified using its VIDEO_ID, has
+in the description of its web page (https://www.youtube.com/watch?v=VIDEO_ID) a link to a specific content hash.
+
+Thus, the Oracle allows a creator to assert that a manifestation is also available in YouTube as a video owned by
+the same person, who should have access to edit the description of the video to include the link to the manifestation
+using its hash.
+
+The tests for this contract are currently disabled as it has not been possible to make Oraclize work in the 
+Ganache test network, even after installing the [ethereum-bridge](https://github.com/oraclize/ethereum-bridge) 
+as recommended in the Oraclize documentation. 
+
+The tests are available from [youtubeevidences.test.js](test/youtubeevidences.test.js.disabled)
+
 ### Upgradable Pattern Registry or Delegation
 
 To make contracts upgradable, the Delegation pattern has been used through a Relay or Proxy. 
 Concretely, the *AdminUpgradeabilityProxy* provided by the ZeppelinOS Library, as detailed in 
 [https://docs.zeppelinos.org/docs/low_level_contract.html]()
+
+Upgradeability is tested in [manifestations_upgradeability.test.js](test/manifestations_upgradeability.test.js)
 
 ### LLL / Vyper
 

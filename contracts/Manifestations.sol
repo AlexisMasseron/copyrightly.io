@@ -4,23 +4,27 @@ import "zos-lib/contracts/migrations/Initializable.sol";
 import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "zos-lib/contracts/upgradeability/AdminUpgradeabilityProxy.sol";
 import "./ExpirableLib.sol";
+import "./EvidencableLib.sol";
 
 /// @title Contract for copyright authorship registration through creations manifestations
 /// @author Roberto García (http://rhizomik.net/~roberto/)
 contract Manifestations is Pausable, Initializable {
 
     using ExpirableLib for ExpirableLib.TimeAndExpiry;
+    using EvidencableLib for EvidencableLib.Evidentiality;
 
     struct Manifestation {
         string title;
         address[] authors;
         ExpirableLib.TimeAndExpiry time;
+        EvidencableLib.Evidentiality evidentiality;
     }
 
     uint32 public timeToExpiry;
     mapping(string => Manifestation) private manifestations;
 
     event ManifestEvent(string hash, string title, address indexed manifester);
+    event AddedEvidence(uint8 evidenceCount);
 
     constructor(uint32 _timeToExpiry) public {
         timeToExpiry = _timeToExpiry;
@@ -37,8 +41,9 @@ contract Manifestations is Pausable, Initializable {
     /// Finally, emits ManifestEvent
     modifier registerIfAvailable(string hash, string title) {
         require(bytes(title).length > 0, "A title is required");
-        require(manifestations[hash].authors.length == 0 || manifestations[hash].time.isExpired(),
-            "Already registered and not expired");
+        require(manifestations[hash].authors.length == 0 || (manifestations[hash].time.isExpired()
+                && manifestations[hash].evidentiality.isUnevidenced()),
+            "Already registered and not expired or with evidences");
         _;
         manifestations[hash].title = title;
         manifestations[hash].time.setExpiry(timeToExpiry);
@@ -85,5 +90,10 @@ contract Manifestations is Pausable, Initializable {
                 manifestations[hash].authors,
                 manifestations[hash].time.creationTime,
                 manifestations[hash].time.expiryTime);
+    }
+
+    function addEvidence(string hash) public {
+        manifestations[hash].evidentiality.addEvidence();
+        emit AddedEvidence(manifestations[hash].evidentiality.evidenceCount);
     }
 }
