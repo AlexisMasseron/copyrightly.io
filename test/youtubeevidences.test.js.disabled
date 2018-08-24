@@ -1,0 +1,47 @@
+const Evidences = artifacts.require("YouTubeEvidences");
+const Manifestations = artifacts.require('Manifestations');
+const Proxy = artifacts.require("AdminUpgradeabilityProxy");
+
+contract('YouTubeEvidences - Check YouTube video ownership', function (accounts) {
+
+  const OWNER = accounts[0];
+  const PROXYADMIN = accounts[1];
+  const MANIFESTER = accounts[2];
+  const HASH = "QmPP8X2rWc2uanbnKpxfzEAAuHPuThQRtxpoY8CYVJxDj8";
+  const VIDEO_ID = "ZwVNLDIJKVA";
+  const ether = 10**18; // 1 ether = 1000000000000000000 wei
+
+
+  let evidences, proxy, manifestations, result;
+
+  beforeEach('setup contracts for each test', async () => {
+    evidences = await Evidences.deployed();
+    proxy = await Proxy.deployed();
+    manifestations = await Manifestations.at(proxy.address);
+  });
+
+  it("should add evidence for YouTube video linked to manifestation", async () => {
+    let eventEmitted = false;
+    const event = evidences.YouTubeEvidenceEvent();
+    await event.watch((error, result) => {
+      evidenceHash = result.args.hash;
+      evidenceVideoId = result.args.videoId;
+      evidenceIsPending = result.args.isPending;
+      evidenceIsVerified = result.args.isVerified;
+      eventEmitted = true;
+    });
+
+    await evidences.check(HASH, VIDEO_ID, {value: 0.0001 * ether});
+
+    assert.equal(eventEmitted, true,
+        'YouTube video linked to its manifestation should emit a YouTubeEvidenceEvent');
+    assert.equal(evidenceHash, HASH,
+        'unexpected evidence event hash');
+    assert.equal(evidenceVideoId, VIDEO_ID,
+        'unexpected evidence event video id');
+    assert.equal(evidenceIsPending, false,
+        'evidence should not be pending');
+    assert.equal(evidenceIsVerified, true,
+      'evidence should be verified');
+  });
+});

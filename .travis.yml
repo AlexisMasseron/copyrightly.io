@@ -20,6 +20,7 @@ cache:
 install:
   - npm install
   - node patch.js
+  - npm run ethpm
 
 before_script:
   - curl -L https://github.com/rancher/rancher-compose/releases/download/v0.12.5/rancher-compose-linux-amd64-v0.12.5.tar.gz > rancher-compose.tar.gz

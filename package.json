@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "description": "ÐApp for Copyright Management",
   "scripts": {
+    "ethpm": "truffle install",
     "postinstall": "node patch.js",
     "lint": "npm-run-all -p -c solhint nglint",
     "solhint": "solhint ./contracts/*.sol",
@@ -58,6 +59,7 @@
     "cucumber": "^4.2.1",
     "cucumber-html-reporter": "^4.0.3",
     "dotenv": "^6.0.0",
+    "ethereum-bridge": "^0.6.1",
     "ganache-cli": "^6.1.6",
     "jasmine-core": "~2.99.1",
     "jasmine-spec-reporter": "~4.2.1",
@@ -83,9 +85,11 @@
     "url": "git+https://github.com/rogargon/copyrightly.io.git"
   },
   "author": "http://rhizomik.net/~roberto/",
-  "license": "SEE LICENSE IN LICENSE",
+  "license": "GPL-3.0-only",
   "bugs": {
     "url": "https://github.com/rogargon/copyrightly.io/issues"
   },
-  "browser": { "fs": false }
+  "browser": {
+    "fs": false
+  }
 }
