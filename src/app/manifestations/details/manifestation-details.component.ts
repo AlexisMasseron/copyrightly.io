@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Web3Service } from '../../util/web3.service';
-import { RegistryContractService } from '../registry-contract.service';
+import { ManifestationsContractService } from '../manifestations-contract.service';
 import { AlertsService } from '../../alerts/alerts.service';
 import { AuthenticationService } from '../../navbar/authentication.service';
 import { switchMap } from 'rxjs/operators';
@@ -19,7 +19,7 @@ export class ManifestationDetailsComponent implements OnInit {
   constructor(private route: ActivatedRoute,
               private router: Router,
               private web3Service: Web3Service,
-              private registryContractService: RegistryContractService,
+              private registryContractService: ManifestationsContractService,
               private alertsService: AlertsService,
               private authenticationService: AuthenticationService) {}
 

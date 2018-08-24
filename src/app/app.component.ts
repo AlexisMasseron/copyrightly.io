@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ManifestEvent } from './manifestations/manifest-event';
 import { filter, flatMap, takeUntil } from 'rxjs/operators';
-import { RegistryContractService } from './manifestations/registry-contract.service';
+import { ManifestationsContractService } from './manifestations/manifestations-contract.service';
 import { AlertsService } from './alerts/alerts.service';
 import { Web3Service } from './util/web3.service';
 import { Subject } from 'rxjs/internal/Subject';
@@ -17,7 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(private web3Service: Web3Service,
-              private registryContractService: RegistryContractService,
+              private registryContractService: ManifestationsContractService,
               private authenticationService: AuthenticationService,
               private alertsService: AlertsService) {}
 

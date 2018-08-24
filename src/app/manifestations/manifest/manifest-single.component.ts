@@ -5,7 +5,7 @@ import { AlertsService } from '../../alerts/alerts.service';
 import { AuthenticationService } from '../../navbar/authentication.service';
 import { Web3Service } from '../../util/web3.service';
 import { IpfsService } from '../../util/ipfs.service';
-import { RegistryContractService } from '../registry-contract.service';
+import { ManifestationsContractService } from '../manifestations-contract.service';
 import { Manifestation } from '../manifestation';
 import { NgForm } from '@angular/forms';
 import { ManifestEventComponent } from '../manifest-event.component';
@@ -25,7 +25,7 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
 
   constructor(private web3Service: Web3Service,
               private ipfsService: IpfsService,
-              private registryContractService: RegistryContractService,
+              private registryContractService: ManifestationsContractService,
               private alertsService: AlertsService,
               private authenticationService: AuthenticationService) {}
 

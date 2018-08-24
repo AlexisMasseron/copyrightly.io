@@ -13,7 +13,7 @@ const proxy = require('../../assets/contracts/AdminUpgradeabilityProxy.json');
 @Injectable({
   providedIn: 'root'
 })
-export class RegistryContractService {
+export class ManifestationsContractService {
 
   private deployedContract = new ReplaySubject<any>(1);
 
@@ -26,7 +26,7 @@ export class RegistryContractService {
         this.deployedContract.next(
           new this.web3Service.web3.eth.Contract(artifacts.abi, deployedAddress));
       } else {
-        this.deployedContract.error(new Error('Registry contract ' +
+        this.deployedContract.error(new Error('Manifestations contract ' +
           'not found in current network with id ' + network_id));
       }
     });

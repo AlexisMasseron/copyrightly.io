@@ -2,7 +2,7 @@ import { Directive, NgZone } from '@angular/core';
 import { AbstractControl, AsyncValidator, NG_ASYNC_VALIDATORS, ValidationErrors
 } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { RegistryContractService } from '../registry-contract.service';
+import { ManifestationsContractService } from '../manifestations-contract.service';
 import { Manifestation } from '../manifestation';
 
 @Directive({
@@ -11,7 +11,7 @@ import { Manifestation } from '../manifestation';
 })
 export class ManifestUnregisteredDirective implements AsyncValidator {
 
-  constructor(private registryContractService: RegistryContractService,
+  constructor(private registryContractService: ManifestationsContractService,
               private ngZone: NgZone) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {

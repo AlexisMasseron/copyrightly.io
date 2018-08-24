@@ -3,7 +3,7 @@ import { Subject } from 'rxjs/internal/Subject';
 import { filter, flatMap, takeUntil } from 'rxjs/operators';
 import { AlertsService } from '../../alerts/alerts.service';
 import { Web3Service } from '../../util/web3.service';
-import { RegistryContractService } from '../registry-contract.service';
+import { ManifestationsContractService } from '../manifestations-contract.service';
 import { AuthenticationService } from '../../navbar/authentication.service';
 import { ManifestEvent } from '../manifest-event';
 
@@ -18,7 +18,7 @@ export class ManifestationsListComponent implements OnInit, OnDestroy {
   public manifestationEvents: ManifestEvent[] = [];
 
   constructor(private web3Service: Web3Service,
-              private registryContractService: RegistryContractService,
+              private registryContractService: ManifestationsContractService,
               private alertsService: AlertsService,
               private authenticationService: AuthenticationService) {}
 

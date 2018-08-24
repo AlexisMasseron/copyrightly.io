@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject } from 'rxjs/internal/Subject';
 import { AlertsService } from '../../alerts/alerts.service';
 import { Web3Service } from '../../util/web3.service';
-import { RegistryContractService } from '../registry-contract.service';
+import { ManifestationsContractService } from '../manifestations-contract.service';
 import { Manifestation } from '../manifestation';
 import { takeUntil } from 'rxjs/operators';
 
@@ -17,7 +17,7 @@ export class ManifestationsSearchComponent implements OnInit, OnDestroy {
   manifestation = new Manifestation();
 
   constructor(private web3Service: Web3Service,
-              private registryContractService: RegistryContractService,
+              private registryContractService: ManifestationsContractService,
               private alertsService: AlertsService) {}
 
   ngOnInit(): void { }
