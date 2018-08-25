@@ -5,7 +5,7 @@ Feature: Manifest Single Authorship
 
   Scenario: Register a piece of content not previously registered
     Given I'm on the home page and authenticated
-    When I click submenu option "Register" in menu "Registry"
+    When I click submenu option "Register" in menu "Manifestations"
     And I uncheck the "upload" option
     And I fill the register form with title "Te Hoho Rock" and content file "Te Hoho Rock.jpg"
     And I wait till finished uploading
@@ -15,7 +15,7 @@ Feature: Manifest Single Authorship
 
   Scenario: Register a piece of content previously registered
     Given I'm on the home page and authenticated
-    When I click submenu option "Register" in menu "Registry"
+    When I click submenu option "Register" in menu "Manifestations"
     And I uncheck the "upload" option
     And I fill the register form with title "My Te Hoho Rock" and content file "Te Hoho Rock.jpg"
     And I wait till finished uploading
@@ -25,7 +25,7 @@ Feature: Manifest Single Authorship
   @slow @disabled
   Scenario: Register a piece of content not previously registered and upload to IPFS
     Given I'm on the home page and authenticated
-    When I click submenu option "Register" in menu "Registry"
+    When I click submenu option "Register" in menu "Manifestations"
     And I fill the register form with title "Smiling Sphinx Rock" and content file "Smiling Sphinx Rock.jpg"
     And I wait till finished uploading
     And I click the "Register" button
@@ -35,7 +35,7 @@ Feature: Manifest Single Authorship
   @slow @disabled
   Scenario: Register a piece of content previously registered and upload to IPFS
     Given I'm on the home page and authenticated
-    When I click submenu option "Register" in menu "Registry"
+    When I click submenu option "Register" in menu "Manifestations"
     And I fill the register form with title "My Smiling Sphinx Rock" and content file "Smiling Sphinx Rock.jpg"
     And I wait till finished uploading
     Then The Register button is disabled

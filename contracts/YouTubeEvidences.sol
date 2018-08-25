@@ -4,8 +4,8 @@ import "oraclize-api/usingOraclize.sol";
 import "./Evidencable.sol";
 
 contract YouTubeEvidences is usingOraclize {
-    string constant HTML = "html(https://www.youtube.com/watch?v=";
-    string constant XPATH = ").xpath(count(//div[contains(@id,'description')]//a[contains(@href,'";
+    string private constant HTML = "html(https://www.youtube.com/watch?v=";
+    string private constant XPATH = ").xpath(count(//div[contains(@id,'description')]//a[contains(@href,'";
 
     mapping(bytes32=>YouTubeEvidence) public evidences;
 
@@ -36,9 +36,9 @@ contract YouTubeEvidences is usingOraclize {
         if (parseInt(properLinksCount) > 0) {
             evidences[evidenceId].isVerified = true;
             Evidencable(evidences[evidenceId].registry)
-              .addEvidence(evidences[evidenceId].evidencedId);
+                .addEvidence(evidences[evidenceId].evidencedId);
             emit YouTubeEvidenceEvent(evidenceId, keccak256(evidences[evidenceId].evidencedId),
-              evidences[evidenceId].videoId);
+                evidences[evidenceId].videoId);
         }
         evidences[evidenceId].isPending = false;
     }

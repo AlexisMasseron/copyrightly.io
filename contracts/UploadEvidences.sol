@@ -9,7 +9,7 @@ contract UploadEvidences {
     mapping(string => bool) private existingEvidences;
 
     event UploadEvidenceEvent(address indexed registry, bytes32 indexed evidencedIdHash,
-      string evidenceHash, address indexed evidencer);
+        string evidenceHash, address indexed evidencer);
 
     constructor() public {}
 
