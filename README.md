@@ -363,6 +363,12 @@ Upgradeability is tested in [manifestations_upgradeability.test.js](test/manifes
 
 ### LLL / Vyper
 
+A version of the *Claims* contract has been also implemented using Vyper. The result is [Claims.vy](contracts/Claims.vy), which has
+been validated and compiled using the [Vyper Online Compiler](https://vyper.online/)
+
+However, this version is not compiled and deployed by Truffle like the rest of the contracts because Vyper is not yet integrated into 
+the Truffle suite.
+
 ### Testnet Deployment
 
 Deployments to both Ropsten and Rinkeby at the addresses detailed in the file: [deployed_addresses.txt](deployed_addresses.txt)
