@@ -1,7 +1,11 @@
 Ropsten:
- - Registry: 0xf269d85bd7575fcd9dcbca3c04bc7acc47d40f47
- - AdminUpgradeabilityProxy: 0x92d2ba2cb7d74ddb3754207f2a188f7a31d09d19
+ - Manifestations: 0xafe25ade4e647e82b9a423f7477fe0fb1d294125
+ - AdminUpgradeabilityProxy: 0x8d941015e1657febbf23eb1300be0b61f3bbbcea
+ - UploadEvidences: 0x9a4fd78d69fcef57d104515f0c06ac140c86cbd4
+ - YouTubeEvidences: 0xde7a21f9266a23f57718de1086bab6cc08395181
 
 Rinkeby:
- - Registry: 0xc9959d09475ea04efbb7d319e6048c62d3692b6d
- - AdminUpgradeabilityProxy: 0x7f1fa43fe3484cc5fd5fd4c94a15897daef49765
+ - Manifestations: 0x2a381e3292b586af5524c18563d64d3a9472be8c
+ - AdminUpgradeabilityProxy: 0x2e0b75e8f64d4cced51bf4503a81ef59b0a939b7
+ - UploadEvidences: 0x1f29de05682da24495a82c63e7a1750e2a86479c
+ - YouTubeEvidences: 0x489636cbd07ee33a298fb3531785790bea1eeeb8

@@ -34,8 +34,8 @@ module.exports = {
           "https://ropsten.infura.io/" + process.env.INFURA_TOKEN, 0, 2)
       },
       network_id: 3,
-      gas: 1700000,
-      gasPrice: 1000000000
+      gas: 2700000,
+      gasPrice: 5000000000 // 5 Gwei
     },
     rinkeby: {
       provider: function() {
@@ -43,8 +43,8 @@ module.exports = {
           "https://rinkeby.infura.io/" + process.env.INFURA_TOKEN, 0, 2)
       },
       network_id: 4,
-      gas: 1700000,
-      gasPrice: 1000000000
+      gas: 2700000,
+      gasPrice: 5000000000 // 5 Gwei
     }
   }
 };
