@@ -20,7 +20,7 @@ contract Evidencable is Ownable {
 
     /// @notice Get the evidence count for the manifestation with `hash`.
     /// @param hash Hash of the manifestation content, for instance IPFS Base58 Hash
-    function getEvidenceCount(string hash) public returns (uint8) {
+    function getEvidenceCount(string hash) public constant returns (uint8) {
         return evidenceCounts[hash];
     }
 

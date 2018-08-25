@@ -91,4 +91,11 @@ contract Manifestations is Pausable, Initializable, Evidencable {
                 manifestations[hash].time.creationTime,
                 manifestations[hash].time.expiryTime);
     }
+
+    /// @notice Adds an evidence if there is already a manifestation for `hash`.
+    /// @param hash Hash of the manifestation content, for instance IPFS Base58 Hash
+    function addEvidence(string hash) public {
+        require(bytes(manifestations[hash].title).length > 0, "The manifestation evidenced should exist");
+        super.addEvidence(hash);
+    }
 }

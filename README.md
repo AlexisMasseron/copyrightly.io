@@ -14,7 +14,7 @@ used to proof authorship as the content can be retrieved from IPFS.
 
 However, it is not enough to register a manifestation. Some evidences should be also provided to support the
 authorship claim or the manifestation will expire after one day. There are evidences based on content uploaded
-(to IPFS), implemented by the [UploadableEvidences](contracts/UploadableEvidences.sol) contract. The uploaded
+(to IPFS), implemented by the [UploadEvidences](contracts/UploadEvidences.sol) contract. The uploaded
 content can be anything, from a screenshot to a scanned contract in PDF format.
 
 The might be also evidences based on having previously published the content online, for instance in YouTube.
@@ -59,7 +59,7 @@ Future work:
    * [Launch Web Application](#launch-web-application)
 * [Testing](#testing)
    * [Manifestations Contract](#manifestations-contract)
-   * [UploadableEvidences Contract](#uploadableevidences-contract)
+   * [UploadEvidences Contract](#UploadEvidences-contract)
    * [Claims Contract](#claims-contract)
    * [ExpirableLib Library](#expirablelib-library)
    * [Evidencable Contract](#evidencable-contract)
@@ -259,16 +259,27 @@ has been added.
     ✓ shouldn't expire if manifestation with evidences (3138ms)
 ```
 
-The output of the tests should end with the following statement about all 18 being successfully:
+### [UploadEvidences](contracts/UploadEvidences.sol) Contract
 
-```
-  18 passing (11s)
-```
+This contract implements the registration of evidences based on uploading content to IPFS. It behaves as an
+evidence provider for the contract specified when adding the evidence. However, the contract has to be registered
+as and allowed evidence provider in that contract, in the case of these tests the *Manifestations* contract.
+Multiple evidences should be accumulated for the same manifestation, but just if they are new ones and if the
+manifestation they are evidences for exists. Finally, only the owner of *Manifestations* can register an
+evidence provider. Finally, it is tested that just the owner of *Manifestations* can register a new provider that
+then can add evidences as usual.
 
-### [UploadableEvidences](contracts/UploadableEvidences.sol) Contract
-
-[uploadableevidences.test.js](test/uploadableevidences.test.js)
+[uploadevidences.test.js](test/uploadevidences.test.js)
 ```
+  Contract: UploadEvidences - Manifestations accumulate evidences
+    ✓ should add evidence if registered evidence provider (220ms)
+    ✓ should add multiple evidences for the same manifestation (124ms)
+    ✓ shouldn't add the same evidence for the same manifestation (116ms)
+    ✓ shouldn't add the same evidence for a different manifestation (142ms)
+    ✓ shouldn't add evidence if the manifestation does not exists (522ms)
+    ✓ shouldn't add evidence if not a registered evidence provider (556ms)
+    ✓ should be enforced that just the owner registers evidence providers (558ms)
+
 ```
 
 ### [Claims](contracts/Claims.sol) Contract
@@ -277,10 +288,9 @@ The output of the tests should end with the following statement about all 18 bei
 
 ### [ExpirableLib](contracts/ExpirableLib.sol) Library
 
-This library contains the logic for items with a creation and expiry time, 
-which is used by the *Manifestations* and *Claims* contracts. It is tested in: 
-[manifestations_expirable.test.js](test/manifestations_expirable.test.js) and 
-[claims_expirable.test.js](test/claims_expirable.test.js)
+This library contains the logic for items with a creation and expiry time. With it, 
+manifestations or claims can expire after a certain amount of time. It is tested in: 
+[manifestations_expirable.test.js](test/manifestations_expirable.test.js)
 
 ### [Evidencable](contracts/EvidencableLib.sol) Contract
 
@@ -290,8 +300,7 @@ can receive evidences by extending this contract.
 The idea is that evidences are considered by curators to check the appropriateness of manifestations and claims.
 
 Moreover, they are counted so manifestations or claims that have accumulated at least one evidence do not expire,
-as tested in [manifestations_expirable.test.js](test/manifestations_expirable.test.js) and 
-[claims_expirable.test.js](test/claims_expirable.test.js)
+as tested in: [manifestations_expirable.test.js](test/manifestations_expirable.test.js)
 
 ## Design Pattern Requirements
 

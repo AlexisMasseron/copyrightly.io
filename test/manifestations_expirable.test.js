@@ -1,6 +1,6 @@
 const Manifestations = artifacts.require('Manifestations');
 const Proxy = artifacts.require("AdminUpgradeabilityProxy");
-const UploadableEvidences = artifacts.require("./UploadableEvidences.sol");
+const UploadEvidences = artifacts.require("./UploadEvidences.sol");
 const assert = require('assert');
 
 contract('Manifestations - Expirable', function (accounts) {
@@ -66,7 +66,7 @@ contract('Manifestations - Expirable', function (accounts) {
   });
 
   it("shouldn't expire if manifestation with evidences", async () => {
-    const evidences = await UploadableEvidences.deployed();
+    const evidences = await UploadEvidences.deployed();
     manifestations.addEvidenceProvider(evidences.address);
 
     await manifestations.manifestAuthorship(HASH2, TITLE_OLD, {from: MANIFESTER1});
