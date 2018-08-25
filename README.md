@@ -30,26 +30,6 @@ Future work:
  CLY if they support and evidence of a winning manifestation or claim... 
 
 ## Table of Contents
-
-* [Features](#features)
-* [Running Locally](#running-locally)
-   * [Required Tools](#required-tools)
-   * [Smart Contracts Deployment](#smart-contracts-deployment)
-   * [Launch Web Application](#launch-web-application)
-* [Testing](#testing)
-   * [Manifestations Contract](#manifestations-contract)
-* [Design Pattern Requirements](#design-pattern-requirements)
-* [Security Tools / Common Attacks](#security-tools--common-attacks)
-* [Library / EthPM](#library--ethpm)
-* [Additional Requirements](#additional-requirements)
-* [Stretch Goals](#stretch-goals)
-   * [IPFS](#ipfs)
-   * [uPort](#uport)
-   * [Ethereum Name Service](#ethereum-name-service)
-   * [Oracles](#oracles)
-   * [Upgradable Pattern Registry or Delegation](#upgradable-pattern-registry-or-delegation)
-   * [LLL / Vyper](#lll--vyper)
-   * [Testnet Deployment](#testnet-deployment)
    
 * [Table of Contents](#table-of-contents)
 * [Features](#features)
@@ -75,7 +55,6 @@ Future work:
    * [Upgradable Pattern Registry or Delegation](#upgradable-pattern-registry-or-delegation)
    * [LLL / Vyper](#lll--vyper)
    * [Testnet Deployment](#testnet-deployment)
-
 
 ## Features
 
