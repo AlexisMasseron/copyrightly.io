@@ -1,8 +1,8 @@
 const Manifestations = artifacts.require("./Manifestations.sol");
 const SafeMath = artifacts.require("./SafeMath.sol");
 const ExpirableLib = artifacts.require("./ExpirableLib.sol");
-const EvidencableLib = artifacts.require("./EvidencableLib.sol");
 const Proxy = artifacts.require("./AdminUpgradeabilityProxy.sol");
+const UploadableEvidences = artifacts.require("./UploadableEvidences.sol");
 const YouTubeEvicences = artifacts.require("./YouTubeEvidences.sol");
 
 module.exports = async function(deployer, network, accounts) {
@@ -12,21 +12,24 @@ module.exports = async function(deployer, network, accounts) {
 
   deployer.then(async () => {
     await deployer.deploy(SafeMath);
-    await deployer.link(SafeMath, [ExpirableLib, EvidencableLib]);
+    await deployer.link(SafeMath, [ExpirableLib, Manifestations]);
     await deployer.deploy(ExpirableLib);
-    await deployer.deploy(EvidencableLib);
     await deployer.link(ExpirableLib, [Manifestations]);
-    await deployer.link(EvidencableLib, [Manifestations]);
     await deployer.deploy(Manifestations, timeToExpiry);
     await deployer.deploy(Proxy, Manifestations.address, {from: proxyAdmin});
+    await deployer.deploy(UploadableEvidences);
     await deployer.deploy(YouTubeEvicences);
 
     const manifestations = await Manifestations.deployed();
     const proxy = await Proxy.deployed();
+    const uploadableEvidences = await UploadableEvidences.deployed();
+    const youTubeEvicences = await YouTubeEvicences.deployed();
     const proxied = await Manifestations.at(proxy.address);
 
     return Promise.all([
-      await proxied.initialize(owner, timeToExpiry)
+      await proxied.initialize(owner, timeToExpiry),
+      await proxied.addEvidenceProvider(uploadableEvidences.address),
+      await proxied.addEvidenceProvider(youTubeEvicences.address)
     ]);
   });
 };

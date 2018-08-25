@@ -1,5 +1,6 @@
 const Manifestations = artifacts.require('Manifestations');
 const Proxy = artifacts.require("AdminUpgradeabilityProxy");
+const UploadableEvidences = artifacts.require("./UploadableEvidences.sol");
 const assert = require('assert');
 
 contract('Manifestations - Expirable', function (accounts) {
@@ -10,13 +11,14 @@ contract('Manifestations - Expirable', function (accounts) {
   const MANIFESTER2 = accounts[3];
   const HASH1 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG";
   const HASH2 = "QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnpBDg";
+  const EVIDENCE_HASH = "QmPP8X2rWc2uanbnKpxfzEAAuHPuThQRtxpoY8CYVJxDj8";
   const TITLE_OLD = "A nice picture";
   const TITLE_NEW = "My nice picture";
   const timeToExpiry = 2; // Expiry 2 seconds
 
   let manifestations, shortExpiryManifestations, newProxy;
 
-  beforeEach('setup contracts for each test', async () => {
+  beforeEach('setup specific contracts for this test with short expiry', async () => {
     shortExpiryManifestations = await Manifestations.new(timeToExpiry);
     newProxy = await Proxy.new(shortExpiryManifestations.address, {from: PROXYADMIN});
     manifestations = await Manifestations.at(newProxy.address);
@@ -64,9 +66,12 @@ contract('Manifestations - Expirable', function (accounts) {
   });
 
   it("shouldn't expire if manifestation with evidences", async () => {
+    const evidences = await UploadableEvidences.deployed();
+    manifestations.addEvidenceProvider(evidences.address);
+
     await manifestations.manifestAuthorship(HASH2, TITLE_OLD, {from: MANIFESTER1});
 
-    await manifestations.addEvidence(HASH2);
+    await evidences.addEvidence(manifestations.address, HASH2, EVIDENCE_HASH);
 
     await sleep(3*1000);
 

@@ -4,20 +4,18 @@ import "zos-lib/contracts/migrations/Initializable.sol";
 import "openzeppelin-solidity/contracts/lifecycle/Pausable.sol";
 import "zos-lib/contracts/upgradeability/AdminUpgradeabilityProxy.sol";
 import "./ExpirableLib.sol";
-import "./EvidencableLib.sol";
+import "./Evidencable.sol";
 
 /// @title Contract for copyright authorship registration through creations manifestations
 /// @author Roberto García (http://rhizomik.net/~roberto/)
-contract Manifestations is Pausable, Initializable {
+contract Manifestations is Pausable, Initializable, Evidencable {
 
     using ExpirableLib for ExpirableLib.TimeAndExpiry;
-    using EvidencableLib for EvidencableLib.Evidentiality;
 
     struct Manifestation {
         string title;
         address[] authors;
         ExpirableLib.TimeAndExpiry time;
-        EvidencableLib.Evidentiality evidentiality;
     }
 
     uint32 public timeToExpiry;
@@ -39,10 +37,12 @@ contract Manifestations is Pausable, Initializable {
     /// @dev Modifier implementing the common logic for single and joint authorship.
     /// Checks title and that hash not registered or expired. Then stores title and sets expiry.
     /// Finally, emits ManifestEvent
+    /// @param hash Hash of the manifestation content, for instance IPFS Base58 Hash
+    /// @param title The title of the manifestation
     modifier registerIfAvailable(string hash, string title) {
         require(bytes(title).length > 0, "A title is required");
-        require(manifestations[hash].authors.length == 0 || (manifestations[hash].time.isExpired()
-                && manifestations[hash].evidentiality.isUnevidenced()),
+        require(manifestations[hash].authors.length == 0 ||
+                (manifestations[hash].time.isExpired() && isUnevidenced(hash)),
             "Already registered and not expired or with evidences");
         _;
         manifestations[hash].title = title;
@@ -90,10 +90,5 @@ contract Manifestations is Pausable, Initializable {
                 manifestations[hash].authors,
                 manifestations[hash].time.creationTime,
                 manifestations[hash].time.expiryTime);
-    }
-
-    function addEvidence(string hash) public {
-        manifestations[hash].evidentiality.addEvidence();
-        emit AddedEvidence(manifestations[hash].evidentiality.evidenceCount);
     }
 }

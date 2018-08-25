@@ -7,6 +7,7 @@ contract('YouTubeEvidences - Check YouTube video ownership', function (accounts)
   const OWNER = accounts[0];
   const PROXYADMIN = accounts[1];
   const MANIFESTER = accounts[2];
+  const TITLE = "Snow Againg in Mollerussa";
   const HASH = "QmPP8X2rWc2uanbnKpxfzEAAuHPuThQRtxpoY8CYVJxDj8";
   const VIDEO_ID = "ZwVNLDIJKVA";
   const ether = 10**18; // 1 ether = 1000000000000000000 wei
@@ -18,9 +19,13 @@ contract('YouTubeEvidences - Check YouTube video ownership', function (accounts)
     evidences = await Evidences.deployed();
     proxy = await Proxy.deployed();
     manifestations = await Manifestations.at(proxy.address);
+    manifestations.addEvidenceProvider(evidences.address);
   });
 
   it("should add evidence for YouTube video linked to manifestation", async () => {
+
+    await manifestations.manifestAuthorship(HASH, TITLE, {from: MANIFESTER});
+
     let eventEmitted = false;
     const event = evidences.YouTubeEvidenceEvent();
     await event.watch((error, result) => {
@@ -31,7 +36,7 @@ contract('YouTubeEvidences - Check YouTube video ownership', function (accounts)
       eventEmitted = true;
     });
 
-    await evidences.check(HASH, VIDEO_ID, {value: 0.0001 * ether});
+    await evidences.check(manifestations.address, HASH, VIDEO_ID, {value: 0.0001 * ether});
 
     assert.equal(eventEmitted, true,
         'YouTube video linked to its manifestation should emit a YouTubeEvidenceEvent');

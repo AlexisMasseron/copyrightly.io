@@ -4,6 +4,31 @@ Decentralized Application (ÐApp) for Copyright Management
 
 [![Build Status](https://travis-ci.org/rogargon/copyrightly.io.svg?branch=master)](https://travis-ci.org/rogargon/copyrightly.io)
 
+CopyrightLY smart contracts allow content owners to register their works as what is called a 
+[Manifestation](https://github.com/rhizomik/copyrightonto/tree/master/ActionsModel#overview).
+
+Manifestations are expressions of authors ideas into pieces of content that can be then used to prove authorship.
+This is done through the [Manifestations](contracts/Manifestations.sol) contract, which records
+the IPFS hash of the manifestation content, its title and when it was manifested. This information can be later 
+used to proof authorship as the content can be retrieved from IPFS.
+
+However, it is not enough to register a manifestation. Some evidences should be also provided to support the
+authorship claim or the manifestation will expire after one day. There are evidences based on content uploaded
+(to IPFS), implemented by the [UploadableEvidences](contracts/UploadableEvidences.sol) contract. The uploaded
+content can be anything, from a screenshot to a scanned contract in PDF format.
+
+The might be also evidences based on having previously published the content online, for instance in YouTube.
+The [YouTubeEvidences](contracts/YouTubeEvidences.sol) contract implements evidences based on having the content
+available in YouTube.
+
+Future work:
+ - Make it possible to register **Claims** if someone else has registered content we own.
+ - Evidences can be also added to **Claims**.
+ - Implement a **[Token Curated Registry](https://medium.com/@tokencuratedregistry/a-simple-overview-of-token-curated-registries-84e2b7b19a06) (TCR)** 
+ of evidences supporting **Manifestations** and **Claims**. To add an evidence, an amount of the CLY token has to be staked.
+ Anyone, the curators, can also mint some CLY and stake it to support an evidence, with the opportunity of winning additional
+ CLY if they support and evidence of a winning manifestation or claim... 
+
 ## Table of Contents
 
 * [Features](#features)
@@ -29,27 +54,27 @@ Decentralized Application (ÐApp) for Copyright Management
 * [Table of Contents](#table-of-contents)
 * [Features](#features)
 * [Running Locally](#running-locally)
-  * [Required Tools](#required-tools)
-  * [Smart Contracts Deployment](#smart-contracts-deployment)
-  * [Launch Web Application](#launch-web-application)
+   * [Required Tools](#required-tools)
+   * [Smart Contracts Deployment](#smart-contracts-deployment)
+   * [Launch Web Application](#launch-web-application)
 * [Testing](#testing)
-  * [Manifestations Contract](#manifestations-contract)
-  * [Evidences Contract](#evidences-contract)
-  * [Claims Contract](#claims-contract)
-  * [ExpirableLib Library](#expirablelib-library)
-  * [EvidencableLib Library](#evidencablelib-library)
+   * [Manifestations Contract](#manifestations-contract)
+   * [UploadableEvidences Contract](#uploadableevidences-contract)
+   * [Claims Contract](#claims-contract)
+   * [ExpirableLib Library](#expirablelib-library)
+   * [Evidencable Contract](#evidencable-contract)
 * [Design Pattern Requirements](#design-pattern-requirements)
 * [Security Tools / Common Attacks](#security-tools--common-attacks)
 * [Library / EthPM](#library--ethpm)
 * [Additional Requirements](#additional-requirements)
 * [Stretch Goals](#stretch-goals)
-  * [IPFS](#ipfs)
-  * [uPort](#uport)
-  * [Ethereum Name Service](#ethereum-name-service)
-  * [Oracles](#oracles)
-  * [Upgradable Pattern Registry or Delegation](#upgradable-pattern-registry-or-delegation)
-  * [LLL / Vyper](#lll--vyper)
-  * [Testnet Deployment](#testnet-deployment)
+   * [IPFS](#ipfs)
+   * [uPort](#uport)
+   * [Ethereum Name Service](#ethereum-name-service)
+   * [Oracles](#oracles)
+   * [Upgradable Pattern Registry or Delegation](#upgradable-pattern-registry-or-delegation)
+   * [LLL / Vyper](#lll--vyper)
+   * [Testnet Deployment](#testnet-deployment)
 
 
 ## Features
@@ -174,7 +199,7 @@ that the contract fails if and already registered content hash is used.
     ✓ testAlreadyRegistered (56ms)
 ```
 
-In addition to the previous Solidity tests, there are the following tests of the same contract but from JavaScript.
+In addition to the previous Solidity tests, there are 14 additional tests of the same contract but from JavaScript.
 It is tested again that single and joint authorship work, and that a previously registered manifestation can be later
 retrieved.
 
@@ -218,13 +243,14 @@ cannot be re-initialized after it has been already initialized during the initia
     ✓ should fail when trying to re-initialize it
 ```
 
-Finally, the *Manifestations* contract uses the *ExpirableLib* and *Evidencable* libraries, detailed next, to make 
-it possible to overwrite manifestations have not received any authorship evidence before an expiry time. 
-The test validates that a manifestation can be re-registered after it has expired, but only if it hasn't 
-received any authorship evidence. 
+Finally, the *Manifestations* contract uses the *ExpirableLib* library and extends the *Evidencable* contract, 
+detailed next, to make it possible to overwrite manifestations have not received any authorship evidence before 
+an expiry time. 
 
-To do so, a new version of the Manifestations contract is deployed with a time to expiry of 2 seconds. 
-Re-registration is possible just after more than 2 seconds, but just if no evidence has been added.
+The test validates that a manifestation can be re-registered after it has expired, but only if it hasn't 
+received any authorship evidence. To do so, a new version of the Manifestations contract is deployed with a 
+time to expiry of 2 seconds. Re-registration is possible just after more than 2 seconds, but just if no evidence 
+has been added.
 
 [manifestations_expirable.test.js](test/manifestations_expirable.test.js)
 ```
@@ -239,9 +265,11 @@ The output of the tests should end with the following statement about all 18 bei
   18 passing (11s)
 ```
 
-### [Evidences](contracts/Evidences.sol) Contract
+### [UploadableEvidences](contracts/UploadableEvidences.sol) Contract
 
-...
+[uploadableevidences.test.js](test/uploadableevidences.test.js)
+```
+```
 
 ### [Claims](contracts/Claims.sol) Contract
 
@@ -250,14 +278,17 @@ The output of the tests should end with the following statement about all 18 bei
 ### [ExpirableLib](contracts/ExpirableLib.sol) Library
 
 This library contains the logic for items with a creation and expiry time, 
-which is used by the *Manifestations* and *Claims* contracts. It is tested in the tests for those contracts: 
+which is used by the *Manifestations* and *Claims* contracts. It is tested in: 
 [manifestations_expirable.test.js](test/manifestations_expirable.test.js) and 
 [claims_expirable.test.js](test/claims_expirable.test.js)
 
-### [EvidencableLib](contracts/EvidencableLib.sol) Library
+### [Evidencable](contracts/EvidencableLib.sol) Contract
 
-This is a library that provides the logic for items that can accumulate evidences. Manifestations or claims
-can receive evidences. They are considered by curators to check the appropriateness of manifestations and claims.
+This is a contract that provides the logic for items that can accumulate evidences. Manifestations or claims
+can receive evidences by extending this contract. 
+
+The idea is that evidences are considered by curators to check the appropriateness of manifestations and claims.
+
 Moreover, they are counted so manifestations or claims that have accumulated at least one evidence do not expire,
 as tested in [manifestations_expirable.test.js](test/manifestations_expirable.test.js) and 
 [claims_expirable.test.js](test/claims_expirable.test.js)
@@ -351,9 +382,17 @@ using its hash.
 
 The tests for this contract are currently disabled as it has not been possible to make Oraclize work in the 
 Ganache test network, even after installing the [ethereum-bridge](https://github.com/oraclize/ethereum-bridge) 
-as recommended in the Oraclize documentation. 
+as recommended in the Oraclize documentation. The tests are available from 
+[youtubeevidences.test.js](test/youtubeevidences.test.js.disabled)
 
-The tests are available from [youtubeevidences.test.js](test/youtubeevidences.test.js.disabled)
+It also possible to test the Oraclize query online at: [http://app.oraclize.it/home/test_query]()
+
+For example: for the query: 
+
+    html(https://www.youtube.com/watch?v=ZwVNLDIJKVA).xpath(count(//div[contains(@id,'description')]//a[contains(@href,'QmPP8X2rWc2uanbnKpxfzEAAuHPuThQRtxpoY8CYVJxDj8')]))
+
+The result should be **1.0** because there is a link to the proper manifestation in the video description for 
+[https://www.youtube.com/watch?v=ZwVNLDIJKVA]()
 
 ### Upgradable Pattern Registry or Delegation
 
