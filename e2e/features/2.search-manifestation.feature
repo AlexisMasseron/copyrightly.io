@@ -9,7 +9,7 @@ Feature: Search Manifestation
     And I fill the search form with content hash "QmaY5GUhbc4UTFi5rzgodUhK3ARHmSkw7vGgULniYERyzv"
     And I click the "Search" button
     Then I see a result with "Title" "Te Hoho Rock"
-    And I see a result with "Authors" "0x627306090abaB3A6e1400e9345bC60c78a8BEf57"
+    And I see a result with "Authors" "0x6273...Ef57"
 
   Scenario: Search a piece of content not registered
     Given I go to the home page
