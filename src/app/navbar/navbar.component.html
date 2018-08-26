@@ -14,17 +14,24 @@
         <a class="nav-link" [routerLink]="['/about']">About</a>
       </li>
       <li class="nav-item dropdown" ngbDropdown>
-        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown"
+        <a class="nav-link dropdown-toggle" id="ManifestationsDropdown" role="button" data-toggle="dropdown"
            aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>Manifestations</a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown" ngbDropdownMenu>
+        <div class="dropdown-menu" aria-labelledby="ManifestationsDropdown" ngbDropdownMenu>
           <a class="dropdown-item" [routerLinkActive]="'active'" [routerLinkActiveOptions]="{ exact: true }"
-             [routerLink]="['/list']"><span class="fa fa-list"></span> List</a>
+             [routerLink]="['/list']"><span class="fa fa-list"></span> List Own</a>
           <a class="dropdown-item" [routerLinkActive]="'active'" [routerLinkActiveOptions]="{ exact: true }"
              [routerLink]="['/register']"><span class="fa fa-gavel"></span> Register</a>
           <a class="dropdown-item" [routerLinkActive]="'active'" [routerLinkActiveOptions]="{ exact: true }"
              [routerLink]="['/search']"><span class="fa fa-search"></span> Search</a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">More coming...</a>
+          <a class="dropdown-item">More coming...</a>
+        </div>
+      </li>
+      <li class="nav-item dropdown" ngbDropdown>
+        <a class="nav-link dropdown-toggle" id="ClaimsDropdown" role="button" data-toggle="dropdown"
+           aria-haspopup="true" aria-expanded="false" ngbDropdownToggle>Claims</a>
+        <div class="dropdown-menu" aria-labelledby="ClaimsDropdown" ngbDropdownMenu>
+          <a class="dropdown-item">Work in progress...</a>
         </div>
       </li>
     </ul>

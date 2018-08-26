@@ -1,37 +1,38 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject } from 'rxjs/internal/Subject';
-import { takeUntil } from 'rxjs/operators';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AlertsService } from '../../alerts/alerts.service';
 import { AuthenticationService } from '../../navbar/authentication.service';
 import { Web3Service } from '../../util/web3.service';
 import { IpfsService } from '../../util/ipfs.service';
-import { ManifestationsContractService } from '../manifestations-contract.service';
-import { Manifestation } from '../manifestation';
+import { UploadEvidencesContractService } from '../upload-evidences-contract.service';
 import { NgForm } from '@angular/forms';
-import { ManifestEventComponent } from '../manifest-event.component';
+import { UploadEvidenceEventComponent } from '../upload-evidence-event.component';
+import { UploadEvidence } from '../uploadEvidence';
+import { Manifestation } from '../../manifestations/manifestation';
 
 @Component({
-  selector: 'app-manifest-single',
-  templateUrl: './manifest-single.component.html',
-  styleUrls: ['./manifest-single.component.css']
+  selector: 'app-upload-evidence',
+  templateUrl: './upload-evicence.component.html',
+  styleUrls: ['./upload-evicence.component.css']
 })
-export class ManifestSingleComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
+export class UploadEvicenceComponent implements OnInit {
+  @Input() manifestation: Manifestation;
+  @Output() cancel: EventEmitter<void> = new EventEmitter();
+  @Output() done: EventEmitter<void> = new EventEmitter();
 
   account: string;
-  manifestation = new Manifestation();
+  uploadEvidence = new UploadEvidence();
   status = 'Register';
   uploadToIpfs = true;
 
   constructor(private web3Service: Web3Service,
               private ipfsService: IpfsService,
-              private manifestationsContractService: ManifestationsContractService,
+              private uploadEvidencesContractService: UploadEvidencesContractService,
               private alertsService: AlertsService,
               private authenticationService: AuthenticationService) {}
 
   ngOnInit(): void {
+    this.uploadEvidence.evidencedHash = this.manifestation.hash;
     this.authenticationService.getSelectedAccount()
-      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(account => this.account = account );
   }
 
@@ -41,36 +42,35 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
       this.ipfsService.uploadFile(event.files[0], this.uploadToIpfs)
       .subscribe((hash: string) => {
         this.status = 'Register';
-        this.manifestation.hash = hash;
+        this.uploadEvidence.evidenceHash = hash;
       }, error => {
         this.status = 'Register';
         this.alertsService.error(error);
       });
     } else {
-      this.manifestation.hash = '';
+      this.uploadEvidence.evidenceHash = '';
     }
   }
 
-  manifest(form: NgForm) {
-    this.manifestationsContractService.manifest(this.manifestation, this.account)
-      .pipe(takeUntil(this.ngUnsubscribe))
+  addEvidence(form: NgForm) {
+    this.uploadEvidencesContractService.addEvidence(this.uploadEvidence, this.account)
       .subscribe(result => {
         if (typeof result === 'string') {
           console.log('Transaction hash: ' + result);
-          this.alertsService.info('Registration submitted, you will be alerted when confirmed.<br>' +
+          this.alertsService.info('Evidence submitted, you will be alerted when confirmed.<br>' +
             'Receipt: <a target="_blank" href="https://ropsten.etherscan.io/tx/' + result + '">' + result + '</a>');
           form.reset();
+          this.done.emit();
         } else {
           console.log(result);
-          this.alertsService.modal(ManifestEventComponent, result);
+          this.alertsService.modal(UploadEvidenceEventComponent, result);
         }
       }, error => {
         this.alertsService.error(error);
       });
   }
 
-  ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
+  cancelUpload() {
+    this.cancel.emit();
   }
 }

@@ -17,13 +17,13 @@ export class ManifestationsSearchComponent implements OnInit, OnDestroy {
   manifestation = new Manifestation();
 
   constructor(private web3Service: Web3Service,
-              private registryContractService: ManifestationsContractService,
+              private manifestationsContractService: ManifestationsContractService,
               private alertsService: AlertsService) {}
 
   ngOnInit(): void { }
 
   getManifestation(hash: string) {
-    this.registryContractService.getManifestation(hash).pipe(takeUntil(this.ngUnsubscribe))
+    this.manifestationsContractService.getManifestation(hash).pipe(takeUntil(this.ngUnsubscribe))
       .subscribe((manifestation: Manifestation) => {
         this.manifestation = manifestation;
         if (!this.manifestation.title) {

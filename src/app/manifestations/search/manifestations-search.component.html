@@ -22,22 +22,35 @@
   </fieldset>
 </form>
 
-<div class="card" *ngIf="manifestation.title">
-  <p class="col-md-12 p-3">Search result:</p>
-  <div class="card-block">
-    <h5 class="card-title col-md-12 p-3">{{manifestation.title}}</h5>
-    <div class="p-3">
-      <h6 class="card-subtitle text-muted">Authors</h6>
-      <p class="card-text">{{manifestation.authors}}</p>
+<div *ngIf="manifestation.title">
+
+  <p class="col-md-12 p-0">Search result:</p>
+
+  <div class="card mb-1">
+    <div class="card-block row m-1">
+      <h5 class="card-title col-md-12 p-1">{{manifestation?.title}}</h5>
+      <div class="col-md-6 p-1 mb-1">
+        <h6 class="card-subtitle text-muted">Hash</h6>
+        <a class="card-text" href="https://ipfs.infura.io/ipfs/{{manifestation?.hash}}" target="_blank">
+          {{manifestation?.hash}}</a>
+      </div>
+      <div class="col-md-2 p-1 mb-1">
+        <h6 class="card-subtitle text-muted">Authors</h6>
+        <p class="card-text" *ngFor="let author of manifestation?.authors" title="{{author}}">
+          {{author | slice:0:6}}...{{author | slice:-4}}
+        </p>
+      </div>
+      <div class="col-md-4 p-1 mb-1">
+        <h6 class="card-subtitle text-muted">When</h6>
+        <p class="card-text">{{manifestation?.when | date:'medium'}}</p>
+      </div>
     </div>
-    <div class="p-3">
-      <h6 class="card-subtitle text-muted">Hash</h6>
-      <a class="card-text" href="https://ipfs.infura.io/ipfs/{{manifestation.hash}}" target="_blank">
-        {{manifestation.hash}}</a>
-    </div>
-    <div class="card-footer text-center">
-      <button id="listBtn" type="button" class="btn btn-primary"
+    <div class="card-footer">
+      <button id="details" type="button" class="btn btn-primary"
+              [routerLink]="['/manifestations', manifestation?.hash]">Details</button>
+      <button id="back" type="button" class="btn btn-secondary ml-2"
               (click)="manifestation.title = ''">Back</button>
     </div>
   </div>
+
 </div>

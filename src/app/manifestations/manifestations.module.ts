@@ -11,6 +11,7 @@ import { ManifestationsListComponent } from './list/manifestations-list.componen
 import { ManifestUnregisteredDirective } from './manifest/manifest-unregistered.directive';
 import { ManifestationDetailsComponent } from './details/manifestation-details.component';
 import { ManifestEventComponent } from './manifest-event.component';
+import { EvidencesModule } from '../evidences/evidences.module';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { ManifestEventComponent } from './manifest-event.component';
     FormsModule,
     RouterModule,
     UtilModule,
-    AlertsModule
+    AlertsModule,
+    EvidencesModule
   ],
   exports: [
     ManifestSingleComponent,

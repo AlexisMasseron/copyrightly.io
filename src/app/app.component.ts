@@ -17,7 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   constructor(private web3Service: Web3Service,
-              private registryContractService: ManifestationsContractService,
+              private manifestationsContractService: ManifestationsContractService,
               private authenticationService: AuthenticationService,
               private alertsService: AlertsService) {}
 
@@ -30,7 +30,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.authenticationService.getSelectedAccount()
       .pipe(takeUntil(this.ngUnsubscribe))
       .pipe(filter(account => account !== ''))
-      .pipe(flatMap((account: string) => this.registryContractService.watchManifestEvents(account)))
+      .pipe(flatMap((account: string) => this.manifestationsContractService.watchManifestEvents(account)))
       .subscribe( (event: ManifestEvent) => {
         console.log(event);
         this.alertsService.modal(ManifestEventComponent, event);

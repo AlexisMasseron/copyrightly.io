@@ -12,11 +12,11 @@ const routes: Routes = [
   { path: 'register', component: ManifestSingleComponent },
   { path: 'search', component: ManifestationsSearchComponent },
   { path: 'list', component: ManifestationsListComponent },
-  { path: 'manifestations/:id', component: ManifestationDetailsComponent },
+  { path: 'manifestations/:id', component: ManifestationDetailsComponent, runGuardsAndResolvers: 'always' },
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes) ],
+  imports: [ RouterModule.forRoot(routes, {onSameUrlNavigation: 'reload'}) ],
   exports: [ RouterModule ]
 })
 export class AppRoutingModule {}

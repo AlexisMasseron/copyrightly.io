@@ -1,32 +1,51 @@
 <h3>Manifestation</h3>
 
-<div class="card mb-4">
+<div class="card mb-1">
   <div class="card-block row m-1">
     <h5 class="card-title col-md-12 p-1">{{manifestation?.title}}</h5>
-    <div class="col-md-6 p-1">
+    <div class="col-md-6 p-1 mb-1">
       <h6 class="card-subtitle text-muted">Hash</h6>
       <a class="card-text" href="https://ipfs.infura.io/ipfs/{{manifestation?.hash}}" target="_blank">
         {{manifestation?.hash}}</a>
     </div>
-    <div class="col-md-2 p-1">
+    <div class="col-md-2 p-1 mb-1">
       <h6 class="card-subtitle text-muted">Authors</h6>
       <p class="card-text" *ngFor="let author of manifestation?.authors" title="{{author}}">
         {{author | slice:0:6}}...{{author | slice:-4}}
       </p>
     </div>
-    <div class="col-md-4 p-1">
+    <div class="col-md-3 p-1 mb-1">
       <h6 class="card-subtitle text-muted">When</h6>
       <p class="card-text">{{manifestation?.when | date:'medium'}}</p>
+    </div>
+    <div class="col-md-1 p-1 mb-1">
+      <h6 class="card-subtitle text-muted">Evidences</h6>
+      <p class="card-text">{{evidences?.length}}</p>
     </div>
   </div>
 </div>
 
+<a class="btn btn-secondary mb-4" [routerLink]="['/list']">Back to List</a>
+
 <h3>Authorship Evidences</h3>
 
-<div class="card mb-4">
+<button *ngIf="!addingEvidence" type="button" class="btn btn-success mb-4"
+        (click)="addingEvidence = true">Add Evidence</button>
+
+<app-upload-evidence *ngIf="addingEvidence" [manifestation]="manifestation"
+ (cancel)="addingEvidence = false" (done)="addingEvidence = false">
+</app-upload-evidence>
+
+<div *ngIf="evidences?.length == 0 && !addingEvidence" class="card mb-4">
   <div class="card-block row m-1">
     <h5 class="card-title col-md-12 p-1">No evidences yet</h5>
     <p class="card-text col-md-12 p-1 alert-danger">Warning! This manifestation can be overwritten if no
       evidences are provided before {{manifestation?.expiry | date:'medium'}}</p>
   </div>
+</div>
+
+<div *ngIf="!addingEvidence">
+  <app-uploadevidence-details *ngFor="let evidence of evidences; let i = index"
+    [evidenceEvent]="evidence" [evidenceIndex]="i+1">
+  </app-uploadevidence-details>
 </div>

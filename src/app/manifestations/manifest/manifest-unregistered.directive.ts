@@ -11,13 +11,13 @@ import { Manifestation } from '../manifestation';
 })
 export class ManifestUnregisteredDirective implements AsyncValidator {
 
-  constructor(private registryContractService: ManifestationsContractService,
+  constructor(private manifestationsContractService: ManifestationsContractService,
               private ngZone: NgZone) {}
 
   validate(control: AbstractControl): Observable<ValidationErrors | null> {
     return new Observable((observer) => {
       this.ngZone.runOutsideAngular(() => {
-        this.registryContractService.getManifestation(control.value)
+        this.manifestationsContractService.getManifestation(control.value)
         .subscribe((manifestation: Manifestation) => {
           if (!manifestation.title || manifestation.expiry < new Date()) {
             this.ngZone.run(() => {

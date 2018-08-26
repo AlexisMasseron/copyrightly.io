@@ -18,7 +18,7 @@ export class ManifestationsListComponent implements OnInit, OnDestroy {
   public manifestationEvents: ManifestEvent[] = [];
 
   constructor(private web3Service: Web3Service,
-              private registryContractService: ManifestationsContractService,
+              private manifestationsContractService: ManifestationsContractService,
               private alertsService: AlertsService,
               private authenticationService: AuthenticationService) {}
 
@@ -27,7 +27,7 @@ export class ManifestationsListComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.ngUnsubscribe))
       .pipe(filter(account => account !== ''))
       .pipe(flatMap((account: string) =>
-        this.registryContractService.listManifestEvents(account)))
+        this.manifestationsContractService.listManifestEvents(account)))
       .subscribe(events => {
             this.manifestationEvents = events;
           }, error => this.alertsService.error(error));

@@ -22,7 +22,7 @@ The [YouTubeEvidences](contracts/YouTubeEvidences.sol) contract implements evide
 available in YouTube.
 
 Future work:
- - Make it possible to register **Claims** if someone else has registered content we own.
+ - Make it possible to register **Claims** from the user interface, if someone else has registered content we own.
  - Evidences can be also added to **Claims**.
  - Implement a **[Token Curated Registry](https://medium.com/@tokencuratedregistry/a-simple-overview-of-token-curated-registries-84e2b7b19a06) (TCR)** 
  of evidences supporting **Manifestations** and **Claims**. To add an evidence, an amount of the CLY token has to be staked.
@@ -69,8 +69,16 @@ The functionality provided to the users by the ÐApp through its Web application
   * Scenario: Search a piece of content not registered
 
 3. [List Own Manifestations](e2e/features/3.list-own-manifestations.feature)
-  * Scenario: List when I have previously registered a piece of content
+  * Scenario: List own manifestations when I have one
 
+4. View Manifestation Details (*pending e2e tests*)
+  * Scenario: Detail manifestation without evidences
+  * Scenario: Detail manifestation with evidences
+  
+5. Add Uploadable Evidence to Manifestation (*pending e2e tests*)
+  * Scenario: Add unused uploadable evidence
+  * Scenario: Add previously used uploadable evidence
+  
 For each feature, the linked feature file specifies the steps to accomplish each scenario.
 The steps are implemented in the [steps](e2e/src/steps) and [pages](e2e/src/pages) folders so 
 it is possible to automatically check that the application implements the specified behaviour
