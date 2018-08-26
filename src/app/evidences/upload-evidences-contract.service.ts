@@ -4,7 +4,6 @@ import { Observable } from 'rxjs/internal/Observable';
 import { ReplaySubject } from 'rxjs';
 import { UploadEvidence } from './uploadEvidence';
 import { UploadEvidenceEvent } from './upload-evidence-event';
-import { Manifestation } from '../manifestations/manifestation';
 
 declare const require: any;
 const evidences = require('../../assets/contracts/UploadEvidences.json');
@@ -110,7 +109,8 @@ export class UploadEvidencesContractService {
           console.log(error);
           this.ngZone.run(() => {
             observer.error(new Error('Error listening manifestation evidences, see log for details'));
-            observer.complete()});
+            observer.complete();
+          });
         });
       }, error => this.ngZone.run(() => { observer.error(error); observer.complete(); }));
       return { unsubscribe() {} };
