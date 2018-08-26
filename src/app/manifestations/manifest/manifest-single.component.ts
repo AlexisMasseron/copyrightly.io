@@ -1,6 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject } from 'rxjs/internal/Subject';
-import { takeUntil } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
 import { AlertsService } from '../../alerts/alerts.service';
 import { AuthenticationService } from '../../navbar/authentication.service';
 import { Web3Service } from '../../util/web3.service';
@@ -15,9 +13,7 @@ import { ManifestEventComponent } from '../manifest-event.component';
   templateUrl: './manifest-single.component.html',
   styleUrls: ['./manifest-single.component.css']
 })
-export class ManifestSingleComponent implements OnInit, OnDestroy {
-  private ngUnsubscribe: Subject<void> = new Subject<void>();
-
+export class ManifestSingleComponent implements OnInit {
   account: string;
   manifestation = new Manifestation();
   status = 'Register';
@@ -31,7 +27,6 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.authenticationService.getSelectedAccount()
-      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(account => this.account = account );
   }
 
@@ -53,7 +48,6 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
 
   manifest(form: NgForm) {
     this.manifestationsContractService.manifest(this.manifestation, this.account)
-      .pipe(takeUntil(this.ngUnsubscribe))
       .subscribe(result => {
         if (typeof result === 'string') {
           console.log('Transaction hash: ' + result);
@@ -67,10 +61,5 @@ export class ManifestSingleComponent implements OnInit, OnDestroy {
       }, error => {
         this.alertsService.error(error);
       });
-  }
-
-  ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 }
