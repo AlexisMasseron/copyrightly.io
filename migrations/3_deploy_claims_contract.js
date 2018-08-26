@@ -3,7 +3,12 @@ const Claims = artifacts.require("./Claims.sol");
 
 module.exports = async function (deployer, network, accounts) {
   const owner = accounts[0];
-  const proxy = await Proxy.deployed();
 
-  deployer.deploy(Claims, proxy.address, {from: owner});
+  deployer.then(async () => {
+    const proxy = await Proxy.deployed();
+
+    return Promise.all([
+      deployer.deploy(Claims, proxy.address, {from: owner})
+    ]);
+  });
 };

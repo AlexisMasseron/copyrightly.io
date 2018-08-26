@@ -354,7 +354,7 @@
         "id": 148,
         "nodeType": "ImportDirective",
         "scope": 452,
-        "sourceUnit": 6767,
+        "sourceUnit": 6793,
         "src": "26:56:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -365,7 +365,7 @@
         "id": 149,
         "nodeType": "ImportDirective",
         "scope": 452,
-        "sourceUnit": 746,
+        "sourceUnit": 772,
         "src": "83:64:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -376,7 +376,7 @@
         "id": 150,
         "nodeType": "ImportDirective",
         "scope": 452,
-        "sourceUnit": 6947,
+        "sourceUnit": 6973,
         "src": "148:71:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -412,10 +412,10 @@
               "id": 153,
               "name": "Pausable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 745,
+              "referencedDeclaration": 771,
               "src": "456:8:2",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Pausable_$745",
+                "typeIdentifier": "t_contract$_Pausable_$771",
                 "typeString": "contract Pausable"
               }
             },
@@ -430,10 +430,10 @@
               "id": 155,
               "name": "Initializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 6766,
+              "referencedDeclaration": 6792,
               "src": "466:13:2",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Initializable_$6766",
+                "typeIdentifier": "t_contract$_Initializable_$6792",
                 "typeString": "contract Initializable"
               }
             },
@@ -462,9 +462,9 @@
         ],
         "contractDependencies": [
           91,
-          745,
-          925,
-          6766
+          771,
+          951,
+          6792
         ],
         "contractKind": "contract",
         "documentation": "@title Contract for copyright authorship registration through creations manifestations\n @author Roberto García (http://rhizomik.net/~roberto/)",
@@ -473,9 +473,9 @@
         "linearizedBaseContracts": [
           451,
           91,
-          6766,
-          745,
-          925
+          6792,
+          771,
+          951
         ],
         "name": "Manifestations",
         "nodeType": "ContractDefinition",
@@ -949,7 +949,7 @@
                       "name": "owner",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 843,
+                      "referencedDeclaration": 869,
                       "src": "1164:5:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -1044,7 +1044,7 @@
                   "name": "isInitializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 6765,
+                  "referencedDeclaration": 6791,
                   "src": "1140:13:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -1277,10 +1277,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        7078,
-                        7079
+                        7104,
+                        7105
                       ],
-                      "referencedDeclaration": 7079,
+                      "referencedDeclaration": 7105,
                       "src": "1651:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -1645,10 +1645,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        7078,
-                        7079
+                        7104,
+                        7105
                       ],
-                      "referencedDeclaration": 7079,
+                      "referencedDeclaration": 7105,
                       "src": "1716:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -1918,7 +1918,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 7075,
+                          "referencedDeclaration": 7101,
                           "src": "2071:3:2",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -2242,7 +2242,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 7075,
+                        "referencedDeclaration": 7101,
                         "src": "2700:3:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -2425,7 +2425,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 706,
+                  "referencedDeclaration": 732,
                   "src": "2608:13:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -2620,10 +2620,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        7078,
-                        7079
+                        7104,
+                        7105
                       ],
-                      "referencedDeclaration": 7079,
+                      "referencedDeclaration": 7105,
                       "src": "3538:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -2880,7 +2880,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 7075,
+                        "referencedDeclaration": 7101,
                         "src": "3721:3:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -3354,7 +3354,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 706,
+                  "referencedDeclaration": 732,
                   "src": "3512:13:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -4122,10 +4122,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        7078,
-                        7079
+                        7104,
+                        7105
                       ],
-                      "referencedDeclaration": 7079,
+                      "referencedDeclaration": 7105,
                       "src": "4676:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -4181,7 +4181,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 7109,
+                        "referencedDeclaration": 7135,
                         "src": "4783:5:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_Manifestations_$451",
@@ -4310,7 +4310,7 @@
         "id": 148,
         "nodeType": "ImportDirective",
         "scope": 452,
-        "sourceUnit": 6767,
+        "sourceUnit": 6793,
         "src": "26:56:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -4321,7 +4321,7 @@
         "id": 149,
         "nodeType": "ImportDirective",
         "scope": 452,
-        "sourceUnit": 746,
+        "sourceUnit": 772,
         "src": "83:64:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -4332,7 +4332,7 @@
         "id": 150,
         "nodeType": "ImportDirective",
         "scope": 452,
-        "sourceUnit": 6947,
+        "sourceUnit": 6973,
         "src": "148:71:2",
         "symbolAliases": [],
         "unitAlias": ""
@@ -4368,10 +4368,10 @@
               "id": 153,
               "name": "Pausable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 745,
+              "referencedDeclaration": 771,
               "src": "456:8:2",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Pausable_$745",
+                "typeIdentifier": "t_contract$_Pausable_$771",
                 "typeString": "contract Pausable"
               }
             },
@@ -4386,10 +4386,10 @@
               "id": 155,
               "name": "Initializable",
               "nodeType": "UserDefinedTypeName",
-              "referencedDeclaration": 6766,
+              "referencedDeclaration": 6792,
               "src": "466:13:2",
               "typeDescriptions": {
-                "typeIdentifier": "t_contract$_Initializable_$6766",
+                "typeIdentifier": "t_contract$_Initializable_$6792",
                 "typeString": "contract Initializable"
               }
             },
@@ -4418,9 +4418,9 @@
         ],
         "contractDependencies": [
           91,
-          745,
-          925,
-          6766
+          771,
+          951,
+          6792
         ],
         "contractKind": "contract",
         "documentation": "@title Contract for copyright authorship registration through creations manifestations\n @author Roberto García (http://rhizomik.net/~roberto/)",
@@ -4429,9 +4429,9 @@
         "linearizedBaseContracts": [
           451,
           91,
-          6766,
-          745,
-          925
+          6792,
+          771,
+          951
         ],
         "name": "Manifestations",
         "nodeType": "ContractDefinition",
@@ -4905,7 +4905,7 @@
                       "name": "owner",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [],
-                      "referencedDeclaration": 843,
+                      "referencedDeclaration": 869,
                       "src": "1164:5:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_address",
@@ -5000,7 +5000,7 @@
                   "name": "isInitializer",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 6765,
+                  "referencedDeclaration": 6791,
                   "src": "1140:13:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -5233,10 +5233,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        7078,
-                        7079
+                        7104,
+                        7105
                       ],
-                      "referencedDeclaration": 7079,
+                      "referencedDeclaration": 7105,
                       "src": "1651:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -5601,10 +5601,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        7078,
-                        7079
+                        7104,
+                        7105
                       ],
-                      "referencedDeclaration": 7079,
+                      "referencedDeclaration": 7105,
                       "src": "1716:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -5874,7 +5874,7 @@
                           "name": "msg",
                           "nodeType": "Identifier",
                           "overloadedDeclarations": [],
-                          "referencedDeclaration": 7075,
+                          "referencedDeclaration": 7101,
                           "src": "2071:3:2",
                           "typeDescriptions": {
                             "typeIdentifier": "t_magic_message",
@@ -6198,7 +6198,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 7075,
+                        "referencedDeclaration": 7101,
                         "src": "2700:3:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -6381,7 +6381,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 706,
+                  "referencedDeclaration": 732,
                   "src": "2608:13:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -6576,10 +6576,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        7078,
-                        7079
+                        7104,
+                        7105
                       ],
-                      "referencedDeclaration": 7079,
+                      "referencedDeclaration": 7105,
                       "src": "3538:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -6836,7 +6836,7 @@
                         "name": "msg",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 7075,
+                        "referencedDeclaration": 7101,
                         "src": "3721:3:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_magic_message",
@@ -7310,7 +7310,7 @@
                   "name": "whenNotPaused",
                   "nodeType": "Identifier",
                   "overloadedDeclarations": [],
-                  "referencedDeclaration": 706,
+                  "referencedDeclaration": 732,
                   "src": "3512:13:2",
                   "typeDescriptions": {
                     "typeIdentifier": "t_modifier$__$",
@@ -8078,10 +8078,10 @@
                       "name": "require",
                       "nodeType": "Identifier",
                       "overloadedDeclarations": [
-                        7078,
-                        7079
+                        7104,
+                        7105
                       ],
-                      "referencedDeclaration": 7079,
+                      "referencedDeclaration": 7105,
                       "src": "4676:7:2",
                       "typeDescriptions": {
                         "typeIdentifier": "t_function_require_pure$_t_bool_$_t_string_memory_ptr_$returns$__$",
@@ -8137,7 +8137,7 @@
                         "name": "super",
                         "nodeType": "Identifier",
                         "overloadedDeclarations": [],
-                        "referencedDeclaration": 7109,
+                        "referencedDeclaration": 7135,
                         "src": "4783:5:2",
                         "typeDescriptions": {
                           "typeIdentifier": "t_super$_Manifestations_$451",
@@ -8247,8 +8247,8 @@
     "3": {
       "events": {},
       "links": {},
-      "address": "0xafe25ade4e647e82b9a423f7477fe0fb1d294125",
-      "transactionHash": "0x12e167496a730efdbe9bf4c39c971fd18233ac1de86a8ecfad37434a67e511b2"
+      "address": "0xbb25860e0bc165cc7c4f487fa406f3f310d146e7",
+      "transactionHash": "0xe2bd47d2eac8e9436f5e0ddd780163f1e2431531c8e4d057c44fdb9b368882b0"
     },
     "4": {
       "events": {},
@@ -8258,5 +8258,5 @@
     }
   },
   "schemaVersion": "2.0.1",
-  "updatedAt": "2018-08-25T07:49:02.377Z"
+  "updatedAt": "2018-08-26T14:23:46.670Z"
 }

@@ -394,18 +394,17 @@ first validated and compiled using the [Vyper Online Compiler](https://vyper.onl
 
 To integrate Vyper with Truffle, the Vyper compiler must be installed first as detailed 
 [here](https://vyper.readthedocs.io/en/latest/installing-vyper.html). Then, the project already installs the tool 
-[truper](https://www.npmjs.com/package/truper) as part of its NPM development dependencies so it is possible to use 
-the following command to generate a Truffle compatible artifact:
+[truper](https://www.npmjs.com/package/truper) ()as part of its NPM development dependencies) that makes possible to use 
+the following command to compile the Vyper contract and generate a Truffle compatible artifact:
 
 ```
 npm run vyper
 ```
 
-For the moment, truper just generates the artifacts in "build/contracts" so it should be moved to "src/assets/contracts",
-the folder configured in [truffle.js](truffle.js) as the destination for Truffle artifacts so they are deployed with the
+For the moment, truper just generates the artifacts in "build/contracts" so it should be moved to "src/assets/contracts".
+This is the folder configured in [truffle.js](truffle.js) as the destination for Truffle artifacts so they are deployed with the
 Angular frontend. Moreover, it should be renamed "Claims.json" instead of the original "Claims.vyper.json", as it seems Truffle
-expects it with that name. However, after deployment, Truffle does not update the "networks" information in the artifact so
-it should be updated manually using the migrate command output, as done for [Claims.json](src/assets/contracts/Claims.json)
+expects it with that name.
 
 ### Testnet Deployment
 
