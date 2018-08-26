@@ -7,27 +7,33 @@ Decentralized Application (ÐApp) for Copyright Management
 CopyrightLY smart contracts allow content owners to register their works as what is called a 
 [Manifestation](https://github.com/rhizomik/copyrightonto/tree/master/ActionsModel#overview).
 
-Manifestations are expressions of authors ideas into pieces of content that can be then used to prove authorship.
+**Manifestations** are expressions of authors ideas into pieces of content that can be then used to prove authorship.
 This is done through the [Manifestations](contracts/Manifestations.sol) contract, which records
-the IPFS hash of the manifestation content, its title and when it was manifested. This information can be later 
-used to proof authorship as the content can be retrieved from IPFS.
+the IPFS hash of the manifestation content, its title (additional metadata is planned) and when it was manifested. 
+This information can be later used to proof authorship as the content can be retrieved from IPFS.
 
-However, it is not enough to register a manifestation. Some evidences should be also provided to support the
-authorship claim or the manifestation will expire after one day. There are evidences based on content uploaded
-(to IPFS), implemented by the [UploadEvidences](contracts/UploadEvidences.sol) contract. The uploaded
-content can be anything, from a screenshot to a scanned contract in PDF format.
+However, it is not enough to register a **Manifestation**. **Evidences** should be also provided to support the
+authorship claim or the **Manifestation** will expire after one day. Usually done by the author registering the
+**Manifestation** but anyone can add an *Evidence** supporting a **Manifestation**
 
-The might be also evidences based on having previously published the content online, for instance in YouTube.
-The [YouTubeEvidences](contracts/YouTubeEvidences.sol) contract implements evidences based on having the content
-available in YouTube.
+There are **Evidences** based on content uploaded (to IPFS), implemented by the 
+[UploadEvidences](contracts/UploadEvidences.sol) contract. The uploaded content can be anything, 
+from a screenshot to a scanned contract in PDF format.
+
+The are also **Evidences** based on having previously published the content online, for instance in YouTube.
+The [YouTubeEvidences](contracts/YouTubeEvidences.sol) contract allows claiming that a video **Manifestation** 
+content is also available on YouTube.
 
 Future work:
- - Make it possible to register **Claims** from the user interface, if someone else has registered content we own.
+ - Register YouTubeEvidences from the user interface.
+ - Make it possible to register [Claims](contracts/Claims.v.py) from the user interface, if someone else has registered content we own. Currently, the
+ contract is implemented but its functionality is not available from the Web client.
  - Evidences can be also added to **Claims**.
  - Implement a **[Token Curated Registry](https://medium.com/@tokencuratedregistry/a-simple-overview-of-token-curated-registries-84e2b7b19a06) (TCR)** 
- of evidences supporting **Manifestations** and **Claims**. To add an evidence, an amount of the CLY token has to be staked.
- Anyone, the curators, can also mint some CLY and stake it to support an evidence, with the opportunity of winning additional
- CLY if they support and evidence of a winning manifestation or claim... 
+ of **Evidences** supporting **Manifestations** and **Claims**. 
+ To add an evidence, an amount of the **CLY token** has to be **staked**.
+ Moreover, anyone (the curators) can also mint some CLY and stake it to support an evidence, with the opportunity of winning additional
+ CLY if they support an evidence of a winning manifestation or claim... but the risk of loosing it otherwise.
 
 ## Table of Contents
    
@@ -61,23 +67,23 @@ Future work:
 The functionality provided to the users by the ÐApp through its Web application is:
 
 1. [Minifest Single Authorship](e2e/features/1.manifest-single-authorship.feature)
-  * Scenario: Register a piece of content not previously registered
-  * Scenario: Register a piece of content previously registered
+   * Scenario: Register a piece of content not previously registered
+   * Scenario: Register a piece of content previously registered
 
 2. [Search Manifestation](e2e/features/2.search-manifestation.feature)
-  * Scenario: Search a piece of content previously registered
-  * Scenario: Search a piece of content not registered
+   * Scenario: Search a piece of content previously registered
+   * Scenario: Search a piece of content not registered
 
 3. [List Own Manifestations](e2e/features/3.list-own-manifestations.feature)
-  * Scenario: List own manifestations when I have one
+   * Scenario: List own manifestations when I have one
 
 4. View Manifestation Details (*pending e2e tests*)
-  * Scenario: Detail manifestation without evidences
-  * Scenario: Detail manifestation with evidences
+   * Scenario: Detail manifestation without evidences
+   * Scenario: Detail manifestation with evidences
   
 5. Add Uploadable Evidence to Manifestation (*pending e2e tests*)
-  * Scenario: Add unused uploadable evidence
-  * Scenario: Add previously used uploadable evidence
+   * Scenario: Add unused uploadable evidence
+   * Scenario: Add previously used uploadable evidence
   
 For each feature, the linked feature file specifies the steps to accomplish each scenario.
 The steps are implemented in the [steps](e2e/src/steps) and [pages](e2e/src/pages) folders so 
@@ -89,31 +95,49 @@ A report of the feature tests results is available:
 
 ## Running Locally
 
-### Required Tools
+### Requirements
 
-Contract deployment and testing is done via [Truffle](https://truffleframework.com/) 
+Contract deployment and testing is done via [Truffle](https://truffleframework.com) 
 and using [Ganache CLI](https://github.com/trufflesuite/ganache-cli). 
 
-Client Web application development is based on the [Angular](https://angular.io/).
+Client Web application development is based on [Angular](https://angular.io).
 
-To install all the required tools, after cloning the project or downloading it:
+To install the project and all the required tools:
+
+ 1-. Clone the project with [Git](https://git-scm.com/downloads) 
+ (or [download](https://github.com/rogargon/copyrightly.io/archive/master.zip) and unzip):
+ 
+```
+git clone https://github.com/rogargon/copyrightly.io.git
+```
+
+ 2.- Install the project dependencies and development tools, using the following commands from the "copyrightly.io" folder
+ (run ony by one, in the same order and waiting until the previous one ends):
 
 ```
+cd copyrightly.io
+
 npm install
+
+node patch.js
+
+npm run ethpm
 ```
 
 ### Smart Contracts Deployment
 
-After npm has installed all dependencies, it is time to deploy the ÐApp smart contracts.
+After npm has installed all dependencies (requires some time), it is time to deploy the ÐApp smart contracts.
 
-First, start a local development network:
+First, start a local development network with the command:
 
 ```
 npm run network
 ```
 
-This command will start Ganache in http://127.0.0.1:8545 together with 10 sample accounts. 
-These accounts are fixed using the seed 'candy maple cake sugar pudding cream honey rich smooth crumble sweet treat'.
+This will start **Ganache** in **http://127.0.0.1:8545** together with 10 sample accounts. 
+These accounts are fixed using the seed: 
+
+    candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 
 Then, deploy the contracts from a different terminal (leave Ganache running on the previous one):
 
@@ -123,7 +147,8 @@ npm run migrate
 
 If there are no errors, the contracts will be then deployed to the local development network. 
 
-> In case the contracts have been previously deployed, and we want to force redeployment:
+> In case the contracts have been previously deployed, and we want to force re-deployment, 
+use the following command instead:
 > 
 > ```
 > npm run migrate -- --reset
@@ -131,24 +156,37 @@ If there are no errors, the contracts will be then deployed to the local develop
 
 ### Launch Web Application
 
-Finally, to start the client Web application locally:
+Finally, to start the [Angular](https://angular.io/) client Web application locally:
 
 ```
 npm start
 ```
 
-Once started, it will be available at: [http://localhost:4200]()
+Once started, it will be available at: http://localhost:4200
 
 The client application provides the features listed in the [Features](#features) section above. 
 
-It can be tested using the accounts provided by Ganache without requiring
-a Web3 enabled browser. 
+It can be tested using the accounts provided by Ganache without requiring a Web3 enabled browser. 
 
 However, if the [MetaMask](https://metamask.io) extension is available, it can be used to 
-configure custom accounts and to sign transactions. Support for uPort is pending, but other 
-Web3 enabled browsers can also be used, for instance [Cipher](https://www.cipherbrowser.com) 
-in mobile devices. It provides nice features like transactions signing using TouchID/FaceID on iOS 
-or Fingerprint Authentication on Android.
+configure custom accounts and to sign transactions. For testing, you can load the accounts
+generated by Ganache using the following 
+[seed phrase](https://www.chainbits.com/tools-and-platforms/how-to-use-metamask/#Recovering_Your_Vault):
+
+    candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
+    
+Then, configure the network used by MetaMask to "Localhost 8545" as shown 
+[here](https://github.com/MetaMask/faq/blob/master/images/click-the-test-network.png?raw=true).
+
+Support for uPort is pending, but other very convenient Web3 enabled browsers can also be used. 
+[Cipher](https://www.cipherbrowser.com) or [Coinbase Wallet](https://www.coinbase.com/mobile) 
+are recommended on mobile devices. They provide nice features like transactions signing using 
+TouchID/FaceID on iOS or Fingerprint Authentication on Android. 
+
+They can be used to test the version of the application already deployed online at: 
+https://copyrightly.io
+
+The application is also available as a Docker container at: https://hub.docker.com/r/rogargon/copyrightly-io/
 
 ## Testing
 
@@ -162,8 +200,8 @@ The application contracts, and all those imported by them, are compiled before r
 Some warnings might appear, but all of them are related to the imported contracts: 
 *Proxy* and *AdminUpgradeabilityProxy* from ZeppelinOs.
 
-The following sections describe the test for each smart contract, link to the test files and list 
-their expected outputs.
+The following sections describe the tests available for each smart contract, provide links to the 
+files implementing then and list their expected outputs.
 
 ### [Manifestations](contracts/Manifestations.sol) Contract
 
@@ -205,7 +243,7 @@ retrieved.
 
 Then, there are tests for the behaviors inherited from the contracts extended by *Manifestations*. 
 
-From OpenZeppelin's *Pausable* and *Ownable*, that the contract can be paused and resumed but just
+From OpenZeppelin's *Pausable* and *Ownable*, that the contract can be paused and resumed, but just
 by the contract owner.
 
 [manifestations.test.js](test/manifestations_pausable.test.js)
@@ -216,11 +254,11 @@ by the contract owner.
     ✓ shouldn't be paused by a non-owner
 ```
 
-From ZeppelinOS' *AdminUpgradeabilityProxy*, that *Manifestations* is upgradable and retains state after an update
-after it is upgraded by the proxy admin. Then, that the proxy admin cannot use the proxy to 
-call the underlying *Manifestations* contract, required for security reasons. Finally, that *Manifestations*
-cannot be re-initialized after it has been already initialized during the initial deployment
-(migration). This behavior is required to make *Manifestations* upgradable, inherited by extending *Initializable*.
+From ZeppelinOS' *AdminUpgradeabilityProxy*, that *Manifestations* is upgradable and retains state after 
+an upgrade by the proxy admin. Then, that the proxy admin cannot use the proxy to call the proxied *Manifestations* 
+contract, required for security reasons. Finally, that *Manifestations* cannot be re-initialized 
+(it has been already initialized during the initial deployment migration). 
+This behavior is required to make *Manifestations* upgradable and inherited by extending *Initializable*.
 
 [manifestations_upgradeability.test.js](test/manifestations_upgradeability.test.js)
 ```
@@ -231,13 +269,14 @@ cannot be re-initialized after it has been already initialized during the initia
 ```
 
 Finally, the *Manifestations* contract uses the *ExpirableLib* library and extends the *Evidencable* contract, 
-detailed next, to make it possible to overwrite manifestations have not received any authorship evidence before 
-an expiry time. 
+both detailed in specific subsection below. 
 
-The test validates that a manifestation can be re-registered after it has expired, but only if it hasn't 
-received any authorship evidence. To do so, a new version of the Manifestations contract is deployed with a 
-time to expiry of 2 seconds. Re-registration is possible just after more than 2 seconds, but just if no evidence 
-has been added.
+*ExpirableLib* makes it possible to overwrite manifestations that have not received any authorship evidence before 
+an expiry time. The following tests validate that a manifestation can be re-registered after it has expired, 
+but only if it hasn't received any authorship evidence. 
+
+To do so, a new version of the Manifestations contract just for testing is deployed with a time to expiry of just 2 seconds. 
+The tests check that re-registration is possible just after more than 2 seconds, but just if no evidence has been added.
 
 [manifestations_expirable.test.js](test/manifestations_expirable.test.js)
 ```
@@ -250,10 +289,11 @@ has been added.
 
 This contract implements the registration of evidences based on uploading content to IPFS. It behaves as an
 evidence provider for the contract specified when adding the evidence. However, the contract has to be registered
-as and allowed evidence provider in that contract, in the case of these tests the *Manifestations* contract.
+as and allowed evidence provider, in the case of these tests in the *Manifestations* contract.
+
 Multiple evidences should be accumulated for the same manifestation, but just if they are new ones and if the
-manifestation they are evidences for exists. Finally, only the owner of *Manifestations* can register an
-evidence provider. Finally, it is tested that just the owner of *Manifestations* can register a new provider that
+manifestation they are evidences for exists. Finally, only the owner of *Manifestations* can register
+evidence providers. It is tested that just the owner of *Manifestations* can register a new provider that
 then can add evidences as usual.
 
 [uploadevidences.test.js](test/uploadevidences.test.js)
@@ -271,9 +311,9 @@ then can add evidences as usual.
 
 ### [Claims](contracts/Claims.v.py) Contract
 
-This contract has been implemented using Vyper as detailed in the [LLL / Vyper](#lll--vyper) Section. It is 
+This contract has been implemented using **Vyper** as detailed in the [LLL / Vyper](#lll--vyper) Section. It is 
 responsible for registering claims from accounts that consider that the existing manifestations is not a 
-proper one coming from the right creator. 
+proper one, i.e. coming from the right creator. 
 
 The corresponding tests verify that just one claim for a given manifestation is allowed at the same
 time. It is also checked that claims can be revoked just by the contract owner. 
@@ -294,18 +334,17 @@ Finally, just existing and non-revoked claims can be retrieved.
 ### [ExpirableLib](contracts/ExpirableLib.sol) Library
 
 This library contains the logic for items with a creation and expiry time. With it, 
-manifestations or claims can expire after a certain amount of time. It is tested in: 
+manifestations (or claims) can expire after a certain amount of time. It is testedf or **Manifestations** in: 
 [manifestations_expirable.test.js](test/manifestations_expirable.test.js)
 
 ### [Evidencable](contracts/EvidencableLib.sol) Contract
 
-This is a contract that provides the logic for items that can accumulate evidences. Manifestations or claims
+This is a contract that provides the logic for items that can accumulate evidences. Manifestations (or claims)
 can receive evidences by extending this contract. 
 
-The idea is that evidences are considered by curators to check the appropriateness of manifestations and claims.
-
-Moreover, they are counted so manifestations or claims that have accumulated at least one evidence do not expire,
-as tested in: [manifestations_expirable.test.js](test/manifestations_expirable.test.js)
+The idea is that evidences are considered by curators to check the appropriateness of manifestations (and claims).
+Moreover, they are counted so manifestations (or claims) that have accumulated at least one evidence do not expire,
+as tested for **Manifestations** in: [manifestations_expirable.test.js](test/manifestations_expirable.test.js)
 
 ## Design Pattern Requirements
 
@@ -338,8 +377,8 @@ From this package, the following contract has been used:
 ## Additional Requirements
 
 The smart contracts code has been commented according to the specs in the documentation
-https://solidity.readthedocs.io/en/v0.4.21/layout-of-source-files.html#comments and extended using the
-Ethereum Natural Specification format as documented in 
+https://solidity.readthedocs.io/en/v0.4.21/layout-of-source-files.html#comments and following the
+Ethereum Natural Specification guidelines as documented in 
 https://github.com/ethereum/wiki/wiki/Ethereum-Natural-Specification-Format 
 
 ## Stretch Goals
@@ -348,10 +387,19 @@ https://github.com/ethereum/wiki/wiki/Ethereum-Natural-Specification-Format
 
 When a user registers a piece of content using a digital file, it is uploaded to IPFS and 
 the corresponding IPFS identifier (hash) is used to register the manifestation of the content in Ethereum.
+Users are offered the option of keeping content private, so it is not uploaded to IPFS and just the
+content hash is generated. It can be later used as a proof of having the digital file so users are
+recommended to keep the same exact file they used to generate the hash.
 
-The same is done for evidences based on uploading a document to IPFS so it is available for anyone to verify.
+The same is done for evidences based on uploading content to IPFS, that then becomes available for inspect.
+
+In both cases the user interface provide links to IPFS to retrieve the uploaded content.
 
 ### uPort
+
+Unfortunately, this feature was delayed expecting the new release of uPort as announced in 
+"[Preparing your apps for our new Standards based Identity Architecture](https://medium.com/uport/preparing-your-apps-for-our-new-standards-based-identity-architecture-41c9a55b1dfc)"
+and finally there was no time to implement it.
 
 ### Ethereum Name Service
 
@@ -370,20 +418,20 @@ Ganache test network, even after installing the [ethereum-bridge](https://github
 as recommended in the Oraclize documentation. The tests are available from 
 [youtubeevidences.test.js](test/youtubeevidences.test.js.disabled)
 
-It also possible to test the Oraclize query online at: [http://app.oraclize.it/home/test_query]()
+It also possible to test the Oraclize query online at: http://app.oraclize.it/home/test_query
 
 For example: for the query: 
 
     html(https://www.youtube.com/watch?v=ZwVNLDIJKVA).xpath(count(//div[contains(@id,'description')]//a[contains(@href,'QmPP8X2rWc2uanbnKpxfzEAAuHPuThQRtxpoY8CYVJxDj8')]))
 
 The result should be **1.0** because there is a link to the proper manifestation in the video description for 
-[https://www.youtube.com/watch?v=ZwVNLDIJKVA]()
+https://www.youtube.com/watch?v=ZwVNLDIJKVA
 
 ### Upgradable Pattern Registry or Delegation
 
 To make contracts upgradable, the Delegation pattern has been used through a Relay or Proxy. 
 Concretely, the *AdminUpgradeabilityProxy* provided by the ZeppelinOS Library, as detailed in 
-[https://docs.zeppelinos.org/docs/low_level_contract.html]()
+https://docs.zeppelinos.org/docs/low_level_contract.html
 
 Upgradeability is tested in [manifestations_upgradeability.test.js](test/manifestations_upgradeability.test.js)
 
@@ -394,7 +442,7 @@ first validated and compiled using the [Vyper Online Compiler](https://vyper.onl
 
 To integrate Vyper with Truffle, the Vyper compiler must be installed first as detailed 
 [here](https://vyper.readthedocs.io/en/latest/installing-vyper.html). Then, the project already installs the tool 
-[truper](https://www.npmjs.com/package/truper) ()as part of its NPM development dependencies) that makes possible to use 
+[truper](https://www.npmjs.com/package/truper) as part of its NPM development dependencies) that makes possible to use 
 the following command to compile the Vyper contract and generate a Truffle compatible artifact:
 
 ```
@@ -411,11 +459,11 @@ expects it with that name.
 Deployments to both Ropsten and Rinkeby at the addresses detailed in the file: [deployed_addresses.txt](deployed_addresses.txt)
 
 **Ropsten** deployment uses private HDWallet, so the owner and proxy admin accounts are not available. 
-These are the contracts used by the client Web application deployed at: [https://copyrightly.io]()
+Ropsten is the network intended when using the client Web application deployed at: https://copyrightly.io
 
 **Rinkeby** using public HDWallet with mnemonic: 
 
     candy maple cake sugar pudding cream honey rich smooth crumble sweet treat
 
 Therefore, anyone can test restricted methods like *pause()* or *unpause()* for the contracts' owner ( account[0] ) or 
-*upgradeTo()* for the proxy contracts' admin ( accounts[1] ).
+*upgradeTo()* for the proxy contract admin ( accounts[1] ).
