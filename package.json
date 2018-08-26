@@ -22,8 +22,9 @@
     "e2e-quick": "ng e2e --dev-server-target= --webdriver-update false",
     "e2e-report": "node e2e/generate-html-report.js",
     "webdriver-update": "webdriver-manager update",
-    "debug:migrate": "node $NODE_DEBUG_OPTION ./node_modules/.bin/truffle migrate --network ropsten",
-    "debug:soltest": "node $NODE_DEBUG_OPTION ./node_modules/.bin/truffle test"
+    "debug:migrate": "node $NODE_DEBUG_OPTION ./node_modules/.bin/truffle migrate",
+    "debug:soltest": "node $NODE_DEBUG_OPTION ./node_modules/.bin/truffle test",
+    "vyper": "truper"
   },
   "private": true,
   "dependencies": {
@@ -75,6 +76,7 @@
     "solidity-cli": "^1.0.1",
     "truffle": "^4.1.13",
     "truffle-hdwallet-provider": "0.0.6",
+    "truper": "0.0.2",
     "ts-node": "~5.0.1",
     "tslint": "~5.9.1",
     "typescript": "~2.7.2",

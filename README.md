@@ -261,9 +261,27 @@ then can add evidences as usual.
 
 ```
 
-### [Claims](contracts/Claims.sol) Contract
+### [Claims](contracts/Claims.v.py) Contract
 
-...
+This contract has been implemented using Vyper as detailed in the [LLL / Vyper](#lll--vyper) Section. It is 
+responsible for registering claims from accounts that consider that the existing manifestations is not a 
+proper one coming from the right creator. 
+
+The corresponding tests verify that just one claim for a given manifestation is allowed at the same
+time. It is also checked that claims can be revoked just by the contract owner. 
+Finally, just existing and non-revoked claims can be retrieved.
+
+[claims.test.js](test/claims.test.js)
+```
+  Contract: Claims - Register claims
+    ✓ should register a new claim (160ms)
+    ✓ shouldn't register a claim if already one for manifestation
+    ✓ shouldn't allow to revoke claim if not contract owner
+    ✓ should retrieve an existing claim
+    ✓ should allow to revoke claim if contract owner (46ms)
+    ✓ shouldn't allow retrieving a revoked claim
+    ✓ shouldn't allow retrieving an unexisting claim
+```
 
 ### [ExpirableLib](contracts/ExpirableLib.sol) Library
 
@@ -363,11 +381,23 @@ Upgradeability is tested in [manifestations_upgradeability.test.js](test/manifes
 
 ### LLL / Vyper
 
-A version of the *Claims* contract has been also implemented using Vyper. The result is [Claims.vy](contracts/Claims.vy), which has
-been validated and compiled using the [Vyper Online Compiler](https://vyper.online/)
+A version of the *Claims* contract has been also implemented using Vyper. The result is [Claims.vy](contracts/Claims.vy), which was
+first validated and compiled using the [Vyper Online Compiler](https://vyper.online/)
 
-However, this version is not compiled and deployed by Truffle like the rest of the contracts because Vyper is not yet integrated into 
-the Truffle suite.
+To integrate Vyper with Truffle, the Vyper compiler must be installed first as detailed 
+[here](https://vyper.readthedocs.io/en/latest/installing-vyper.html). Then, the project already installs the tool 
+[truper](https://www.npmjs.com/package/truper) as part of its NPM development dependencies so it is possible to use 
+the following command to generate a Truffle compatible artifact:
+
+```
+npm run vyper
+```
+
+For the moment, truper just generates the artifacts in "build/contracts" so it should be moved to "src/assets/contracts",
+the folder configured in [truffle.js](truffle.js) as the destination for Truffle artifacts so they are deployed with the
+Angular frontend. Moreover, it should be renamed "Claims.json" instead of the original "Claims.vyper.json", as it seems Truffle
+expects it with that name. However, after deployment, Truffle does not update the "networks" information in the artifact so
+it should be updated manually using the migrate command output, as done for [Claims.json](src/assets/contracts/Claims.json)
 
 ### Testnet Deployment
 
