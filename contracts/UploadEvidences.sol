@@ -6,12 +6,17 @@ import "./Evidencable.sol";
 /// @author Roberto García (http://rhizomik.net/~roberto/)
 contract UploadEvidences {
 
+    /// @notice Allows checking if some content has already been used as evidence.
     mapping(string => bool) private existingEvidences;
 
     event UploadEvidenceEvent(address indexed registry, bytes32 indexed evidencedIdHash,
         string evidenceHash, address indexed evidencer);
 
-    constructor() public {}
+    /// @notice Get if the evidence with content hash `evidenceHash` is already registered.
+    /// @param evidenceHash Hash of the evidence content, for instance IPFS Base58 Hash
+    function getEvidenceExistence(string evidenceHash) public constant returns (bool) {
+        return existingEvidences[evidenceHash];
+    }
 
     /// @notice Add evidence for item in `registry` identified by `evidencedId`. The evidence
     /// has `evidenceHash` and registered by `msg.sender`.
