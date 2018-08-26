@@ -28,11 +28,15 @@
         </label>
       </div>
       <label class="control-label" for="inputHash">Evidence Content*</label>
-      <input id="inputHash" name="inputHash" type="text" class="form-control" readonly required
-             [(ngModel)]="uploadEvidence.evidenceHash" #inputHash="ngModel" placeholder="Loaded content hash">
+      <input id="inputHash" name="inputHash" type="text" class="form-control"
+             readonly required appUploadExistence [(ngModel)]="uploadEvidence.evidenceHash"
+             #inputHash="ngModel" placeholder="Loaded content hash">
       <input id="inputFile" name="inputFile" type="file" class="form-control"
              (change)="loadFile(inputFile)" #inputFile>
       <div class="invalid-feedback">A content hash is required, load a file to generate it</div>
+      <div class="invalid-feedback" [hidden]="!inputHash.errors?.uploadExistence" style="display:block">
+        Content already uploaded as evidence
+      </div>
     </div>
 
     <!-- Button -->

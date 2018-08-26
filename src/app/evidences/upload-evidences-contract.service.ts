@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { ReplaySubject } from 'rxjs';
 import { UploadEvidence } from './uploadEvidence';
 import { UploadEvidenceEvent } from './upload-evidence-event';
+import { Manifestation } from '../manifestations/manifestation';
 
 declare const require: any;
 const evidences = require('../../assets/contracts/UploadEvidences.json');
@@ -35,33 +36,55 @@ export class UploadEvidencesContractService {
     });
   }
 
+  public getEvidenceExistence(hash: string): Observable<boolean> {
+    return new Observable((observer) => {
+      this.deployedContract.subscribe(contract => {
+        contract.methods.getEvidenceExistence(hash).call()
+        .then(result => {
+          this.ngZone.run(() => {
+            observer.next(result);
+            observer.complete();
+          });
+        })
+        .catch(error => {
+          console.error(error);
+          this.ngZone.run(() => {
+            observer.error(new Error('Error retrieving manifestation, see logs for details'));
+            observer.complete();
+          });
+        });
+      }, error => this.ngZone.run(() => { observer.error(error); observer.complete(); }));
+      return { unsubscribe() {} };
+    });
+  }
+
   public addEvidence(evidence: UploadEvidence, account: string): Observable<string | UploadEvidenceEvent> {
     return new Observable((observer) => {
-      this.ngZone.runOutsideAngular(() => {
-        this.deployedContract.subscribe(contract => {
-          contract.methods.addEvidence(this.manifestationsAddress, evidence.evidencedHash, evidence.evidenceHash)
-          .send({from: account, gas: 150000})
-          .on('transactionHash', hash =>
-            this.ngZone.run(() => observer.next(hash)))
-          .on('receipt', receipt => {
-            receipt.events.UploadEvidenceEvent.returnValues.evidencedHash = evidence.evidencedHash;
-            const evidenceEvent = new UploadEvidenceEvent(receipt.events.UploadEvidenceEvent);
-            this.web3Service.getBlockDate(receipt.events.UploadEvidenceEvent.blockNumber)
-            .subscribe(date => {
-              this.ngZone.run(() => {
-                evidenceEvent.when = date;
-                observer.next(evidenceEvent);
-                observer.complete();
-              });
+      this.deployedContract.subscribe(contract => {
+        contract.methods.addEvidence(this.manifestationsAddress, evidence.evidencedHash, evidence.evidenceHash)
+        .send({from: account, gas: 150000})
+        .on('transactionHash', hash =>
+          this.ngZone.run(() => observer.next(hash)))
+        .on('receipt', receipt => {
+          receipt.events.UploadEvidenceEvent.returnValues.evidencedHash = evidence.evidencedHash;
+          const evidenceEvent = new UploadEvidenceEvent(receipt.events.UploadEvidenceEvent);
+          this.web3Service.getBlockDate(receipt.events.UploadEvidenceEvent.blockNumber)
+          .subscribe(date => {
+            this.ngZone.run(() => {
+              evidenceEvent.when = date;
+              observer.next(evidenceEvent);
+              observer.complete();
             });
-          })
-          .on('error', error => {
-            console.error(error);
-            this.ngZone.run(() => observer.error(
-              new Error('Error registering evidence, see log for details')));
           });
-        }, error => this.ngZone.run(() => observer.error(error)));
-      });
+        })
+        .on('error', error => {
+          console.error(error);
+          this.ngZone.run(() => {
+            observer.error(new Error('Error registering evidence, see log for details'));
+            observer.complete();
+          });
+        });
+      }, error => this.ngZone.run(() => { observer.error(error); observer.complete(); }));
       return { unsubscribe() {} };
     });
   }
@@ -81,13 +104,15 @@ export class UploadEvidencesContractService {
             );
             return evidenceEvent;
           }));
+          observer.complete();
         })
         .catch(error => {
           console.log(error);
-          this.ngZone.run(() => observer.error(
-            new Error('Error listening manifestation evidences, see log for details')));
+          this.ngZone.run(() => {
+            observer.error(new Error('Error listening manifestation evidences, see log for details'));
+            observer.complete()});
         });
-      }, error => this.ngZone.run(() => observer.error(error)));
+      }, error => this.ngZone.run(() => { observer.error(error); observer.complete(); }));
       return { unsubscribe() {} };
     });
   }

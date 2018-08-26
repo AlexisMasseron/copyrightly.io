@@ -11,10 +11,10 @@ import { Manifestation } from '../../manifestations/manifestation';
 
 @Component({
   selector: 'app-upload-evidence',
-  templateUrl: './upload-evicence.component.html',
-  styleUrls: ['./upload-evicence.component.css']
+  templateUrl: './upload-evidence.component.html',
+  styleUrls: ['./upload-evidence.component.css']
 })
-export class UploadEvicenceComponent implements OnInit {
+export class UploadEvidenceComponent implements OnInit {
   @Input() manifestation: Manifestation;
   @Output() cancel: EventEmitter<void> = new EventEmitter();
   @Output() done: EventEmitter<void> = new EventEmitter();
