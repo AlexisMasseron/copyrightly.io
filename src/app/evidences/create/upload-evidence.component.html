@@ -18,6 +18,19 @@
              [ngModel]="uploadEvidence.evidencedHash" #inputEvidenced="ngModel">
     </div>
 
+    <!-- CLY stake input -->
+    <div class="form-group" [class.was-validated]="inputEvidenced.dirty || inputEvidenced.touched">
+      <label class="control-label" for="inputStake">Stake* (not implemented yet)</label>
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <span class="input-group-text" id="cly-units">
+            <span class="fas fa-copyright logo-icon"></span>LY Tokens</span>
+        </div>
+        <input id="inputStake" name="inputStake" type="number" step="0.01" class="form-control"
+               aria-describedby="cly-units" [ngModel]="stake" #inputStake="ngModel">
+      </div>
+    </div>
+
     <!-- Content file input -->
     <div class="form-group" [class.was-validated]="inputHash.dirty || inputHash.touched">
       <div class="form-check">

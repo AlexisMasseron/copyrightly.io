@@ -10,5 +10,7 @@ export class UploadEvidenceDetailsComponent {
   @Input() evidenceEvent: UploadEvidenceEvent;
   @Input() evidenceIndex: number;
 
+  stake = 1.5;
+
   constructor() {}
 }
