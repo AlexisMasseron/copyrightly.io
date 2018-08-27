@@ -442,14 +442,18 @@ https://www.youtube.com/watch?v=ZwVNLDIJKVA
 
 ### Upgradable Pattern Registry or Delegation
 
-To make contracts upgradable, the Delegation pattern has been used through a Relay or Proxy. 
+To make the *Manifestations* contracts upgradable, the Delegation pattern has been used through a Relay or Proxy. 
 Concretely, the *AdminUpgradeabilityProxy* provided by the ZeppelinOS Library, as detailed in 
 https://docs.zeppelinos.org/docs/low_level_contract.html
 
-Upgradeability is tested in [manifestations_upgradeability.test.js](test/manifestations_upgradeability.test.js)
+Upgradeability of the *Manifestations* contract is tested in [manifestations_upgradeability.test.js](test/manifestations_upgradeability.test.js)
 
 The file [5_upgrade_manifestations](migrations/5_upgrade_manifestations.js.example) provides an example of how
 **Manifestations** can be upgraded adding a new migration step.
+
+NOTE: When testing locally, the second account (accounts[1] with ENS name "Bob.eth") is configured as the proxy administrator. For
+security reasons, if the admin account calls *Manifestations* through the proxy, the calls are not forwarded to the proxy. 
+Consequently, this account cannot be used to register manifestations. A "revert" error will be generated.
 
 ### LLL / Vyper
 

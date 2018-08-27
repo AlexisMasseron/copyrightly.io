@@ -10,6 +10,7 @@ const TRUFFLE_CONFIG = require('../../../truffle');
   providedIn: 'root'
 })
 export class Web3Service {
+  public useWebSockets = false; // Disabled for improved interoperability with current tools
   public web3: any;
 
   constructor(private ngZone: NgZone) {
@@ -25,18 +26,24 @@ export class Web3Service {
       window.postMessage({ type: 'ETHEREUM_PROVIDER_REQUEST' }, '*');
 
       // Default, use local network defined by Truffle config if none provided
-      const localNode = 'ws://' + TRUFFLE_CONFIG.networks.development.host + ':' +
-        TRUFFLE_CONFIG.networks.development.port;
-      console.log('Using Web3 for local node: ' + localNode);
-      this.web3 = new Web3(new Web3.providers.WebsocketProvider(localNode));
-      // this.web3.providers.WebsocketProvider.prototype.sendAsync = this.web3.providers.WebsocketProvider.prototype.send;
-
+      if (this.useWebSockets) {
+        const localNode = 'ws://' + TRUFFLE_CONFIG.networks.development.host + ':' +
+          TRUFFLE_CONFIG.networks.development.port;
+        console.log('Using Web3 for local node: ' + localNode);
+        this.web3 = new Web3(new Web3.providers.WebsocketProvider(localNode));
+      } else {
+        const localNode = 'http://' + TRUFFLE_CONFIG.networks.development.host + ':' +
+          TRUFFLE_CONFIG.networks.development.port;
+        console.log('Using Web3 for local node: ' + localNode);
+        this.web3 = new Web3(new Web3.providers.HttpProvider(localNode));
+        // Hack to provide backwards compatibility for Truffle, which uses web3js 0.20.x
+        Web3.providers.HttpProvider.prototype.sendAsync = Web3.providers.HttpProvider.prototype.send;
+      }
     } else {
       console.log('Using Web3 provided by the browser');
       this.web3 = new Web3(window.web3.currentProvider);
     }
   }
-
 
   public getAccounts(): Observable<string[]> {
     return new Observable((observer) => {
