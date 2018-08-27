@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 
 declare let require: any;
@@ -6,11 +6,13 @@ declare let window: any;
 const Web3 = require('web3');
 const TRUFFLE_CONFIG = require('../../../truffle');
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class Web3Service {
   public web3: any;
 
-  constructor() {
+  constructor(private ngZone: NgZone) {
     if (typeof window.web3 === 'undefined') {
       // Listen for provider injection
       window.addEventListener('message', ({ data }) => {
@@ -27,6 +29,8 @@ export class Web3Service {
         TRUFFLE_CONFIG.networks.development.port;
       console.log('Using Web3 for local node: ' + localNode);
       this.web3 = new Web3(new Web3.providers.WebsocketProvider(localNode));
+      // this.web3.providers.WebsocketProvider.prototype.sendAsync = this.web3.providers.WebsocketProvider.prototype.send;
+
     } else {
       console.log('Using Web3 provided by the browser');
       this.web3 = new Web3(window.web3.currentProvider);
@@ -37,16 +41,23 @@ export class Web3Service {
   public getAccounts(): Observable<string[]> {
     return new Observable((observer) => {
       this.web3.eth.getAccounts()
-        .then(function(accounts) {
-          if (accounts.length === 0) {
-            observer.error('Couldn\'t get any accounts. Make sure you are logged in MetaMask');
-          }
-          observer.next(accounts);
-          observer.complete();
+        .then(accounts => {
+          this.ngZone.run(() => {
+            if (accounts.length === 0) {
+              observer.error('Couldn\'t get any accounts. Make sure you are logged in MetaMask ' +
+                'or Web3-enabled browser');
+            }
+            observer.next(accounts);
+            observer.complete();
+          });
         })
-        .catch(function(error) {
+        .catch(error => {
           console.error(error);
-          observer.error(new Error('Error retrieving accounts, see logs for details'));
+          this.ngZone.run(() => {
+            observer.error(new Error('Retrieving accounts<br>' +
+              'A Web3-enable browser or supporting the ' +
+              '<a target="_blank" href="https://metamask.io">MetaMask</a> extension required'));
+          });
         });
       return { unsubscribe() {} };
     });
@@ -55,12 +66,18 @@ export class Web3Service {
   public getBlockDate(blockNumber: number): Observable<Date> {
     return new Observable((observer) => {
       this.web3.eth.getBlock(blockNumber)
-      .then(function(block) {
-        observer.next(new Date(block.timestamp * 1000));
-        observer.complete();
+      .then(block => {
+        this.ngZone.run(() => {
+          observer.next(new Date(block.timestamp * 1000));
+          observer.complete();
+        });
       })
-      .catch(function(error) {
+      .catch(error => {
         console.error(error);
+        this.ngZone.run(() => {
+          observer.error('Block date not retrieved, see log for details');
+          observer.complete();
+        });
       });
       return { unsubscribe() {} };
     });

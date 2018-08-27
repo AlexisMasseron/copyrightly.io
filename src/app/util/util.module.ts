@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Web3Service } from './web3.service';
 import { IpfsService } from './ipfs.service';
+import { EnsService } from './ens.service';
 
 @NgModule({
   declarations: [],
@@ -9,7 +10,7 @@ import { IpfsService } from './ipfs.service';
     CommonModule
   ],
   providers: [
-    Web3Service, IpfsService
+    Web3Service, IpfsService, EnsService
   ]
 })
 export class UtilModule { }

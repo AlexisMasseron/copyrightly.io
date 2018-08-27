@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Web3Service } from '../util/web3.service';
-import { AlertsService } from '../alerts/alerts.service';
-import { AuthenticationService } from './authentication.service';
-import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs/internal/Subject';
+import { filter, takeUntil } from 'rxjs/operators';
+import { Web3Service } from '../util/web3.service';
+import { AuthenticationService } from './authentication.service';
+import { EnsService } from '../util/ens.service';
 
 @Component({
   selector: 'app-navbar',
@@ -15,11 +15,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   public isCollapsed: boolean;
   public account: string;
+  public accountsNames: string[];
   public accounts: string[];
 
   constructor(private web3Service: Web3Service,
               private authenticationService: AuthenticationService,
-              private errorMessageService: AlertsService) {}
+              private ensService: EnsService) {}
 
   ngOnInit() {
     this.isCollapsed = true;
@@ -28,7 +29,11 @@ export class NavbarComponent implements OnInit, OnDestroy {
       .subscribe(accounts =>  this.accounts = accounts );
     this.authenticationService.getSelectedAccount()
       .pipe(takeUntil(this.ngUnsubscribe))
+      .pipe(filter(account => account !== ''))
       .subscribe(account =>  this.account = account );
+    this.authenticationService.getAccountsNames()
+      .pipe(takeUntil(this.ngUnsubscribe))
+      .subscribe(accountsNames =>  this.accountsNames = accountsNames );
   }
 
   refreshAccounts() {

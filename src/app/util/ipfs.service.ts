@@ -4,7 +4,9 @@ import IPFS_API from 'ipfs-api';
 
 declare const Buffer;
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 export class IpfsService {
   private ipfsApi: any;
 

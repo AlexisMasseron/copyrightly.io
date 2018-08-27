@@ -40,8 +40,8 @@
         <span class="nav-link">Account:
           <select id="accounts" name="accounts" class="" required title="{{account}}"
                   [(ngModel)]="account" (ngModelChange)="onChange($event)">
-            <option *ngFor="let account of accounts" [ngValue]="account" title="{{account}}">
-              {{account | slice:0:6}}...{{account | slice:-4}}</option>
+            <option *ngFor="let account of accounts; let i = index" [ngValue]="account" title="{{account}}">
+              {{accountsNames[i]}}</option>
           </select>
           <a id="refresh-accounts" class="refresh-account" (click)="refreshAccounts()">
             <span class="fa fa-sync-alt"></span>
