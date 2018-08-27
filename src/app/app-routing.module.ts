@@ -5,6 +5,7 @@ import { ManifestSingleComponent } from './manifestations/manifest/manifest-sing
 import { ManifestationsSearchComponent } from './manifestations/search/manifestations-search.component';
 import { ManifestationsListComponent } from './manifestations/list/manifestations-list.component';
 import { ManifestationDetailsComponent } from './manifestations/details/manifestation-details.component';
+import { ManifestationsListAllComponent } from './manifestations/list/manifestations-list-all.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/about', pathMatch: 'full' },
@@ -12,6 +13,7 @@ const routes: Routes = [
   { path: 'register', component: ManifestSingleComponent },
   { path: 'search', component: ManifestationsSearchComponent },
   { path: 'list', component: ManifestationsListComponent },
+  { path: 'list-all', component: ManifestationsListAllComponent },
   { path: 'manifestations/:id', component: ManifestationDetailsComponent, runGuardsAndResolvers: 'always' },
 ];
 

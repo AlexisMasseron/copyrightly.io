@@ -12,11 +12,11 @@ import { ManifestEvent } from '../manifest-event';
   templateUrl: './manifestations-list.component.html',
   styleUrls: ['./manifestations-list.component.css']
 })
-export class ManifestationsListComponent implements OnInit, OnDestroy {
+export class ManifestationsListAllComponent implements OnInit, OnDestroy {
   private ngUnsubscribe: Subject<void> = new Subject<void>();
 
   public manifestationEvents: ManifestEvent[] = [];
-  public all = false;
+  public all = true;
 
   constructor(private web3Service: Web3Service,
               private manifestationsContractService: ManifestationsContractService,
@@ -28,7 +28,7 @@ export class ManifestationsListComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.ngUnsubscribe))
       .pipe(filter(account => account !== ''))
       .pipe(flatMap((account: string) =>
-        this.manifestationsContractService.listManifestEvents(account)))
+        this.manifestationsContractService.listManifestEvents(undefined)))
       .subscribe(events => {
             this.manifestationEvents = events;
           }, error => this.alertsService.error(error));

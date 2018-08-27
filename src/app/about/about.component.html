@@ -10,8 +10,16 @@
           claim single authorship on a piece of content hash.</li>
         <li><a [routerLink]="['/search']">Search</a>:
           check if a piece of content is already registered searching by hash.</li>
-        <li><a [routerLink]="['/list']">List</a>:
+        <li><a [routerLink]="['/list']">List Own</a>:
           look for all the authorship manifestations made by the current user.</li>
+        <li><a [routerLink]="['/list-all']">List All</a>:
+          look for all the authorship manifestations registered by any user.</li>
+        <li><b>Details</b>:
+          From a manifestation search results, or from the list of own manifestations,
+          click "Details" to see all the information about them, including their Evidences.</li>
+        <li><b>Evidences</b>:
+          From the manifestation details it is possible to add new evidences supporting
+          authorship.</li>
       </ul>
     <li>More coming...</li>
   </ul>

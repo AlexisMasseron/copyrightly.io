@@ -8,6 +8,7 @@ import { ManifestationsContractService } from './manifestations-contract.service
 import { ManifestSingleComponent } from './manifest/manifest-single.component';
 import { ManifestationsSearchComponent } from './search/manifestations-search.component';
 import { ManifestationsListComponent } from './list/manifestations-list.component';
+import { ManifestationsListAllComponent } from './list/manifestations-list-all.component';
 import { ManifestUnregisteredDirective } from './manifest/manifest-unregistered.directive';
 import { ManifestationDetailsComponent } from './details/manifestation-details.component';
 import { ManifestEventComponent } from './manifest-event.component';
@@ -19,6 +20,7 @@ import { EvidencesModule } from '../evidences/evidences.module';
     ManifestUnregisteredDirective,
     ManifestationsSearchComponent,
     ManifestationsListComponent,
+    ManifestationsListAllComponent,
     ManifestationDetailsComponent,
     ManifestEventComponent
   ],

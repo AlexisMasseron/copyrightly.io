@@ -8,6 +8,7 @@ import { AlertsService } from '../../alerts/alerts.service';
 import { Manifestation } from '../manifestation';
 import { UploadEvidenceEvent } from '../../evidences/upload-evidence-event';
 import { UploadEvidencesContractService } from '../../evidences/upload-evidences-contract.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-manifestation-details',
@@ -23,6 +24,7 @@ export class ManifestationDetailsComponent implements OnInit, OnDestroy {
 
   constructor(private route: ActivatedRoute,
               private router: Router,
+              private location: Location,
               private web3Service: Web3Service,
               private manifestationsContractService: ManifestationsContractService,
               private uploadEvidencesContractService: UploadEvidencesContractService,
@@ -51,6 +53,10 @@ export class ManifestationDetailsComponent implements OnInit, OnDestroy {
         this.loadEvidences();
       }
     });
+  }
+
+  back() {
+    this.location.back();
   }
 
   ngOnDestroy(): void {

@@ -407,10 +407,11 @@ To integrate ENS the guidelines available at https://medium.com/the-ethereum-nam
 have been followed.
 
 The **ethereum-ens** package has been installed and an Angular Service [EnsService](src/app/util/ens.service.ts) that 
-implements reverse resolution of addresses to ENS names. However, this library is based on Web3 0.* instead of 
-the Web3 1.* used in the project and there are some breaking problems that make reversing names unreliable.
+implements reverse resolution of addresses to ENS names. This library works on the Main Ethereum Network, Ropsten and
+Rinkeby. It has been checked with Ropsten and it works properly, showing the reverse of the currently selected account
+in MetaMask instead of the address, if available.
 
-In any case, the application has been prepared to also provide ENS when working with a local test network. To do so,
+The application has been prepared to also provide ENS when working with a local test network. To do so,
 the **@ensdomains/ens** package has been also installed, which provides all ENS contracts to be deployed locally.
 This is done with migration [4_deploy_ens.js](migrations/4_deploy_ens.js), which deploys them and also sets ENS names
 for addresses 0, 1 and 2, respectively "Alice.eth", "Bob.eth" and "Charlie.eth".

@@ -116,8 +116,11 @@ export class ManifestationsContractService {
   public listManifestEvents(account: string): Observable<ManifestEvent[]> {
     return new Observable((observer) => {
       this.deployedContract.subscribe(contract => {
-        contract.getPastEvents('ManifestEvent',
-          {filter: {manifester: account}, fromBlock: 0})
+        const options = {filter: {manifester: account}, fromBlock: 0};
+        if (!account) {
+          delete options.filter;
+        }
+        contract.getPastEvents('ManifestEvent', options)
         .then(events => {
           observer.next(events.map(event => {
             const manifestEvent = new ManifestEvent(event);
