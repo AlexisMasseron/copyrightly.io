@@ -19,15 +19,23 @@ export class ManifestUnregisteredDirective implements AsyncValidator {
       this.ngZone.runOutsideAngular(() => {
         this.manifestationsContractService.getManifestation(control.value)
         .subscribe((manifestation: Manifestation) => {
-          if (!manifestation.title || manifestation.expiry < new Date()) {
+          if (!manifestation.title) {
             this.ngZone.run(() => {
               observer.next(null);
               observer.complete();
             });
           } else {
-            this.ngZone.run(() => {
-              observer.next({'manifestUnregistered': {title: manifestation.title}});
-              observer.complete();
+            this.manifestationsContractService.getEvidenceCount(control.value)
+            .subscribe(evidenceCount => {
+              this.ngZone.run(() => {
+                if (evidenceCount > 0 || manifestation.expiry >= new Date()) {
+                  observer.next({'manifestUnregistered': {title: manifestation.title}});
+                  observer.complete();
+                } else {
+                  observer.next(null);
+                  observer.complete();
+                }
+              });
             });
           }
         }, error => {

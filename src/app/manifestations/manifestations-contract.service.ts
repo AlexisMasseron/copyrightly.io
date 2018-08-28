@@ -143,4 +143,26 @@ export class ManifestationsContractService {
       return { unsubscribe() {} };
     });
   }
+
+  public getEvidenceCount(hash: string): Observable<number> {
+    return new Observable((observer) => {
+      this.deployedContract.subscribe(contract => {
+        contract.methods.getEvidenceCount(hash).call()
+        .then(result => {
+          this.ngZone.run(() => {
+            observer.next(result);
+            observer.complete();
+          });
+        })
+        .catch(error => {
+          console.error(error);
+          this.ngZone.run(() => {
+            observer.error(new Error('Error retrieving evidence count, see logs for details'));
+            observer.complete();
+          });
+        });
+      }, error => this.ngZone.run(() => { observer.error(error); observer.complete(); }));
+      return { unsubscribe() {} };
+    });
+  }
 }
