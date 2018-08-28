@@ -3,11 +3,11 @@ Ropsten:
  - AdminUpgradeabilityProxy: 0x82d9b9268bf23d60aed1f6877c150a9b4f280b68
  - UploadEvidences: 0xb78f2f829ee4a326c4d8e39b2e584c3b37d8840c
  - YouTubeEvidences: 0xbd9ca57fa1625872d3b4c4d9f92027ca756cf0e1
- - Claims: 0x7F970854749356A996F9d868FFEc3c3E90e7c17E
+ - Complaints: 0x7F970854749356A996F9d868FFEc3c3E90e7c17E
 
 Rinkeby:
  - Manifestations: 0x2a381e3292b586af5524c18563d64d3a9472be8c
  - AdminUpgradeabilityProxy: 0x2e0b75e8f64d4cced51bf4503a81ef59b0a939b7
  - UploadEvidences: 0x1f29de05682da24495a82c63e7a1750e2a86479c
  - YouTubeEvidences: 0x489636cbd07ee33a298fb3531785790bea1eeeb8
- - Claims: 0x74c31e5c62d3469f0962741b96bcad0ace1f3a25
+ - Complaints: 0x74c31e5c62d3469f0962741b96bcad0ace1f3a25

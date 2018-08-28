@@ -24,7 +24,7 @@ class Evidencable {
 }
 class ExpirableLib {
 }
-class Claims {
+class Complaints {
 }
 class UploadEvidences {
 }
@@ -37,7 +37,7 @@ class SafeMath <<Imported>> {
 
 Manifestations <-- AdminUpgradeabilityProxy
 Manifestations -up-> ExpirableLib
-Manifestations <-- Claims
+Manifestations <-- Complaints
 Evidencable <-- UploadEvidences
 Evidencable <-- YouTubeEvidences
 SafeMath <-- ExpirableLib

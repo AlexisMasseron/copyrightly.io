@@ -26,11 +26,11 @@ content is also available on YouTube.
 
 Future work:
  - Register YouTubeEvidences from the user interface.
- - Make it possible to register [Claims](contracts/Claims.v.py) from the user interface, if someone else has registered content we own. Currently, the
+ - Make it possible to register [Complaints](contracts/Complaints.v.py) from the user interface, if someone else has registered content we own. Currently, the
  contract is implemented but its functionality is not available from the Web client.
- - Evidences can be also added to **Claims**.
+ - Evidences can be also added to **Complaints**.
  - Implement a **[Token Curated Registry](https://medium.com/@tokencuratedregistry/a-simple-overview-of-token-curated-registries-84e2b7b19a06) (TCR)** 
- of **Evidences** supporting **Manifestations** and **Claims**. 
+ of **Evidences** supporting **Manifestations** and **Complaints**. 
  To add an evidence, an amount of the **CLY token** has to be **staked**.
  Moreover, anyone (the curators) can also mint some CLY and stake it to support an evidence, with the opportunity of winning additional
  CLY if they support an evidence of a winning manifestation or claim... but the risk of loosing it otherwise.
@@ -46,7 +46,7 @@ Future work:
 * [Testing](#testing)
    * [Manifestations Contract](#manifestations-contract)
    * [UploadEvidences Contract](#UploadEvidences-contract)
-   * [Claims Contract](#claims-contract)
+   * [Complaints Contract](#complaints-contract)
    * [ExpirableLib Library](#expirablelib-library)
    * [Evidencable Contract](#evidencable-contract)
 * [Design Pattern Requirements](#design-pattern-requirements)
@@ -313,28 +313,28 @@ then can add evidences as usual.
 
 ```
 
-### Claims Contract
+### Complaints Contract
 
-Source: [Claims.v.py](contracts/Claims.v.py)
+Source: [Complaints.v.py](contracts/Complaints.v.py)
 
 This contract has been implemented using **Vyper** as detailed in the [LLL / Vyper](#lll--vyper) Section. It is 
-responsible for registering claims from accounts that consider that the existing manifestations is not a 
+responsible for registering complaints from accounts that consider that the existing manifestations is not a 
 proper one, i.e. coming from the right creator. 
 
-The corresponding tests verify that just one claim for a given manifestation is allowed at the same
-time. It is also checked that claims can be revoked just by the contract owner. 
-Finally, just existing and non-revoked claims can be retrieved.
+The corresponding tests verify that just one complaint for a given manifestation is allowed at the same
+time. It is also checked that complaints can be revoked just by the contract owner. 
+Finally, just existing and non-revoked complaints can be retrieved.
 
-[claims.test.js](test/claims.test.js)
+[complaints.test.js](test/complaints.test.js)
 ```
-  Contract: Claims - Register claims
-    ✓ should register a new claim (160ms)
-    ✓ shouldn't register a claim if already one for manifestation
-    ✓ shouldn't allow to revoke claim if not contract owner
-    ✓ should retrieve an existing claim
-    ✓ should allow to revoke claim if contract owner (46ms)
-    ✓ shouldn't allow retrieving a revoked claim
-    ✓ shouldn't allow retrieving an unexisting claim
+  Contract: Complaints - Register complaints
+    ✓ should register a new complaint (160ms)
+    ✓ shouldn't register a complaint if already one for manifestation
+    ✓ shouldn't allow to revoke complaint if not contract owner
+    ✓ should retrieve an existing complaint
+    ✓ should allow to revoke complaint if contract owner (46ms)
+    ✓ shouldn't allow retrieving a revoked complaint
+    ✓ shouldn't allow retrieving an unexisting complaint
 ```
 
 ### ExpirableLib Library
@@ -342,18 +342,18 @@ Finally, just existing and non-revoked claims can be retrieved.
 Source: [ExpirableLib.sol](contracts/ExpirableLib.sol)
 
 This library contains the logic for items with a creation and expiry time. With it, 
-manifestations (or claims) can expire after a certain amount of time. It is testedf or **Manifestations** in: 
+manifestations (or complaints) can expire after a certain amount of time. It is testedf or **Manifestations** in: 
 [manifestations_expirable.test.js](test/manifestations_expirable.test.js)
 
 ### Evidencable Contract
 
 Source: [Evidencable.sol](contracts/Evidencable.sol)
 
-This is a contract that provides the logic for items that can accumulate evidences. Manifestations (or claims)
+This is a contract that provides the logic for items that can accumulate evidences. Manifestations (or complaints)
 can receive evidences by extending this contract. 
 
-The idea is that evidences are considered by curators to check the appropriateness of manifestations (and claims).
-Moreover, they are counted so manifestations (or claims) that have accumulated at least one evidence do not expire,
+The idea is that evidences are considered by curators to check the appropriateness of manifestations (and complaints).
+Moreover, they are counted so manifestations (or complaints) that have accumulated at least one evidence do not expire,
 as tested for **Manifestations** in: [manifestations_expirable.test.js](test/manifestations_expirable.test.js)
 
 ## Design Pattern Requirements
@@ -467,7 +467,7 @@ Consequently, this account cannot be used to register manifestations. A "revert"
 
 ### LLL / Vyper
 
-A version of the *Claims* contract has been also implemented using Vyper. The result is [Claims.vy](contracts/Claims.v.py), which was
+A version of the *Complaints* contract has been also implemented using Vyper. The result is [Complaints.vy](contracts/Complaints.v.py), which was
 first validated and compiled using the [Vyper Online Compiler](https://vyper.online/)
 
 To integrate Vyper with Truffle, the Vyper compiler must be installed first as detailed 
@@ -481,7 +481,7 @@ npm run vyper
 
 For the moment, truper just generates the artifacts in "build/contracts" so it should be moved to "src/assets/contracts".
 This is the folder configured in [truffle.js](truffle.js) as the destination for Truffle artifacts so they are deployed with the
-Angular frontend. Moreover, it should be renamed "Claims.json" instead of the original "Claims.vyper.json", as it seems Truffle
+Angular frontend. Moreover, it should be renamed "Complaints.json" instead of the original "Complaints.vyper.json", as it seems Truffle
 expects it with that name.
 
 ### Testnet Deployment

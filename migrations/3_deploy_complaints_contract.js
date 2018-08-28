@@ -1,5 +1,5 @@
 const Proxy = artifacts.require("./AdminUpgradeabilityProxy.sol");
-const Claims = artifacts.require("./Claims.sol");
+const Complaints = artifacts.require("./Complaints.sol");
 
 module.exports = async function (deployer, network, accounts) {
   const owner = accounts[0];
@@ -8,7 +8,7 @@ module.exports = async function (deployer, network, accounts) {
     const proxy = await Proxy.deployed();
 
     return Promise.all([
-      deployer.deploy(Claims, proxy.address, {from: owner})
+      deployer.deploy(Complaints, proxy.address, {from: owner})
     ]);
   });
 };

@@ -15,7 +15,7 @@ It has been tested in [manifestations_expirable.test.js](test/manifestations_exp
 Overall, the contracts have been designed favouring modularity and reusability. Thus, the previous expiration functionality has been
 implemented as a Solidity Library. There is also the "evidencable" functionality, that makes a item capable of accumulating evidences
 supporting it, that has been implemented using a Solidity contract [Evidencable](contracts/Evidencable.sol). This facilitates
-making manifestations capable of accumulating evidences supporting them, but also reusing this same behaviour for claims. Moreover,
+making manifestations capable of accumulating evidences supporting them, but also reusing this same behaviour for complaints. Moreover,
 making this functionality available as a library reduces deployment costs.
 
 ### Architecture Overview
