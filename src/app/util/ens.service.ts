@@ -49,7 +49,10 @@ export class EnsService {
             observer.complete();
           });
         });
-      }, error => this.ngZone.run(() => { observer.error(error); observer.complete(); }));
+      }, error => this.ngZone.run(() => {
+        observer.next(address.slice(0, 6) + '...' + address.slice(-4));
+        observer.complete();
+      }));
       return { unsubscribe() {} };
     });
   }

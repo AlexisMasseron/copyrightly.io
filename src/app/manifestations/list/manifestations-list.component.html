@@ -1,5 +1,12 @@
-<p *ngIf="!all">You have registered {{manifestationEvents?.length}} manifestations</p>
-<p *ngIf="all">There are {{manifestationEvents?.length}} manifestations registered</p>
+
+<p *ngIf="!all">You have registered { manifestationEvents?.length, plural,
+  =1 { 1 manifestation }
+  other { {{manifestationEvents?.length}} manifestations} }
+</p>
+<p *ngIf="all">There { manifestationEvents?.length, plural,
+  =1 { is 1 manifestation }
+  other { are {{manifestationEvents?.length}} manifestations} } registered
+</p>
 
 <div class="card mb-4" *ngFor="let event of manifestationEvents">
   <div class="card-block row m-1">

@@ -44,6 +44,10 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.authenticationService.setSelectedAccount(selectedAccount);
   }
 
+  getCurrentNetwork(): string {
+    return this.web3Service.getNetworkName();
+  }
+
   ngOnDestroy() {
     this.ngUnsubscribe.next();
     this.ngUnsubscribe.complete();

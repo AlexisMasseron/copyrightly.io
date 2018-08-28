@@ -12,6 +12,7 @@ const TRUFFLE_CONFIG = require('../../../truffle');
 export class Web3Service {
   public useWebSockets = false; // Disabled for improved interoperability with current tools
   public web3: any;
+  private networkId: number;
 
   constructor(private ngZone: NgZone) {
     if (typeof window.web3 === 'undefined') {
@@ -42,6 +43,17 @@ export class Web3Service {
     } else {
       console.log('Using Web3 provided by the browser');
       this.web3 = new Web3(window.web3.currentProvider);
+    }
+    this.web3.eth.net.getId().then(networkId => this.networkId = networkId);
+  }
+
+  public getNetworkName() {
+    switch (this.networkId) {
+      case 1: return 'MainNet';
+      case 2: return 'Morden';
+      case 3: return 'Ropsten';
+      case 4: return 'Rinkeby';
+      default: return 'LocalNet';
     }
   }
 
