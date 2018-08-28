@@ -14,7 +14,7 @@ This information can be later used to proof authorship as the content can be ret
 
 However, it is not enough to register a **Manifestation**. **Evidences** should be also provided to support the
 authorship claim or the **Manifestation** will expire after one day. Usually done by the author registering the
-**Manifestation** but anyone can add an *Evidence** supporting a **Manifestation**
+**Manifestation** but anyone can add an **Evidence** supporting a **Manifestation**
 
 There are **Evidences** based on content uploaded (to IPFS), implemented by the 
 [UploadEvidences](contracts/UploadEvidences.sol) contract. The uploaded content can be anything, 
@@ -40,7 +40,7 @@ Future work:
 * [Table of Contents](#table-of-contents)
 * [Features](#features)
 * [Running Locally](#running-locally)
-   * [Required Tools](#required-tools)
+   * [Required Tools](#requirements)
    * [Smart Contracts Deployment](#smart-contracts-deployment)
    * [Launch Web Application](#launch-web-application)
 * [Testing](#testing)
@@ -203,7 +203,9 @@ Some warnings might appear, but all of them are related to the imported contract
 The following sections describe the tests available for each smart contract, provide links to the 
 files implementing then and list their expected outputs.
 
-### [Manifestations](contracts/Manifestations.sol) Contract
+### Manifestations Contract
+
+Source: [Manifestations.sol](contracts/Manifestations.sol)
 
 This contract is responsible for registering *Manifestations*, the expressions of authors ideas into
 pieces of content that can be then used to prove authorship. A manifestation is based on a content hash, 
@@ -285,7 +287,9 @@ The tests check that re-registration is possible just after more than 2 seconds,
     ✓ shouldn't expire if manifestation with evidences (3138ms)
 ```
 
-### [UploadEvidences](contracts/UploadEvidences.sol) Contract
+### UploadEvidences Contract
+
+Source: [UploadEvidences.sol](contracts/UploadEvidences.sol)
 
 This contract implements the registration of evidences based on uploading content to IPFS. It behaves as an
 evidence provider for the contract specified when adding the evidence. However, the contract has to be registered
@@ -309,7 +313,9 @@ then can add evidences as usual.
 
 ```
 
-### [Claims](contracts/Claims.v.py) Contract
+### Claims Contract
+
+Source: [Claims.v.py](contracts/Claims.v.py)
 
 This contract has been implemented using **Vyper** as detailed in the [LLL / Vyper](#lll--vyper) Section. It is 
 responsible for registering claims from accounts that consider that the existing manifestations is not a 
@@ -331,13 +337,17 @@ Finally, just existing and non-revoked claims can be retrieved.
     ✓ shouldn't allow retrieving an unexisting claim
 ```
 
-### [ExpirableLib](contracts/ExpirableLib.sol) Library
+### ExpirableLib Library
+
+Source: [ExpirableLib.sol](contracts/ExpirableLib.sol)
 
 This library contains the logic for items with a creation and expiry time. With it, 
 manifestations (or claims) can expire after a certain amount of time. It is testedf or **Manifestations** in: 
 [manifestations_expirable.test.js](test/manifestations_expirable.test.js)
 
-### [Evidencable](contracts/EvidencableLib.sol) Contract
+### Evidencable Contract
+
+Source: [Evidencable.sol](contracts/Evidencable.sol)
 
 This is a contract that provides the logic for items that can accumulate evidences. Manifestations (or claims)
 can receive evidences by extending this contract. 
@@ -457,7 +467,7 @@ Consequently, this account cannot be used to register manifestations. A "revert"
 
 ### LLL / Vyper
 
-A version of the *Claims* contract has been also implemented using Vyper. The result is [Claims.vy](contracts/Claims.vy), which was
+A version of the *Claims* contract has been also implemented using Vyper. The result is [Claims.vy](contracts/Claims.v.py), which was
 first validated and compiled using the [Vyper Online Compiler](https://vyper.online/)
 
 To integrate Vyper with Truffle, the Vyper compiler must be installed first as detailed 
